@@ -5,6 +5,7 @@ require("dotenv").config();
 const { fileLoader, mergeResolvers, mergeTypes } = require("merge-graphql-schemas");
 const path = require("path");
 
+const models = require("./models");
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schemas")));
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, "./resolvers")));
 
@@ -12,7 +13,8 @@ const app = express();
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: { models }
 });
 
 server.applyMiddleware({ app });
@@ -23,7 +25,8 @@ const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useCreateIndex: true
     });
 
     app.listen(PORT, () =>
