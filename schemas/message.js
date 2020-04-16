@@ -6,7 +6,7 @@ module.exports = `
     channel: Channel!
   }
   
-   type Query {
+  type Query {
     getMessage(id: ID!): Message!
     getAllMessages: [Message!]!
   }
@@ -14,6 +14,4 @@ module.exports = `
   type Mutation {
     createMessage(channelId: ID!, text: String!): Message!
   }
-  
-  
 `;
