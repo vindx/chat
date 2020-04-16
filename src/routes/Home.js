@@ -12,12 +12,12 @@ const allUsersQuery = gql`
 `;
 
 const Home = () => {
-  const { loading, error, data } = useQuery(allUsersQuery);
+  const { loading, error, data: { getAllUsers: users } = {} } = useQuery(allUsersQuery);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  return data.getAllUsers.map(({ id, email }) => (
+  return users.map(({ id, email }) => (
     <div key={id}>
       <h2>{email}</h2>
     </div>
