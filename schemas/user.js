@@ -12,6 +12,6 @@ module.exports = `
   }
 
   type Mutation {
-    createUser(userName: String!, email: String!, password: String!): User!
+    register(userName: String!, email: String!, password: String!): Boolean!
   }
 `;

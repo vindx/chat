@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 module.exports = {
   Query: {
     getUser: async (parent, { id }, { models }) => {
@@ -14,13 +16,14 @@ module.exports = {
     getAllUsers: async (parent, args, { models }) => await models.User.find()
   },
   Mutation: {
-    createUser: async (parent, args, { models }) => {
+    register: async (parent, { password, ...otherArgs }, { models }) => {
       try {
-        const newUser = new models.User(args);
-        await newUser.save();
-        return newUser;
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await new models.User({ ...otherArgs, password: hashedPassword }).save();
+        return true;
       } catch (err) {
-        return err;
+        console.log(err);
+        return false;
       }
     }
   }
