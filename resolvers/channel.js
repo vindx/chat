@@ -1,4 +1,4 @@
-const formatErrors = require('../formatErrors');
+const formatErrors = require('../helpers/formatErrors');
 
 module.exports = {
   Query: {

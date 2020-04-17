@@ -1,5 +1,5 @@
-const { tryLogin } = require('../auth');
-const formatErrors = require('../formatErrors');
+const { tryLogin } = require('../helpers/auth');
+const formatErrors = require('../helpers/formatErrors');
 
 module.exports = {
   Query: {
