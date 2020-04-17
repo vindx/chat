@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Header, Input, Button } from 'semantic-ui-react';
+import { Container, Header, Input, Button, Message } from 'semantic-ui-react';
 import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
@@ -31,7 +31,7 @@ const Register = (props) => {
 
   const handleChangeLoginData = (e) => {
     const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value, [`${name}Error`]: '' });
+    setLoginData({ ...loginData, [name]: value, [`${name}Error`]: null });
   };
 
   const handleSubmit = async (e) => {
@@ -64,16 +64,16 @@ const Register = (props) => {
           name="userName"
           value={userName}
           onChange={handleChangeLoginData}
+          error={userNameError}
         />
-        <span style={{ color: 'red' }}>{userNameError}</span>
         <Input
           fluid
           placeholder="Email"
           name="email"
           value={email}
           onChange={handleChangeLoginData}
+          error={emailError}
         />
-        <span style={{ color: 'red' }}>{emailError}</span>
         <Input
           fluid
           placeholder="Password"
@@ -81,17 +81,23 @@ const Register = (props) => {
           type="password"
           value={password}
           onChange={handleChangeLoginData}
+          error={passwordError}
         />
-        <span style={{ color: 'red' }}>{passwordError}</span>
         <Button
           negative={!!userNameError || !!emailError || !!passwordError}
           loading={loading}
-          floated="right"
           compact
         >
           Submit
         </Button>
       </form>
+      {(userNameError || emailError || passwordError) && (
+        <Message
+          error
+          header="There was some errors with your submission"
+          list={[userNameError, emailError, passwordError]}
+        />
+      )}
     </Container>
   );
 };
