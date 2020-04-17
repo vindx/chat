@@ -16,8 +16,16 @@ module.exports = `
     user: User
     errors: [Error!]
   }
+  
+  type LoginResponse {
+    ok: Boolean!
+    token: String
+    refreshToken: String
+    errors: [Error!]
+  }
  
   type Mutation {
     register(userName: String!, email: String!, password: String!): RegisterResponse!
+    login(email: String!, password: String!): LoginResponse!
   }
 `;

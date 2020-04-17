@@ -17,5 +17,6 @@ module.exports = {
     'function-paren-newline': 0,
     'comma-dangle': 0,
     'no-console': 0,
+    'no-return-await': 0,
   },
 };

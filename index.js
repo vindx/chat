@@ -8,6 +8,9 @@ const cors = require('cors');
 
 const models = require('./models');
 
+const SECRET = 'wqj6d1y03n-d9m13d0123i0dd';
+const SECRET2 = 'ij523-e12k70506kh0kkg421';
+
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')));
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
@@ -17,7 +20,7 @@ app.use(cors());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { models },
+  context: { models, SECRET, SECRET2 },
 });
 
 server.applyMiddleware({ app });

@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 
+const { tryLogin } = require('../auth');
+
 const formatErrors = (e) => {
   if (e.name === 'ValidationError') {
     return Object.keys(e.errors).map((key) => e.errors[key].properties);
@@ -54,5 +56,8 @@ module.exports = {
         };
       }
     },
+
+    login: async (parent, { email, password }, { models, SECRET, SECRET2 }) =>
+      await tryLogin(email, password, models, SECRET, SECRET2),
   },
 };
