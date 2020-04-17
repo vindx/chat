@@ -64,7 +64,7 @@ const Register = (props) => {
           name="userName"
           value={userName}
           onChange={handleChangeLoginData}
-          error={userNameError}
+          error={!!userNameError}
         />
         <Input
           fluid
@@ -72,7 +72,7 @@ const Register = (props) => {
           name="email"
           value={email}
           onChange={handleChangeLoginData}
-          error={emailError}
+          error={!!emailError}
         />
         <Input
           fluid
@@ -81,7 +81,7 @@ const Register = (props) => {
           type="password"
           value={password}
           onChange={handleChangeLoginData}
-          error={passwordError}
+          error={!!passwordError}
         />
         <Button
           negative={!!userNameError || !!emailError || !!passwordError}
