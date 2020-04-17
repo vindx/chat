@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-
 const { tryLogin } = require('../auth');
 
 const formatErrors = (e) => {
@@ -29,22 +27,9 @@ module.exports = {
     getAllUsers: async (parent, args, { models }) => await models.User.find(),
   },
   Mutation: {
-    register: async (parent, { password, ...otherArgs }, { models }) => {
+    register: async (parent, args, { models }) => {
       try {
-        if (password.length < 5 || password.length > 30) {
-          return {
-            ok: false,
-            errors: [
-              {
-                path: 'password',
-                type: 'length',
-                message: 'Password should be between 5 and 30 characters long',
-              },
-            ],
-          };
-        }
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await new models.User({ ...otherArgs, password: hashedPassword }).save();
+        const user = await new models.User(args).save();
         return {
           ok: true,
           user,

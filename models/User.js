@@ -1,4 +1,5 @@
 const { Schema, model, Types } = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new Schema({
   email: {
@@ -23,9 +24,19 @@ const userSchema = new Schema({
       message: 'The username can only contain letters, numbers, underscores and dashes',
     },
   },
-  password: { type: String, required: true },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: [5, 'The password needs to be at least 5 characters long'],
+    maxlength: [30, 'The password needs to be not more 30 characters long'],
+  },
   messages: [{ type: Types.ObjectId, ref: 'Message' }],
   channels: [{ type: Types.ObjectId, ref: 'Channel' }],
+});
+
+userSchema.post('validate', async (user) => {
+  // eslint-disable-next-line no-param-reassign
+  user.password = await bcrypt.hash(user.password, 12);
 });
 
 module.exports = model('User', userSchema);
