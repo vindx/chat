@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Header, Input, Button, Message } from 'semantic-ui-react';
+import { Form, Container, Header, Input, Button, Message } from 'semantic-ui-react';
 import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
@@ -57,32 +57,35 @@ const Register = (props) => {
   return (
     <Container text>
       <Header as="h2">Register</Header>
-      <form onSubmit={handleSubmit}>
-        <Input
-          fluid
-          placeholder="Username"
-          name="userName"
-          value={userName}
-          onChange={handleChangeLoginData}
-          error={!!userNameError}
-        />
-        <Input
-          fluid
-          placeholder="Email"
-          name="email"
-          value={email}
-          onChange={handleChangeLoginData}
-          error={!!emailError}
-        />
-        <Input
-          fluid
-          placeholder="Password"
-          name="password"
-          type="password"
-          value={password}
-          onChange={handleChangeLoginData}
-          error={!!passwordError}
-        />
+      <Form onSubmit={handleSubmit}>
+        <Form.Field error={!!userNameError}>
+          <Input
+            fluid
+            placeholder="Username"
+            name="userName"
+            value={userName}
+            onChange={handleChangeLoginData}
+          />
+        </Form.Field>
+        <Form.Field error={!!emailError}>
+          <Input
+            fluid
+            placeholder="Email"
+            name="email"
+            value={email}
+            onChange={handleChangeLoginData}
+          />
+        </Form.Field>
+        <Form.Field error={!!passwordError}>
+          <Input
+            fluid
+            placeholder="Password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={handleChangeLoginData}
+          />
+        </Form.Field>
         <Button
           negative={!!userNameError || !!emailError || !!passwordError}
           loading={loading}
@@ -90,7 +93,7 @@ const Register = (props) => {
         >
           Submit
         </Button>
-      </form>
+      </Form>
       {(userNameError || emailError || passwordError) && (
         <Message
           error
