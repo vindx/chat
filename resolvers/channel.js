@@ -1,3 +1,5 @@
+const formatErrors = require('../formatErrors');
+
 module.exports = {
   Query: {
     getChannel: async (parent, { id }, { models }) => {
@@ -11,17 +13,17 @@ module.exports = {
         return err;
       }
     },
-    getAllChannels: async (parent, args, { models }) => await models.Channel.find()
+    getAllChannels: async (parent, args, { models }) => await models.Channel.find(),
   },
   Mutation: {
     createChannel: async (parent, args, { models }) => {
       try {
         const newChannel = new models.Channel(args);
         await newChannel.save();
-        return newChannel;
+        return { ok: true };
       } catch (err) {
-        return err;
+        return { ok: false, errors: formatErrors(err) };
       }
-    }
-  }
+    },
+  },
 };
