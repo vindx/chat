@@ -7,6 +7,7 @@ const path = require('path');
 const cors = require('cors');
 
 const models = require('./models');
+const authMiddleware = require('./middlewares/auth.middleware');
 
 const SECRET = 'wqj6d1y03n-d9m13d0123i0dd';
 const SECRET2 = 'ij523-e12k70506kh0kkg421';
@@ -16,11 +17,17 @@ const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers'))
 
 const app = express();
 app.use(cors());
+app.use(authMiddleware(models, SECRET, SECRET2));
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { models, SECRET, SECRET2 },
+  context: ({ req }) => ({
+    user: req.user,
+    models,
+    SECRET,
+    SECRET2,
+  }),
 });
 
 server.applyMiddleware({ app });
