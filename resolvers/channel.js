@@ -1,4 +1,5 @@
 const formatErrors = require('../helpers/formatErrors');
+const requiresAuth = require('../helpers/permissions');
 
 module.exports = {
   Query: {
@@ -16,14 +17,14 @@ module.exports = {
     getAllChannels: async (parent, args, { models }) => await models.Channel.find(),
   },
   Mutation: {
-    createChannel: async (parent, args, { models }) => {
+    createChannel: requiresAuth.createResolver(async (parent, args, { models, user }) => {
       try {
-        const newChannel = new models.Channel(args);
+        const newChannel = new models.Channel({ ...args, owner: user.id });
         await newChannel.save();
         return { ok: true };
       } catch (err) {
         return { ok: false, errors: formatErrors(err) };
       }
-    },
+    }),
   },
 };
