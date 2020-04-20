@@ -32,8 +32,9 @@ const CreateChannel = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let response = null;
     try {
-      const response = await createChannel({ variables: { name: channelName } });
+      response = await createChannel({ variables: { name: channelName } });
       const { ok, errors } = response.data.createChannel;
 
       if (ok) {
@@ -47,6 +48,7 @@ const CreateChannel = (props) => {
       }
     } catch (err) {
       console.log(err);
+      props.history.push('/login');
     }
   };
 
