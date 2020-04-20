@@ -21,9 +21,9 @@ module.exports = {
   Mutation: {
     createChannel: requiresAuth.createResolver(async (parent, args, { models, user }) => {
       try {
-        const newChannel = new models.Channel({ ...args, owner: user.id, members: [user.id] });
-        await newChannel.save();
-        return { ok: true };
+        const channel = new models.Channel({ ...args, owner: user.id, members: [user.id] });
+        await channel.save();
+        return { ok: true, channel };
       } catch (err) {
         return { ok: false, errors: formatErrors(err) };
       }
