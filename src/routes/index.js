@@ -7,6 +7,7 @@ import Home from './Home';
 import Register from './Register';
 import Login from './Login';
 import CreateChannel from './CreateChannel';
+import ViewChannel from './ViewChannel';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -35,7 +36,8 @@ export default () => (
       <Route path="/" exact component={Home} />
       <Route path="/register" exact component={Register} />
       <Route path="/login" exact component={Login} />
-      <PrivateRoute path="/createChannel" exact component={CreateChannel} />
+      <PrivateRoute path="/create-channel" exact component={CreateChannel} />
+      <PrivateRoute path="/view-channel" exact component={ViewChannel} />
     </Switch>
   </BrowserRouter>
 );
