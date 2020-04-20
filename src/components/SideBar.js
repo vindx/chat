@@ -75,7 +75,8 @@ member.propTypes = {
 SideBar.propTypes = {
   channelName: PropTypes.string.isRequired,
   ownerUserName: PropTypes.string.isRequired,
-  members: PropTypes.shape([]).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  members: PropTypes.array.isRequired,
 };
 
 export default SideBar;

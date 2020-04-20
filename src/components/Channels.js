@@ -34,8 +34,8 @@ const ChannelListItem = styled.li`
   }
 `;
 
-const channel = ({ id, letter }) => (
-  <ChannelListItem key={`channel-${id}`}>{letter}</ChannelListItem>
+const channel = ({ id, name }) => (
+  <ChannelListItem key={`channel-${id}`}>{name.charAt(0).toUpperCase()}</ChannelListItem>
 );
 
 const Channels = ({ channels }) => (
@@ -46,11 +46,12 @@ const Channels = ({ channels }) => (
 
 channel.propTypes = {
   id: PropTypes.string.isRequired,
-  letter: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 Channels.propTypes = {
-  channels: PropTypes.shape([]).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  channels: PropTypes.array.isRequired,
 };
 
 export default Channels;
