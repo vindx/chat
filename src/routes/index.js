@@ -37,7 +37,7 @@ export default () => (
       <Route path="/register" exact component={Register} />
       <Route path="/login" exact component={Login} />
       <PrivateRoute path="/create-channel" exact component={CreateChannel} />
-      <PrivateRoute path="/view-channel" exact component={ViewChannel} />
+      <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
     </Switch>
   </BrowserRouter>
 );

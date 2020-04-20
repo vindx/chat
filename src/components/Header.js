@@ -8,11 +8,12 @@ const HeaderWrapper = styled.div`
   grid-row: 1;
 `;
 
-const Header = ({ channelName }) => (
-  <HeaderWrapper>
-    <SemanticHeader textAlign="center">{`# ${channelName}`}</SemanticHeader>
-  </HeaderWrapper>
-);
+const Header = ({ channelName }) =>
+  channelName && (
+    <HeaderWrapper>
+      <SemanticHeader textAlign="center">{`# ${channelName}`}</SemanticHeader>
+    </HeaderWrapper>
+  );
 
 Header.propTypes = {
   channelName: PropTypes.string.isRequired,

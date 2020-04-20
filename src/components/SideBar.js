@@ -7,7 +7,7 @@ const PushLeft = styled.div`
   ${paddingLeft}
 `;
 
-const SideBarWrapper = styled.div`
+export const SideBarWrapper = styled.div`
   grid-column: 2;
   grid-row: 1/4;
   background-color: #ffa07a;

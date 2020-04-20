@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const ChannelWrapper = styled.div`
@@ -32,26 +33,48 @@ const ChannelListItem = styled.li`
     border-width: thick;
     border-color: #408ad2;
   }
+  ${({ active }) =>
+    active && css`
+      border-style: solid;
+      border-width: thick;
+      border-color: #408ad2;
+    `}
 `;
 
-const channel = ({ id, name }) => (
-  <ChannelListItem key={`channel-${id}`}>{name.charAt(0).toUpperCase()}</ChannelListItem>
+const channel = ({ id, name, active }) => (
+  <Link key={`channel-${id}`} to={`/view-channel/${id}`}>
+    <ChannelListItem active={active}>{name.charAt(0).toUpperCase()}</ChannelListItem>
+  </Link>
 );
 
-const Channels = ({ channels }) => (
-  <ChannelWrapper>
-    <ChannelList>{channels.map(channel)}</ChannelList>
-  </ChannelWrapper>
-);
+const Channels = ({ channels, currentChannelId }) => {
+  // eslint-disable-next-line no-confusing-arrow
+  const channelsWithActive = channels.map((ch) =>
+    currentChannelId === ch.id ? { ...ch, active: true } : ch
+  );
+  return (
+    <ChannelWrapper>
+      <ChannelList>{channelsWithActive.map(channel)}</ChannelList>
+    </ChannelWrapper>
+  );
+};
 
 channel.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  active: PropTypes.bool,
+};
+channel.defaultProps = {
+  active: false,
 };
 
 Channels.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   channels: PropTypes.array.isRequired,
+  currentChannelId: PropTypes.string,
+};
+Channels.defaultProps = {
+  currentChannelId: undefined,
 };
 
 export default Channels;

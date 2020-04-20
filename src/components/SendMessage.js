@@ -9,11 +9,12 @@ const SendMessageWrapper = styled.div`
   margin: 20px;
 `;
 
-const SendMessage = ({ channelName }) => (
-  <SendMessageWrapper>
-    <Input fluid placeholder={`Message #${channelName}`} />
-  </SendMessageWrapper>
-);
+const SendMessage = ({ channelName }) =>
+  channelName && (
+    <SendMessageWrapper>
+      <Input fluid placeholder={`Message #${channelName}`} />
+    </SendMessageWrapper>
+  );
 
 SendMessage.propTypes = {
   channelName: PropTypes.string.isRequired,

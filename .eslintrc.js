@@ -21,5 +21,7 @@ module.exports = {
     'comma-dangle': 0,
     'object-curly-newline': 0,
     'no-console': 0,
+    'implicit-arrow-linebreak': 0,
+    'function-paren-newline': 0,
   },
 };

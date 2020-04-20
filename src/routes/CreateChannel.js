@@ -8,6 +8,9 @@ const createChannelMutation = gql`
   mutation($name: String!) {
     createChannel(name: $name) {
       ok
+      channel {
+        id
+      }
       errors {
         path
         type
@@ -35,10 +38,14 @@ const CreateChannel = (props) => {
     let response = null;
     try {
       response = await createChannel({ variables: { name: channelName } });
-      const { ok, errors } = response.data.createChannel;
+      const {
+        ok,
+        channel: { id },
+        errors,
+      } = response.data.createChannel;
 
       if (ok) {
-        props.history.push('/');
+        props.history.push(`/view-channel/${id}`);
       } else {
         const err = errors.reduce((acc, { path, message }) => {
           acc[`${path}Error`] = message;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import AppLayout from '../components/AppLayout';
 import ChannelsContainer from './ChannelsContainer';
@@ -7,16 +8,26 @@ import Header from '../components/Header';
 import MessagesContainer from './MessagesContainer';
 import SendMessage from '../components/SendMessage';
 
-export default () => {
+const AppLayoutContainer = ({ match: { params } }) => {
   const [channelName, setChannelName] = useState('');
 
   return (
     <AppLayout>
-      <ChannelsContainer />
-      <SideBarContainer setChannelName={setChannelName} />
+      <ChannelsContainer currentChannelId={params.channelId} />
+      <SideBarContainer setChannelName={setChannelName} currentChannelId={params.channelId} />
       <Header channelName={channelName} />
-      <MessagesContainer />
+      <MessagesContainer currentChannelId={params.channelId} />
       <SendMessage channelName={channelName} />
     </AppLayout>
   );
 };
+
+AppLayoutContainer.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      channelId: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
+export default AppLayoutContainer;
