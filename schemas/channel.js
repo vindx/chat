@@ -9,7 +9,7 @@ module.exports = `
   
   type createChannelResponse {
     ok: Boolean!
-    channel: Channel!
+    channel: Channel
     errors: [Error!]
   }
   
