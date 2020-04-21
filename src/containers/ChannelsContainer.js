@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
+import { allChannelsQuery } from '../graphql/channel';
 
-const allChannelsQuery = gql`
-  {
-    getAllChannels {
-      id
-      name
-    }
-  }
-`;
-
-const ChannelsContainer = ({ currentChannelId }) => {
+const ChannelsContainer = ({ currentChannelId, history }) => {
   const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery);
   const [addChannelModalToggle, setToggleAddChannelModal] = useState(false);
 
@@ -41,6 +32,7 @@ const ChannelsContainer = ({ currentChannelId }) => {
       key="add-channel-modal"
       isOpen={addChannelModalToggle}
       onClose={handleCloseAddChannelModal}
+      history={history}
     />,
   ];
 };

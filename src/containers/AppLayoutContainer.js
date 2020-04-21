@@ -8,12 +8,12 @@ import Header from '../components/Header';
 import MessagesContainer from './MessagesContainer';
 import SendMessage from '../components/SendMessage';
 
-const AppLayoutContainer = ({ match: { params } }) => {
+const AppLayoutContainer = ({ match: { params }, history }) => {
   const [channelName, setChannelName] = useState('');
 
   return (
     <AppLayout>
-      <ChannelsContainer currentChannelId={params.channelId} />
+      <ChannelsContainer currentChannelId={params.channelId} history={history} />
       <SideBarContainer setChannelName={setChannelName} currentChannelId={params.channelId} />
       <Header channelName={channelName} />
       <MessagesContainer currentChannelId={params.channelId} />
@@ -28,6 +28,7 @@ AppLayoutContainer.propTypes = {
       channelId: PropTypes.string,
     }),
   }).isRequired,
+  history: PropTypes.shape({}).isRequired,
 };
 
 export default AppLayoutContainer;
