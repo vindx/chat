@@ -69,6 +69,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId }) => {
       key="invite-people-modal"
       isOpen={invitePeopleModalIsOpen}
       onClose={handleCloseInvitePeopleModal}
+      channelId={currentChannelId}
     />,
   ];
 };
