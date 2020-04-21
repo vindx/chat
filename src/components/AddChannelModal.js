@@ -1,6 +1,8 @@
 import React from 'react';
-import { Form, Button, Header, Modal, Input, Segment, Grid, Divider } from 'semantic-ui-react';
+import { Header, Modal, Segment, Grid, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import CreateChannelForm from './CreateChannelForm';
+import JoinChannelForm from './JoinChannelForm';
 
 const AddChannelModal = ({ isOpen, onClose }) => (
   <Modal open={isOpen} onClose={onClose} closeIcon>
@@ -14,17 +16,7 @@ const AddChannelModal = ({ isOpen, onClose }) => (
             <Header as="h5" disabled textAlign="center">
               Create a new channel and invite people there
             </Header>
-
-            <Form>
-              <Form.Field>
-                <Input fluid placeholder="Channel name" />
-              </Form.Field>
-              <Form.Field>
-                <Button color="blue" fluid>
-                  Create Channel
-                </Button>
-              </Form.Field>
-            </Form>
+            <CreateChannelForm />
           </Grid.Column>
           <Grid.Column>
             <Header as="h3" textAlign="center">
@@ -33,20 +25,9 @@ const AddChannelModal = ({ isOpen, onClose }) => (
             <Header as="h5" disabled textAlign="center">
               Join an existing channel
             </Header>
-
-            <Form>
-              <Form.Field>
-                <Input fluid placeholder="Secret key" />
-              </Form.Field>
-              <Form.Field>
-                <Button color="orange" fluid>
-                  Join Channel
-                </Button>
-              </Form.Field>
-            </Form>
+            <JoinChannelForm />
           </Grid.Column>
         </Grid>
-
         <Divider vertical>or</Divider>
       </Segment>
     </Modal.Content>

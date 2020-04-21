@@ -13,6 +13,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
     "apollo-link-http": "^1.5.17",
+    "formik": "^2.1.4",
     "graphql": "^15.0.0",
     "jwt-decode": "^2.2.0",
     "prop-types": "^15.7.2",
