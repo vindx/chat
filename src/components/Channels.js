@@ -19,6 +19,7 @@ const ChannelListItem = styled.li`
   height: 50px;
   width: 50px;
   background-color: #679ed2;
+  border-color: #408ad2;
   color: #fffafa;
   margin: auto;
   margin-bottom: 10px;
@@ -31,7 +32,6 @@ const ChannelListItem = styled.li`
   &:hover {
     border-style: solid;
     border-width: thick;
-    border-color: #408ad2;
   }
   ${({ active }) =>
     active && css`
@@ -39,22 +39,42 @@ const ChannelListItem = styled.li`
       border-width: thick;
       border-color: #408ad2;
     `}
+  ${({ bgColor }) =>
+    bgColor && css`
+      background-color: ${bgColor};
+    `}
+  ${({ borderColor }) =>
+    borderColor && css`
+      border-color: ${borderColor};
+    `}
 `;
 
 const channel = ({ id, name, active }) => (
   <Link key={`channel-${id}`} to={`/view-channel/${id}`}>
-    <ChannelListItem active={active}>{name.charAt(0).toUpperCase()}</ChannelListItem>
+    <ChannelListItem active={active} title={name}>
+      {name.charAt(0).toUpperCase()}
+    </ChannelListItem>
   </Link>
 );
 
-const Channels = ({ channels, currentChannelId }) => {
+const Channels = ({ channels, currentChannelId, onAddChannelClick }) => {
   // eslint-disable-next-line no-confusing-arrow
   const channelsWithActive = channels.map((ch) =>
     currentChannelId === ch.id ? { ...ch, active: true } : ch
   );
   return (
     <ChannelWrapper>
-      <ChannelList>{channelsWithActive.map(channel)}</ChannelList>
+      <ChannelList>
+        {channelsWithActive.map(channel)}
+        <ChannelListItem
+          title="Add channel"
+          bgColor="#8EEC6A"
+          borderColor="#3BDA00"
+          onClick={onAddChannelClick}
+        >
+          +
+        </ChannelListItem>
+      </ChannelList>
     </ChannelWrapper>
   );
 };
@@ -72,6 +92,7 @@ Channels.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   channels: PropTypes.array.isRequired,
   currentChannelId: PropTypes.string,
+  onAddChannelClick: PropTypes.func.isRequired,
 };
 Channels.defaultProps = {
   currentChannelId: undefined,
