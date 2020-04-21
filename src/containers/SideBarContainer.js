@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import SideBar, { SideBarWrapper } from '../components/SideBar';
+import InvitePeopleModal from '../components/InvitePeopleModal';
 
 const getChannelQuery = gql`
   query($id: ID!) {
@@ -30,11 +31,21 @@ const SideBarContainer = ({ setChannelName, currentChannelId }) => {
   } = useQuery(getChannelQuery, {
     variables: { id: currentChannelId },
   });
+  const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(true);
+
   useEffect(() => {
     if (name) {
       setChannelName(name);
     }
   }, [name, setChannelName]);
+
+  const handleOpenInvitePeopleModal = () => {
+    setToggleInvitePeopleModal(true);
+  };
+
+  const handleCloseInvitePeopleModal = () => {
+    setToggleInvitePeopleModal(false);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (!name) {
@@ -46,7 +57,20 @@ const SideBarContainer = ({ setChannelName, currentChannelId }) => {
   }
   if (error) return <p>Error :(</p>;
 
-  return <SideBar channelName={name} ownerUserName={ownerUserName} members={members} />;
+  return [
+    <SideBar
+      key="sidebar"
+      channelName={name}
+      ownerUserName={ownerUserName}
+      members={members}
+      onInvitePeopleClick={handleOpenInvitePeopleModal}
+    />,
+    <InvitePeopleModal
+      key="invite-people-modal"
+      isOpen={invitePeopleModalIsOpen}
+      onClose={handleCloseInvitePeopleModal}
+    />,
+  ];
 };
 
 SideBarContainer.propTypes = {

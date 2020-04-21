@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const paddingLeft = 'padding-left: 10px';
@@ -50,7 +51,7 @@ const member = ({ id, userName }) => (
   </SideBarListItem>
 );
 
-const SideBar = ({ channelName, ownerUserName, members }) => (
+const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick }) => (
   <SideBarWrapper>
     <PushLeft>
       <ChannelNameHeader>{channelName}</ChannelNameHeader>
@@ -60,6 +61,9 @@ const SideBar = ({ channelName, ownerUserName, members }) => (
       <SideBarListHeader>Members</SideBarListHeader>
       {members.map(member)}
     </SideBarList>
+    <Button onClick={onInvitePeopleClick} positive floated="right">
+      + Invite people
+    </Button>
   </SideBarWrapper>
 );
 
@@ -77,6 +81,7 @@ SideBar.propTypes = {
   ownerUserName: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   members: PropTypes.array.isRequired,
+  onInvitePeopleClick: PropTypes.func.isRequired,
 };
 
 export default SideBar;
