@@ -16,7 +16,7 @@ const AddChannelModal = ({ isOpen, onClose }) => (
             <Header as="h5" disabled textAlign="center">
               Create a new channel and invite people there
             </Header>
-            <CreateChannelForm />
+            <CreateChannelForm onClose={onClose} />
           </Grid.Column>
           <Grid.Column>
             <Header as="h3" textAlign="center">
