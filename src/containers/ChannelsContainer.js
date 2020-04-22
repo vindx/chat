@@ -8,14 +8,10 @@ import { allChannelsQuery } from '../graphql/channel';
 
 const ChannelsContainer = ({ currentChannelId, history }) => {
   const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery);
-  const [addChannelModalToggle, setToggleAddChannelModal] = useState(false);
+  const [addChannelModalIsOpen, setToggleAddChannelModal] = useState(false);
 
-  const handleOpenAddChannelModal = () => {
-    setToggleAddChannelModal(true);
-  };
-
-  const handleCloseAddChannelModal = () => {
-    setToggleAddChannelModal(false);
+  const toggleAddChannelModal = () => {
+    setToggleAddChannelModal(!addChannelModalIsOpen);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -26,12 +22,12 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
       key="channels"
       channels={channels}
       currentChannelId={currentChannelId}
-      onAddChannelClick={handleOpenAddChannelModal}
+      onAddChannelClick={toggleAddChannelModal}
     />,
     <AddChannelModal
       key="add-channel-modal"
-      isOpen={addChannelModalToggle}
-      onClose={handleCloseAddChannelModal}
+      isOpen={addChannelModalIsOpen}
+      onClose={toggleAddChannelModal}
       history={history}
     />,
   ];

@@ -51,7 +51,7 @@ const member = ({ id, userName }) => (
   </SideBarListItem>
 );
 
-const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick }) => (
+const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick, viewMode }) => (
   <SideBarWrapper>
     <PushLeft>
       <ChannelNameHeader>{channelName}</ChannelNameHeader>
@@ -61,9 +61,11 @@ const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick }) =
       <SideBarListHeader>Members</SideBarListHeader>
       {members.map(member)}
     </SideBarList>
-    <Button onClick={onInvitePeopleClick} positive floated="right">
-      + Invite people
-    </Button>
+    {!viewMode && (
+      <Button onClick={onInvitePeopleClick} positive floated="right">
+        + Invite people
+      </Button>
+    )}
   </SideBarWrapper>
 );
 
@@ -82,6 +84,7 @@ SideBar.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   members: PropTypes.array.isRequired,
   onInvitePeopleClick: PropTypes.func.isRequired,
+  viewMode: PropTypes.bool.isRequired,
 };
 
 export default SideBar;

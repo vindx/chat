@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import decode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 import SideBar, { SideBarWrapper } from '../components/SideBar';
@@ -27,7 +28,9 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
   const {
     loading,
     error,
-    data: { getChannel: { name, owner: { userName: ownerUserName } = {}, members } = {} } = {},
+    data: {
+      getChannel: { name, owner: { id: ownerId, userName: ownerUserName } = {}, members } = {},
+    } = {},
   } = useQuery(getChannelQuery, {
     variables: { id: currentChannelId },
   });
@@ -39,12 +42,8 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
     }
   }, [name, setChannelName]);
 
-  const handleOpenInvitePeopleModal = () => {
-    setToggleInvitePeopleModal(true);
-  };
-
-  const handleCloseInvitePeopleModal = () => {
-    setToggleInvitePeopleModal(false);
+  const toggleInvitePeopleModal = () => {
+    setToggleInvitePeopleModal(!invitePeopleModalIsOpen);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -56,6 +55,10 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
     );
   }
   if (error) return <p>Error :(</p>;
+  const {
+    user: { id },
+  } = decode(localStorage.getItem('token'));
+  const viewMode = ownerId !== id;
 
   return [
     <SideBar
@@ -63,12 +66,13 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
       channelName={name}
       ownerUserName={ownerUserName}
       members={members}
-      onInvitePeopleClick={handleOpenInvitePeopleModal}
+      onInvitePeopleClick={toggleInvitePeopleModal}
+      viewMode={viewMode}
     />,
     <InvitePeopleModal
       key="invite-people-modal"
       isOpen={invitePeopleModalIsOpen}
-      onClose={handleCloseInvitePeopleModal}
+      onClose={toggleInvitePeopleModal}
       channelId={currentChannelId}
     />,
   ];
