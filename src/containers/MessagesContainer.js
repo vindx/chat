@@ -16,7 +16,7 @@ const getMessagesQuery = gql`
   }
 `;
 
-const MessagesContainer = ({ currentChannelId }) => {
+const MessagesContainer = ({ currentChannelId = '' }) => {
   const { loading, error, data: { getChannel: { messages } = {} } = {} } = useQuery(
     getMessagesQuery,
     {

@@ -23,7 +23,7 @@ const getChannelQuery = gql`
   }
 `;
 
-const SideBarContainer = ({ setChannelName, currentChannelId }) => {
+const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
   const {
     loading,
     error,
