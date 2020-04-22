@@ -17,13 +17,10 @@ module.exports = {
     getAllUsers: async (parent, args, { models }) => await models.User.find(),
   },
   Mutation: {
-    register: async (parent, args, { models }) => {
+    register: async (parent, args, { models, SECRET, SECRET2 }) => {
       try {
-        const user = await new models.User(args).save();
-        return {
-          ok: true,
-          user,
-        };
+        await new models.User(args).save();
+        return await tryLogin(args.email, args.password, models, SECRET, SECRET2);
       } catch (err) {
         return {
           ok: false,
