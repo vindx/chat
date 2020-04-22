@@ -5,6 +5,7 @@ require('dotenv').config();
 const { fileLoader, mergeResolvers, mergeTypes } = require('merge-graphql-schemas');
 const path = require('path');
 const cors = require('cors');
+const { createServer } = require('http');
 
 const models = require('./models');
 const authMiddleware = require('./middlewares/auth.middleware');
@@ -22,17 +23,25 @@ app.use(authMiddleware(models, SECRET, SECRET2));
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({
-    user: req.user,
-    models,
-    SECRET,
-    SECRET2,
-  }),
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return connection.context;
+    }
+    return {
+      user: req.user,
+      models,
+      SECRET,
+      SECRET2,
+    };
+  },
 });
 
 server.applyMiddleware({ app });
 
 const PORT = process.env.PORT || 5000;
+
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
 
 const start = async () => {
   try {
@@ -42,9 +51,10 @@ const start = async () => {
       useCreateIndex: true,
     });
 
-    app.listen(PORT, () =>
-      console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
-    );
+    httpServer.listen(PORT, () => {
+      console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
+    });
   } catch (e) {
     console.log('Server ERROR!', e.message);
     process.exit(1);
