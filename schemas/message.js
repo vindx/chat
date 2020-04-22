@@ -4,11 +4,12 @@ module.exports = `
     text: String!
     user: User!
     channel: Channel!
+    createdAt: String!
   }
   
   type Query {
     getMessage(id: ID!): Message!
-    getAllMessages: [Message!]!
+    getMessages(channelId: ID!): [Message!]!
   }
   
   type Mutation {

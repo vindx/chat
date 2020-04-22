@@ -1,6 +1,9 @@
 const requiresAuth = require('../helpers/permissions');
 
 module.exports = {
+  Message: {
+    user: async ({ userId }, args, { models }) => await models.User.findById(userId),
+  },
   Query: {
     getMessage: async (parent, { id }, { models }) => {
       try {
@@ -13,7 +16,9 @@ module.exports = {
         return err;
       }
     },
-    getAllMessages: async (parent, args, { models }) => await models.Message.find(),
+    getMessages: requiresAuth.createResolver(
+      async (parent, { channelId }, { models }) => await models.Message.find({ channelId })
+    ),
   },
   Mutation: {
     createMessage: requiresAuth.createResolver(async (parent, args, { models, user }) => {
