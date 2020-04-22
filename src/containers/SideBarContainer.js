@@ -31,7 +31,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId }) => {
   } = useQuery(getChannelQuery, {
     variables: { id: currentChannelId },
   });
-  const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(true);
+  const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(false);
 
   useEffect(() => {
     if (name) {
