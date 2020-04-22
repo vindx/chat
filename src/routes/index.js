@@ -32,10 +32,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 export default () => (
   <BrowserRouter>
     <Switch>
-      <Route path="/" exact component={Home} />
+      <PrivateRoute path="/" exact component={() => <Redirect to="/view-channel" />} />
       <Route path="/register" exact component={Register} />
       <Route path="/login" exact component={Login} />
       <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
+      <Route path="/users" exact component={Home} />
     </Switch>
   </BrowserRouter>
 );
