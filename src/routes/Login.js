@@ -43,7 +43,7 @@ const Login = (props) => {
       if (ok) {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
-        props.history.push('/');
+        props.history.push('/view-channel');
       } else {
         const err = errors.reduce((acc, { path, message }) => {
           acc[`${path}Error`] = message;
