@@ -1,9 +1,21 @@
 import React from 'react';
-import { Button, Form, Input } from 'semantic-ui-react';
+import { Button, Form, Input, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
+import { gql } from 'apollo-boost';
+import { graphql } from 'react-apollo';
+import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-const joinChannelForm = ({ values, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
+import { allChannelsQuery } from '../graphql/channel';
+
+const joinChannelForm = ({
+  values,
+  handleChange,
+  handleBlur,
+  isSubmitting,
+  handleSubmit,
+  errors: error,
+}) => (
   <Form onSubmit={handleSubmit}>
     <Form.Field>
       <Input
@@ -14,9 +26,14 @@ const joinChannelForm = ({ values, handleChange, handleBlur, isSubmitting, handl
         fluid
         placeholder="Secret key"
       />
+      {error.message && (
+        <Label basic color="red" pointing>
+          {error.message}
+        </Label>
+      )}
     </Form.Field>
     <Form.Field>
-      <Button color="orange" fluid disabled={isSubmitting} type="submit">
+      <Button color="orange" fluid disabled={isSubmitting} loading={isSubmitting} type="submit">
         Join Channel
       </Button>
     </Form.Field>
@@ -31,12 +48,55 @@ joinChannelForm.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}).isRequired,
 };
 
-export default withFormik({
-  mapPropsToValues: () => ({ secretKey: '' }),
-  handleSubmit: (values, { setSubmitting }) => {
-    console.log('submitting', values);
-    setSubmitting(false);
-  },
-})(joinChannelForm);
+const joinChannelMutation = gql`
+  mutation($secretKey: String!) {
+    joinChannel(secretKey: $secretKey) {
+      ok
+      channel {
+        id
+        name
+      }
+      errors {
+        message
+      }
+    }
+  }
+`;
+
+export default compose(
+  graphql(joinChannelMutation),
+  withFormik({
+    mapPropsToValues: () => ({ secretKey: '' }),
+    handleSubmit: async (
+      { secretKey },
+      { props: { onClose, mutate, history }, setSubmitting, setErrors }
+    ) => {
+      const response = await mutate({
+        variables: { secretKey },
+        update: (store, { data: { joinChannel } }) => {
+          const { ok, channel, errors } = joinChannel;
+          if (!ok) {
+            setErrors(errors[0]);
+            return;
+          }
+          const data = store.readQuery({ query: allChannelsQuery });
+          data.getAllChannels.push(channel);
+          store.writeQuery({ query: allChannelsQuery, data });
+        },
+      });
+      const {
+        data: {
+          joinChannel: { ok, channel },
+        },
+      } = response;
+      if (ok) {
+        history.push(`/view-channel/${channel.id}`);
+        setSubmitting(false);
+        onClose();
+      }
+    },
+  })
+)(joinChannelForm);

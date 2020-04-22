@@ -26,7 +26,7 @@ const AddChannelModal = ({ isOpen, onClose, history }) => (
             <Header as="h5" disabled textAlign="center">
               Join an existing channel
             </Header>
-            <JoinChannelForm />
+            <JoinChannelForm onClose={onClose} history={history} />
           </Grid.Column>
         </Grid>
         <Divider vertical>or</Divider>
