@@ -7,7 +7,7 @@ module.exports = `
     members: [User!]!
   }
   
-  type createChannelResponse {
+  type channelResponse {
     ok: Boolean!
     channel: Channel
     errors: [Error!]
@@ -19,6 +19,7 @@ module.exports = `
   }
   
   type Mutation {
-    createChannel(name: String!): createChannelResponse!
+    createChannel(name: String!): channelResponse!
+    joinChannel(secretKey: String!): channelResponse!
   }
 `;
