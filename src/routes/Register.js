@@ -8,6 +8,8 @@ const registerMutation = gql`
   mutation($userName: String!, $email: String!, $password: String!) {
     register(userName: $userName, email: $email, password: $password) {
       ok
+      token
+      refreshToken
       errors {
         type
         path
@@ -17,7 +19,7 @@ const registerMutation = gql`
   }
 `;
 
-const Register = (props) => {
+const Register = ({ history }) => {
   const [register, { loading }] = useMutation(registerMutation);
   const [loginData, setLoginData] = useState({
     userName: '',
@@ -38,10 +40,12 @@ const Register = (props) => {
     e.preventDefault();
     try {
       const response = await register({ variables: { userName, email, password } });
-      const { ok, errors } = response.data.register;
+      const { ok, token, refreshToken, errors } = response.data.register;
 
       if (ok) {
-        props.history.push('/');
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
+        history.push('/view-channel');
       } else {
         const err = errors.reduce((acc, { path, message }) => {
           acc[`${path}Error`] = message;
