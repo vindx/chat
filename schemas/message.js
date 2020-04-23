@@ -7,6 +7,10 @@ module.exports = `
     createdAt: String!
   }
   
+  type Subscription {
+    newChannelMessage(channelId: ID!): Message!
+  }
+  
   type Query {
     getMessage(id: ID!): Message!
     getMessages(channelId: ID!): [Message!]!

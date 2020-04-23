@@ -1,6 +1,19 @@
+const { PubSub, withFilter } = require('apollo-server-express');
+
 const requiresAuth = require('../helpers/permissions');
 
+const pubSub = new PubSub();
+const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
+
 module.exports = {
+  Subscription: {
+    newChannelMessage: {
+      subscribe: withFilter(
+        () => pubSub.asyncIterator(NEW_CHANNEL_MESSAGE),
+        (payload, args) => payload.channelId === args.channelId
+      ),
+    },
+  },
   Message: {
     user: async ({ userId }, args, { models }) => await models.User.findById(userId),
   },
@@ -25,6 +38,12 @@ module.exports = {
       try {
         const newMessage = new models.Message({ ...args, userId: user.id });
         await newMessage.save();
+
+        await pubSub.publish(NEW_CHANNEL_MESSAGE, {
+          channelId: args.channelId,
+          newChannelMessage: newMessage,
+        });
+
         return newMessage;
       } catch (err) {
         return err;
