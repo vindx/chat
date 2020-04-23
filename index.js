@@ -6,7 +6,9 @@ const { fileLoader, mergeResolvers, mergeTypes } = require('merge-graphql-schema
 const path = require('path');
 const cors = require('cors');
 const { createServer } = require('http');
+const jwt = require('jsonwebtoken');
 
+const { refreshTokens } = require('./helpers/auth');
 const models = require('./models');
 const authMiddleware = require('./middlewares/auth.middleware');
 
@@ -23,6 +25,27 @@ app.use(authMiddleware(models, SECRET, SECRET2));
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  subscriptions: {
+    onConnect: async ({ token, refreshToken }) => {
+      if (token && refreshToken) {
+        let user;
+        try {
+          const payload = jwt.verify(token, SECRET);
+          user = payload.user;
+        } catch (err) {
+          const newTokens = await refreshTokens(token, refreshToken, models, SECRET, SECRET2);
+          user = newTokens.user;
+        }
+        if (!user) {
+          throw new Error('Invalid auth tokens!');
+        }
+
+        return { user };
+      }
+
+      throw new Error('Missing auth tokens!');
+    },
+  },
   context: async ({ req, connection }) => {
     if (connection) {
       return { ...connection.context, models };
