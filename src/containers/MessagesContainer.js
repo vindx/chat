@@ -37,6 +37,7 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
     getMessagesQuery,
     {
       variables: { channelId: currentChannelId },
+      fetchPolicy: 'network-only',
     }
   );
 
