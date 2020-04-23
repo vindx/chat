@@ -41,10 +41,10 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
     }
   );
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
-    let unSubscribe;
     if (currentChannelId) {
-      unSubscribe = subscribeToMore({
+      const unSubscribe = subscribeToMore({
         document: messageSubscription,
         variables: { channelId: currentChannelId },
         updateQuery: (prev, { subscriptionData }) => {
@@ -56,10 +56,10 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
           };
         },
       });
+      return () => {
+        unSubscribe();
+      };
     }
-    return () => {
-      unSubscribe();
-    };
   }, [currentChannelId, subscribeToMore]);
 
   if (loading) return <p>Loading...</p>;
