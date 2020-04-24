@@ -1,5 +1,5 @@
 const formatErrors = require('../helpers/formatErrors');
-const requiresAuth = require('../helpers/permissions');
+const { requiresAuth } = require('../helpers/permissions');
 
 module.exports = {
   Query: {

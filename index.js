@@ -28,22 +28,15 @@ const server = new ApolloServer({
   subscriptions: {
     onConnect: async ({ token, refreshToken }) => {
       if (token && refreshToken) {
-        let user;
         try {
-          const payload = jwt.verify(token, SECRET);
-          user = payload.user;
+          const { user } = jwt.verify(token, SECRET);
+          return { user };
         } catch (err) {
           const newTokens = await refreshTokens(token, refreshToken, models, SECRET, SECRET2);
-          user = newTokens.user;
+          return { user: newTokens.user };
         }
-        if (!user) {
-          throw new Error('Invalid auth tokens!');
-        }
-
-        return { user };
       }
-
-      throw new Error('Missing auth tokens!');
+      return {};
     },
   },
   context: async ({ req, connection }) => {

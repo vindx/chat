@@ -1,5 +1,5 @@
 const shortid = require('shortid');
-const requiresAuth = require('../helpers/permissions');
+const { requiresAuth } = require('../helpers/permissions');
 
 module.exports = {
   Mutation: {

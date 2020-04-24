@@ -1,6 +1,6 @@
 const { PubSub, withFilter } = require('apollo-server-express');
 
-const requiresAuth = require('../helpers/permissions');
+const { requiresAuth, requiresChannelAccess } = require('../helpers/permissions');
 
 const pubSub = new PubSub();
 const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
@@ -8,9 +8,11 @@ const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
 module.exports = {
   Subscription: {
     newChannelMessage: {
-      subscribe: withFilter(
-        () => pubSub.asyncIterator(NEW_CHANNEL_MESSAGE),
-        (payload, args) => payload.channelId === args.channelId
+      subscribe: requiresChannelAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator(NEW_CHANNEL_MESSAGE),
+          (payload, args) => payload.channelId === args.channelId
+        )
       ),
     },
   },
