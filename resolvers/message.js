@@ -36,10 +36,13 @@ module.exports = {
     ),
   },
   Mutation: {
-    createMessage: requiresAuth.createResolver(async (parent, args, { models, user }) => {
+    createMessage: requiresChannelAccess.createResolver(async (parent, args, { models, user }) => {
       try {
         const newMessage = new models.Message({ ...args, userId: user.id });
         await newMessage.save();
+
+        args.channel.messages.push(newMessage.id);
+        await args.channel.save();
 
         await pubSub.publish(NEW_CHANNEL_MESSAGE, {
           channelId: args.channelId,
