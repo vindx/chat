@@ -16,9 +16,18 @@ const requiresAuth = createResolver((parent, args, { user }) => {
   }
 });
 
-const requiresChannelAccess = requiresAuth.createResolver(
-  async (parent, { channelId }, { models, user }) => {
-    const channel = await models.Channel.findById(channelId);
+const requiresChannel = requiresAuth.createResolver(async (parent, args, { models }) => {
+  const channel = await models.Channel.findById(args.channelId);
+  if (!channel) {
+    throw new Error("Channel didn't found");
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    args.channel = channel;
+  }
+});
+
+const requiresChannelAccess = requiresChannel.createResolver(
+  async (parent, { channel }, { user }) => {
     const member = channel.members.includes(user.id);
     if (!member) {
       throw new Error('You have to be a member of this channel');
@@ -26,4 +35,4 @@ const requiresChannelAccess = requiresAuth.createResolver(
   }
 );
 
-module.exports = { requiresAuth, requiresChannelAccess };
+module.exports = { requiresAuth, requiresChannelAccess, requiresChannel };

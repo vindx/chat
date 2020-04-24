@@ -1,19 +1,15 @@
 const formatErrors = require('../helpers/formatErrors');
-const { requiresAuth } = require('../helpers/permissions');
+const { requiresAuth, requiresChannel } = require('../helpers/permissions');
 
 module.exports = {
   Query: {
-    getChannel: async (parent, { id }, { models }) => {
+    getChannel: requiresChannel.createResolver(async (parent, { channel }) => {
       try {
-        const channel = await models.Channel.findById(id);
-        if (!channel) {
-          throw new Error("Channel didn't found");
-        }
         return channel;
       } catch (err) {
         return err;
       }
-    },
+    }),
     getAllChannels: requiresAuth.createResolver(
       async (parent, args, { models, user }) => await models.Channel.find({ members: user.id })
     ),

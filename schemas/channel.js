@@ -14,7 +14,7 @@ module.exports = `
   }
   
   type Query {
-    getChannel(id: ID!): Channel!
+    getChannel(channelId: ID!): Channel!
     getAllChannels: [Channel!]!
   }
   
