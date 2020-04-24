@@ -9,7 +9,7 @@ import InvitePeopleModal from '../components/InvitePeopleModal';
 
 const getChannelQuery = gql`
   query($id: ID!) {
-    getChannel(id: $id) {
+    getChannel(channelId: $id) {
       id
       name
       owner {
