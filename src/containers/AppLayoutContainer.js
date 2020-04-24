@@ -14,7 +14,11 @@ const AppLayoutContainer = ({ match: { params }, history }) => {
   return (
     <AppLayout>
       <ChannelsContainer currentChannelId={params.channelId} history={history} />
-      <SideBarContainer setChannelName={setChannelName} currentChannelId={params.channelId} />
+      <SideBarContainer
+        setChannelName={setChannelName}
+        currentChannelId={params.channelId}
+        history={history}
+      />
       <Header channelName={channelName} />
       <MessagesContainer currentChannelId={params.channelId} />
       <SendMessage channelName={channelName} currentChannelId={params.channelId} />

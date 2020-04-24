@@ -15,7 +15,17 @@ export const SideBarWrapper = styled.div`
   color: #fffafa;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+`;
+
+const BottomSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1em;
+  :last-of-type {
+    margin-top: auto;
+  }
 `;
 
 const ChannelNameHeader = styled.h1`
@@ -32,7 +42,7 @@ const SideBarListWrapper = styled.div`
 `;
 
 const SideBarList = styled.ul`
-  margin: 0;
+  margin: 0 0 10px 0;
   padding-left: 0;
   list-style: none;
   max-height: 30vh;
@@ -64,7 +74,14 @@ const member = ({ id, userName }) => (
   </SideBarListItem>
 );
 
-const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick, viewMode }) => (
+const SideBar = ({
+  channelName,
+  ownerUserName,
+  members,
+  onInvitePeopleClick,
+  viewMode,
+  onChannelOptionsClick,
+}) => (
   <SideBarWrapper>
     <PushLeft>
       <ChannelNameHeader>{channelName}</ChannelNameHeader>
@@ -73,12 +90,17 @@ const SideBar = ({ channelName, ownerUserName, members, onInvitePeopleClick, vie
     <SideBarListWrapper>
       <SideBarListHeader>Members</SideBarListHeader>
       <SideBarList>{members.map(member)}</SideBarList>
+      {!viewMode && (
+        <Button onClick={onInvitePeopleClick} positive floated="right">
+          + Invite people
+        </Button>
+      )}
     </SideBarListWrapper>
-    {!viewMode && (
-      <Button onClick={onInvitePeopleClick} positive floated="right">
-        + Invite people
+    <BottomSection>
+      <Button onClick={onChannelOptionsClick} negative>
+        {viewMode ? 'Leave channel' : 'Delete channel'}
       </Button>
-    )}
+    </BottomSection>
   </SideBarWrapper>
 );
 
@@ -98,6 +120,7 @@ SideBar.propTypes = {
   members: PropTypes.array.isRequired,
   onInvitePeopleClick: PropTypes.func.isRequired,
   viewMode: PropTypes.bool.isRequired,
+  onChannelOptionsClick: PropTypes.func.isRequired,
 };
 
 export default SideBar;

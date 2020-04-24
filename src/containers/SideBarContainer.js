@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import decode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 import SideBar, { SideBarWrapper } from '../components/SideBar';
 import InvitePeopleModal from '../components/InvitePeopleModal';
+import ChannelOptionsModal from '../components/ChannelOptionsModal';
+import { getChannelQuery } from '../graphql/channel';
 
-const getChannelQuery = gql`
-  query($id: ID!) {
-    getChannel(channelId: $id) {
-      id
-      name
-      owner {
-        id
-        userName
-      }
-      members {
-        id
-        userName
-      }
-    }
-  }
-`;
-
-const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
+const SideBarContainer = ({ setChannelName, currentChannelId = '', history }) => {
   const {
     loading,
     error,
@@ -35,6 +19,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
     variables: { id: currentChannelId },
   });
   const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(false);
+  const [channelOptionsModalIsOpen, setToggleChannelOptionsModal] = useState(false);
 
   useEffect(() => {
     if (name) {
@@ -44,6 +29,10 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
 
   const toggleInvitePeopleModal = () => {
     setToggleInvitePeopleModal(!invitePeopleModalIsOpen);
+  };
+
+  const toggleChannelOptionsModal = () => {
+    setToggleChannelOptionsModal(!channelOptionsModalIsOpen);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -67,6 +56,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
       ownerUserName={ownerUserName}
       members={members}
       onInvitePeopleClick={toggleInvitePeopleModal}
+      onChannelOptionsClick={toggleChannelOptionsModal}
       viewMode={viewMode}
     />,
     <InvitePeopleModal
@@ -74,6 +64,14 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '' }) => {
       isOpen={invitePeopleModalIsOpen}
       onClose={toggleInvitePeopleModal}
       channelId={currentChannelId}
+    />,
+    <ChannelOptionsModal
+      key="channel-options-modal"
+      viewMode={viewMode}
+      isOpen={channelOptionsModalIsOpen}
+      onClose={toggleChannelOptionsModal}
+      channelId={currentChannelId}
+      history={history}
     />,
   ];
 };
