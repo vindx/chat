@@ -7,6 +7,12 @@ const ChannelWrapper = styled.div`
   grid-column: 1;
   grid-row: 1/4;
   background-color: #ff7f50;
+  display: flex;
+  overflow-y: auto;
+  flex-direction: column;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ChannelList = styled.ul`
@@ -65,7 +71,6 @@ const Channels = ({ channels, currentChannelId, onAddChannelClick }) => {
   return (
     <ChannelWrapper>
       <ChannelList>
-        {channelsWithActive.map(channel)}
         <ChannelListItem
           title="Add channel"
           bgColor="#8EEC6A"
@@ -74,6 +79,7 @@ const Channels = ({ channels, currentChannelId, onAddChannelClick }) => {
         >
           +
         </ChannelListItem>
+        {channelsWithActive.map(channel)}
       </ChannelList>
     </ChannelWrapper>
   );
