@@ -21,5 +21,7 @@ module.exports = `
   type Mutation {
     createChannel(name: String!): channelResponse!
     joinChannel(secretKey: String!): channelResponse!
+    leaveChannel(channelId: ID!): channelResponse!
+    deleteChannel(channelId: ID!): channelResponse!
   }
 `;

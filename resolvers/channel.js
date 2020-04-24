@@ -1,5 +1,5 @@
 const formatErrors = require('../helpers/formatErrors');
-const { requiresAuth, requiresChannel } = require('../helpers/permissions');
+const { requiresAuth, requiresChannelAccess, requiresChannel } = require('../helpers/permissions');
 
 module.exports = {
   Query: {
@@ -61,15 +61,62 @@ module.exports = {
         channel,
       };
     }),
+    leaveChannel: requiresChannelAccess.createResolver(
+      async (parent, { channel, channelId }, { models, user }) => {
+        if (String(channel.owner) === user.id) {
+          return {
+            ok: false,
+            errors: [
+              {
+                type: 'cannot leave',
+                path: 'leave channel',
+                message: 'You are the owner of this channel. Use deleting instead',
+              },
+            ],
+          };
+        }
+        const updatedChannel = await models.Channel.findByIdAndUpdate(channelId, {
+          $pull: { members: user.id },
+        });
+
+        return { ok: true, channel: updatedChannel };
+      }
+    ),
+    deleteChannel: requiresChannelAccess.createResolver(
+      async (parent, { channel, channelId }, { models, user }) => {
+        if (String(channel.owner) !== user.id) {
+          return {
+            ok: false,
+            errors: [
+              {
+                type: 'cannot delete',
+                path: 'delete channel',
+                message: "You aren't the owner of this channel and can't delete it",
+              },
+            ],
+          };
+        }
+        try {
+          await Promise.all(
+            channel.messages.map(
+              async (messageId) => await models.Message.findByIdAndDelete(messageId)
+            )
+          );
+          const deletedChannel = await models.Channel.findByIdAndDelete(channelId);
+          return {
+            ok: true,
+            channel: deletedChannel,
+          };
+        } catch (err) {
+          return { ok: false, errors: formatErrors(err) };
+        }
+      }
+    ),
   },
   Channel: {
     owner: async ({ owner }, args, { models }) => await models.User.findById(owner),
     messages: async ({ id }, args, { models }) => await models.Message.find({ channelId: id }),
-    members: async ({ id }, args, { models }) => {
-      const { members: membersIds } = await models.Channel.findById(id);
-      return await Promise.all(
-        membersIds.map(async (memberId) => await models.User.findById(memberId))
-      );
-    },
+    members: async ({ members }, args, { models }) =>
+      await Promise.all(members.map(async (memberId) => await models.User.findById(memberId))),
   },
 };
