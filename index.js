@@ -26,7 +26,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   subscriptions: {
-    onConnect: async ({ token, refreshToken }) => {
+    onConnect: async ({ 'auth-token': token, 'auth-refresh-token': refreshToken }) => {
       if (token && refreshToken) {
         try {
           const { user } = jwt.verify(token, SECRET);
