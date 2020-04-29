@@ -17,7 +17,7 @@ export const SideBarWrapper = styled.div`
   flex-direction: column;
 `;
 
-const BottomSection = styled.div`
+export const BottomSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

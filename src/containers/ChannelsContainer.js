@@ -14,6 +14,12 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
     setToggleAddChannelModal(!addChannelModalIsOpen);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    history.push('/');
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
@@ -23,6 +29,7 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
       channels={channels}
       currentChannelId={currentChannelId}
       onAddChannelClick={toggleAddChannelModal}
+      onLogOutClick={handleLogOut}
     />,
     <AddChannelModal
       key="add-channel-modal"

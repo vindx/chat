@@ -1,24 +1,27 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+
+import { BottomSection } from './SideBar';
 
 const ChannelWrapper = styled.div`
   grid-column: 1;
   grid-row: 1/4;
   background-color: #ff7f50;
   display: flex;
-  overflow-y: auto;
   flex-direction: column;
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const ChannelList = styled.ul`
   width: 100%;
   padding-left: 0px;
   list-style: none;
+  overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ChannelListItem = styled.li`
@@ -63,7 +66,7 @@ const channel = ({ id, name, active }) => (
   </Link>
 );
 
-const Channels = ({ channels, currentChannelId, onAddChannelClick }) => {
+const Channels = ({ channels, currentChannelId, onAddChannelClick, onLogOutClick }) => {
   // eslint-disable-next-line no-confusing-arrow
   const channelsWithActive = channels.map((ch) =>
     currentChannelId === ch.id ? { ...ch, active: true } : ch
@@ -81,6 +84,11 @@ const Channels = ({ channels, currentChannelId, onAddChannelClick }) => {
         </ChannelListItem>
         {channelsWithActive.map(channel)}
       </ChannelList>
+      <BottomSection>
+        <Button onClick={onLogOutClick} negative compact>
+          Sign out
+        </Button>
+      </BottomSection>
     </ChannelWrapper>
   );
 };
@@ -99,6 +107,7 @@ Channels.propTypes = {
   channels: PropTypes.array.isRequired,
   currentChannelId: PropTypes.string,
   onAddChannelClick: PropTypes.func.isRequired,
+  onLogOutClick: PropTypes.func.isRequired,
 };
 Channels.defaultProps = {
   currentChannelId: undefined,

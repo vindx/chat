@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Form, Container, Header, Input, Button, Message } from 'semantic-ui-react';
 import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
@@ -98,6 +99,11 @@ const Register = ({ history }) => {
           Submit
         </Button>
       </Form>
+      <Link to="/login">
+        <Button compact floated="right">
+          Login
+        </Button>
+      </Link>
       {(userNameError || emailError || passwordError) && (
         <Message
           error
