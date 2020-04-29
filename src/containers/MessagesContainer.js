@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Comment } from 'semantic-ui-react';
+import { Comment, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import Messages from '../components/Messages';
@@ -65,12 +65,14 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
   if (loading) return <p>Loading...</p>;
   if (!messages) {
     return (
-      <Messages style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        Please choose channel
-      </Messages>
+      <>
+        {currentChannelId && error && <Label color="red">{error.message}</Label>}
+        <Messages style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          Please choose channel
+        </Messages>
+      </>
     );
   }
-  if (error) return <p>Error :(</p>;
 
   return (
     <Messages>
