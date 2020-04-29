@@ -1,6 +1,6 @@
 const { PubSub, withFilter } = require('apollo-server-express');
 
-const { requiresAuth, requiresChannelAccess } = require('../helpers/permissions');
+const { requiresChannelAccess } = require('../helpers/permissions');
 
 const pubSub = new PubSub();
 const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
@@ -31,7 +31,7 @@ module.exports = {
         return err;
       }
     },
-    getMessages: requiresAuth.createResolver(
+    getMessages: requiresChannelAccess.createResolver(
       async (parent, { channelId }, { models }) => await models.Message.find({ channelId })
     ),
   },
