@@ -17,12 +17,11 @@ const requiresAuth = createResolver((parent, args, { user }) => {
 });
 
 const requiresChannel = requiresAuth.createResolver(async (parent, args, { models }) => {
-  const channel = await models.Channel.findById(args.channelId);
-  if (!channel) {
-    throw new Error("Channel didn't found");
-  } else {
+  try {
     // eslint-disable-next-line no-param-reassign
-    args.channel = channel;
+    args.channel = await models.Channel.findById(args.channelId);
+  } catch (err) {
+    throw new Error("Channel didn't found");
   }
 });
 
