@@ -17,6 +17,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '', history }) =>
     } = {},
   } = useQuery(getChannelQuery, {
     variables: { id: currentChannelId },
+    fetchPolicy: 'network-only',
   });
   const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(false);
   const [channelOptionsModalIsOpen, setToggleChannelOptionsModal] = useState(false);

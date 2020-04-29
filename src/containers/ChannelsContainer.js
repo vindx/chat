@@ -7,7 +7,9 @@ import AddChannelModal from '../components/AddChannelModal';
 import { allChannelsQuery } from '../graphql/channel';
 
 const ChannelsContainer = ({ currentChannelId, history }) => {
-  const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery);
+  const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery, {
+    fetchPolicy: 'network-only',
+  });
   const [addChannelModalIsOpen, setToggleAddChannelModal] = useState(false);
 
   const toggleAddChannelModal = () => {

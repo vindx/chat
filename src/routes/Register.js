@@ -5,6 +5,8 @@ import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
+import { wsLink } from '../apollo';
+
 const registerMutation = gql`
   mutation($userName: String!, $email: String!, $password: String!) {
     register(userName: $userName, email: $email, password: $password) {
@@ -46,6 +48,7 @@ const Register = ({ history }) => {
       if (ok) {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
+        wsLink.subscriptionClient.tryReconnect();
         history.push('/view-channel');
       } else {
         const err = errors.reduce((acc, { path, message }) => {
