@@ -1,9 +1,9 @@
 const formatErrors = require('../helpers/formatErrors');
-const { requiresAuth, requiresChannelAccess, requiresChannel } = require('../helpers/permissions');
+const { requiresAuth, requiresChannelAccess } = require('../helpers/permissions');
 
 module.exports = {
   Query: {
-    getChannel: requiresChannel.createResolver(async (parent, { channel }) => {
+    getChannel: requiresChannelAccess.createResolver(async (parent, { channel }) => {
       try {
         return channel;
       } catch (err) {
