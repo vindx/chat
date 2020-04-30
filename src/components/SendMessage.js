@@ -26,10 +26,11 @@ const SendMessage = ({
   handleBlur,
   handleSubmit,
   isSubmitting,
+  currentChannelId,
 }) =>
   channelName && (
     <SendMessageWrapper>
-      <FileUpload>
+      <FileUpload channelId={currentChannelId}>
         <Button icon="upload" />
       </FileUpload>
       <Input
@@ -57,6 +58,7 @@ SendMessage.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  currentChannelId: PropTypes.string.isRequired,
 };
 
 const createMessageMutation = gql`
