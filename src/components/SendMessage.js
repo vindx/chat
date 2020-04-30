@@ -1,16 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Input } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
+import FileUpload from './FileUpload';
+
 const SendMessageWrapper = styled.div`
   grid-column: 3;
   grid-row: 3;
   margin: 20px;
+  display: grid;
+  grid-template-columns: 0.01fr 1fr;
 `;
 
 const ENTER_KEY = 13;
@@ -25,6 +29,9 @@ const SendMessage = ({
 }) =>
   channelName && (
     <SendMessageWrapper>
+      <FileUpload>
+        <Button icon="upload" />
+      </FileUpload>
       <Input
         onChange={handleChange}
         onBlur={handleBlur}

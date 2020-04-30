@@ -18,6 +18,7 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'react/jsx-filename-extension': 0,
+    'react/jsx-props-no-spreading': 0,
     'comma-dangle': 0,
     'object-curly-newline': 0,
     'no-console': 0,
