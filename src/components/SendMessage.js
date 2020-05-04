@@ -58,7 +58,10 @@ SendMessage.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  currentChannelId: PropTypes.string.isRequired,
+  currentChannelId: PropTypes.string,
+};
+SendMessage.defaultProps = {
+  currentChannelId: undefined,
 };
 
 const createMessageMutation = gql`
