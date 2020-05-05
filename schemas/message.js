@@ -13,7 +13,7 @@ module.exports = `
   
   type Query {
     getMessage(id: ID!): Message!
-    getMessages(channelId: ID!): [Message!]!
+    getMessages(offset: Int, limit: Int, channelId: ID!): [Message!]!
   }
   
   type Mutation {

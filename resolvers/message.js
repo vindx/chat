@@ -32,27 +32,45 @@ module.exports = {
       }
     },
     getMessages: requiresChannelAccess.createResolver(
-      async (parent, { channelId }, { models }) => await models.Message.find({ channelId })
+      async (parent, { offset, limit = 10, channelId }, { models }) =>
+        await models.Message.find({ channelId }).sort({ _id: -1 }).limit(limit).skip(offset)
     ),
   },
   Mutation: {
-    createMessage: requiresChannelAccess.createResolver(async (parent, args, { models, user }) => {
-      try {
-        const newMessage = new models.Message({ ...args, userId: user.id });
-        await newMessage.save();
+    createMessage: requiresChannelAccess.createResolver(
+      async (parent, { channel, file, ...args }, { models, user }) => {
+        try {
+          // const { createReadStream, filename, mimetype } = await file;
+          // console.log(createReadStream, filename, mimetype);
+          // await new Promise((res) =>
+          //   createReadStream(path.join(__dirname, '../files', filename))
+          //     .pipe(createWriteStream(path.join(__dirname, '../files', filename)))
+          //     .on('close', res)
+          // );
+          // console.log(args);
+          // const messageData = args;
+          // // if (file) {
+          // //   messageData.fileType = file.type;
+          // //   messageData.url = file.path;
+          // // }
 
-        args.channel.messages.push(newMessage.id);
-        await args.channel.save();
+          const newMessage = new models.Message({ ...args, userId: user.id });
+          await newMessage.save();
 
-        await pubSub.publish(NEW_CHANNEL_MESSAGE, {
-          channelId: args.channelId,
-          newChannelMessage: newMessage,
-        });
+          channel.messages.push(newMessage.id);
+          await channel.save();
 
-        return newMessage;
-      } catch (err) {
-        return err;
+          await pubSub.publish(NEW_CHANNEL_MESSAGE, {
+            channelId: args.channelId,
+            newChannelMessage: newMessage,
+          });
+
+          return newMessage;
+        } catch (err) {
+          console.log(err);
+          return err;
+        }
       }
-    }),
+    ),
   },
 };
