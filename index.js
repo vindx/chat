@@ -7,20 +7,19 @@ const path = require('path');
 const cors = require('cors');
 const { createServer } = require('http');
 const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 const { refreshTokens } = require('./helpers/auth');
 const models = require('./models');
 const authMiddleware = require('./middlewares/auth.middleware');
 
-const SECRET = 'wqj6d1y03n-d9m13d0123i0dd';
-const SECRET2 = 'ij523-e12k70506kh0kkg421';
+const { SECRET, SECRET2 } = process.env;
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')));
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
 const app = express();
-app.use(cors());
-app.use(authMiddleware(models, SECRET, SECRET2));
+app.use(cors(), bodyParser.json(), authMiddleware(models, SECRET, SECRET2));
 
 const server = new ApolloServer({
   typeDefs,
