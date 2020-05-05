@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Comment, Label } from 'semantic-ui-react';
+import { Button, Comment, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import Messages from '../components/Messages';
 
 const getMessagesQuery = gql`
-  query($channelId: ID!) {
-    getMessages(channelId: $channelId) {
+  query($offset: Int, $limit: Int, $channelId: ID!) {
+    getMessages(offset: $offset, limit: $limit, channelId: $channelId) {
       id
       text
       user {
@@ -33,13 +33,17 @@ const messageSubscription = gql`
 `;
 
 const MessagesContainer = ({ currentChannelId = '' }) => {
-  const { subscribeToMore, loading, error, data: { getMessages: messages } = {} } = useQuery(
-    getMessagesQuery,
-    {
-      variables: { channelId: currentChannelId },
-      fetchPolicy: 'network-only',
-    }
-  );
+  const [showLoadMoreButton, setShowingLoadMoreButton] = useState(true);
+  const {
+    subscribeToMore,
+    loading,
+    error,
+    data: { getMessages: messages } = {},
+    fetchMore,
+  } = useQuery(getMessagesQuery, {
+    variables: { channelId: currentChannelId, offset: 0, limit: 15 },
+    fetchPolicy: 'network-only',
+  });
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -52,12 +56,13 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
 
           return {
             ...prev,
-            getMessages: [...prev.getMessages, subscriptionData.data.newChannelMessage],
+            getMessages: [subscriptionData.data.newChannelMessage, ...prev.getMessages],
           };
         },
       });
       return () => {
         unSubscribe();
+        setShowingLoadMoreButton(true);
       };
     }
   }, [currentChannelId, subscribeToMore]);
@@ -77,7 +82,28 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
   return (
     <Messages>
       <Comment.Group>
-        {messages.map(({ id, text, user: { userName }, createdAt }) => (
+        {showLoadMoreButton && (
+          <Button
+            compact
+            onClick={() =>
+              fetchMore({
+                variables: { channelId: currentChannelId, offset: messages.length, limit: 10 },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                  if (!fetchMoreResult) return prev;
+                  if (fetchMoreResult.getMessages.length === 0) {
+                    setShowingLoadMoreButton(false);
+                  }
+                  return {
+                    ...prev,
+                    getMessages: [...prev.getMessages, ...fetchMoreResult.getMessages],
+                  };
+                },
+              })}
+          >
+            Load more
+          </Button>
+        )}
+        {[...messages].reverse().map(({ id, text, user: { userName }, createdAt }) => (
           <Comment key={`message-${id}`}>
             <Comment.Content>
               <Comment.Author as="a">{userName}</Comment.Author>
