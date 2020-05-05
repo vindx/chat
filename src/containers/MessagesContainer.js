@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Button, Comment, Label } from 'semantic-ui-react';
+import { Comment, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import Messages from '../components/Messages';
@@ -33,7 +33,7 @@ const messageSubscription = gql`
 `;
 
 const MessagesContainer = ({ currentChannelId = '' }) => {
-  const [showLoadMoreButton, setShowingLoadMoreButton] = useState(true);
+  const messagesLimit = 30;
   const {
     subscribeToMore,
     loading,
@@ -41,9 +41,39 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
     data: { getMessages: messages } = {},
     fetchMore,
   } = useQuery(getMessagesQuery, {
-    variables: { channelId: currentChannelId, offset: 0, limit: 15 },
+    variables: { channelId: currentChannelId, offset: 0, limit: messagesLimit },
     fetchPolicy: 'network-only',
   });
+
+  const observer = useRef();
+  const lastMessageElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          fetchMore({
+            variables: {
+              channelId: currentChannelId,
+              offset: messages.length,
+              limit: messagesLimit,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+              return {
+                ...prev,
+                getMessages: [...prev.getMessages, ...fetchMoreResult.getMessages],
+              };
+            },
+          });
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, messages, fetchMore, currentChannelId]
+  );
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -62,7 +92,6 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
       });
       return () => {
         unSubscribe();
-        setShowingLoadMoreButton(true);
       };
     }
   }, [currentChannelId, subscribeToMore]);
@@ -82,33 +111,14 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
   return (
     <Messages>
       <Comment.Group>
-        {showLoadMoreButton && (
-          <Button
-            compact
-            onClick={() =>
-              fetchMore({
-                variables: { channelId: currentChannelId, offset: messages.length, limit: 10 },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) return prev;
-                  if (fetchMoreResult.getMessages.length === 0) {
-                    setShowingLoadMoreButton(false);
-                  }
-                  return {
-                    ...prev,
-                    getMessages: [...prev.getMessages, ...fetchMoreResult.getMessages],
-                  };
-                },
-              })}
-          >
-            Load more
-          </Button>
-        )}
-        {[...messages].reverse().map(({ id, text, user: { userName }, createdAt }) => (
+        {[...messages].reverse().map(({ id, text, user: { userName }, createdAt }, index) => (
           <Comment key={`message-${id}`}>
             <Comment.Content>
               <Comment.Author as="a">{userName}</Comment.Author>
               <Comment.Metadata>
-                <div>{new Date(createdAt * 1000).toString()}</div>
+                <div ref={index === 7 ? lastMessageElementRef : null}>
+                  {new Date(createdAt * 1000).toString()}
+                </div>
               </Comment.Metadata>
               <Comment.Text>{text}</Comment.Text>
             </Comment.Content>
