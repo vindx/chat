@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { gql } from 'apollo-boost';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { Dropdown, Label } from 'semantic-ui-react';
 import prettydate from 'pretty-date';
@@ -14,37 +13,22 @@ import {
   MessageWrapper,
   UserName,
 } from '../components/styledComponents/Messages';
-
-const getMessagesQuery = gql`
-  query($offset: Int, $limit: Int, $channelId: ID!) {
-    getMessages(offset: $offset, limit: $limit, channelId: $channelId) {
-      id
-      text
-      user {
-        id
-        userName
-      }
-      createdAt
-    }
-  }
-`;
-
-const messageSubscription = gql`
-  subscription($channelId: ID!) {
-    newChannelMessage(channelId: $channelId) {
-      id
-      text
-      user {
-        id
-        userName
-      }
-      createdAt
-    }
-  }
-`;
+import DeleteMessageModal from '../components/DeleteMessageModal';
+import { getMessagesQuery, messageSubscription } from '../graphql/message';
 
 const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
+  const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
+
+  const handleOpenDeleteMessageModal = (e, data) => {
+    setMessageIdForDeleteMessageModal(data.messageid);
+  };
+
+  const handleCloseDeleteMessageModal = () => {
+    setMessageIdForDeleteMessageModal(null);
+  };
+
   const messagesLimit = 30;
+  let offset = 0;
   const {
     subscribeToMore,
     loading,
@@ -52,7 +36,7 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
     data: { getMessages: messages } = {},
     fetchMore,
   } = useQuery(getMessagesQuery, {
-    variables: { channelId: currentChannelId, offset: 0, limit: messagesLimit },
+    variables: { channelId: currentChannelId, offset, limit: messagesLimit },
     fetchPolicy: 'network-only',
   });
 
@@ -65,11 +49,11 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
       }
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          console.log('show');
+          offset = messages.length;
           fetchMore({
             variables: {
               channelId: currentChannelId,
-              offset: messages.length,
+              offset,
               limit: messagesLimit,
             },
             updateQuery: (prev, { fetchMoreResult }) => {
@@ -118,8 +102,8 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
     );
   }
 
-  return (
-    <MessagesWrapper>
+  return [
+    <MessagesWrapper key="messages-block">
       {[...messages].map(({ id, text, user: { id: userId, userName }, createdAt }, index) => (
         <MessageWrapper key={`message-${id}`} myMessage={activeUserId === userId}>
           <Message
@@ -134,7 +118,8 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
                     <Dropdown.Item
                       text="Delete"
                       icon="trash"
-                      onClick={() => console.log('delete')}
+                      messageid={id}
+                      onClick={handleOpenDeleteMessageModal}
                     />
                     <Dropdown.Item text="Edit" icon="edit" onClick={() => console.log('edit')} />
                   </Dropdown.Menu>
@@ -147,8 +132,16 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
           </Message>
         </MessageWrapper>
       ))}
-    </MessagesWrapper>
-  );
+    </MessagesWrapper>,
+    <DeleteMessageModal
+      key="delete-message-modal"
+      isOpen={!!messageIdForDeleteMessageModal}
+      channelId={currentChannelId}
+      onClose={handleCloseDeleteMessageModal}
+      messageId={messageIdForDeleteMessageModal}
+      queryOptions={{ limit: messagesLimit, offset }}
+    />,
+  ];
 };
 
 MessagesContainer.propTypes = {
