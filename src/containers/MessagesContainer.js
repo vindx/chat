@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { Comment, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import Messages from '../components/Messages';
+import Messages from '../components/styledComponents/Messages';
 
 const getMessagesQuery = gql`
   query($offset: Int, $limit: Int, $channelId: ID!) {

@@ -1,12 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Header as SemanticHeader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-const HeaderWrapper = styled.div`
-  grid-column: 3;
-  grid-row: 1;
-`;
+import { HeaderWrapper } from './styledComponents/Header';
 
 const Header = ({ channelName }) =>
   channelName && (

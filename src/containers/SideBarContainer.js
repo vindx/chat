@@ -3,7 +3,8 @@ import { useQuery } from '@apollo/react-hooks';
 import decode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
-import SideBar, { SideBarWrapper } from '../components/SideBar';
+import SideBar from '../components/SideBar';
+import { SideBarWrapper } from '../components/styledComponents/SideBar';
 import InvitePeopleModal from '../components/InvitePeopleModal';
 import ChannelOptionsModal from '../components/ChannelOptionsModal';
 import { getChannelQuery } from '../graphql/channel';

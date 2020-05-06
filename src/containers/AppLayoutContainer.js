@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../components/styledComponents/AppLayout';
 import ChannelsContainer from './ChannelsContainer';
 import SideBarContainer from './SideBarContainer';
 import Header from '../components/Header';
