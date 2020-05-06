@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Label } from 'semantic-ui-react';
+import { Dropdown, Label } from 'semantic-ui-react';
 import prettydate from 'pretty-date';
 import PropTypes from 'prop-types';
 
 import {
   CreatedAt,
   Message,
+  MessageHeader,
   MessagesWrapper,
   MessageText,
   MessageWrapper,
@@ -125,7 +126,22 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
             ref={messages.length === index + 5 ? lastMessageElementRef : null}
             myMessage={activeUserId === userId}
           >
-            <UserName>{userName}</UserName>
+            <MessageHeader myMessage={activeUserId === userId}>
+              <UserName>{userName}</UserName>
+              {activeUserId === userId && (
+                <Dropdown icon="options" style={{ margin: '0 10px' }} pointing="bottom right">
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      text="Delete"
+                      icon="trash"
+                      onClick={() => console.log('delete')}
+                    />
+                    <Dropdown.Item text="Edit" icon="edit" onClick={() => console.log('edit')} />
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
+            </MessageHeader>
+
             <MessageText>{text}</MessageText>
             <CreatedAt>{prettydate.format(new Date(Number(createdAt)))}</CreatedAt>
           </Message>

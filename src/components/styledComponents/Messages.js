@@ -34,6 +34,15 @@ export const Message = styled.div`
     `}
 `;
 
+export const MessageHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  ${({ myMessage }) =>
+    myMessage && css`
+      flex-direction: row-reverse;
+    `}
+`;
+
 export const UserName = styled.span`
   width: fit-content;
   font-size: 18px;
