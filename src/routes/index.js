@@ -13,21 +13,28 @@ const isAuthenticated = () => {
   const refreshToken = localStorage.getItem('refreshToken');
   try {
     decode(token);
-    decode(refreshToken);
-    const { exp } = decode(refreshToken);
+    const {
+      user: { id: userId },
+      exp,
+    } = decode(refreshToken);
     if (Date.now() / 1000 > exp) {
       return false;
     }
+    return userId;
   } catch (err) {
     return false;
   }
-  return true;
 };
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     /* eslint-disable-next-line react/jsx-props-no-spreading */
-    render={(props) => (isAuthenticated() ? <Component {...props} /> : <Redirect to="/login" />)}
+    render={(props) =>
+      (isAuthenticated() ? (
+        <Component {...props} userId={isAuthenticated()} />
+      ) : (
+        <Redirect to="/login" />
+      ))}
     /* eslint-disable-next-line react/jsx-props-no-spreading */
     {...rest}
   />

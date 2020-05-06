@@ -39,11 +39,7 @@ const SideBarContainer = ({ setChannelName, currentChannelId = '', history }) =>
 
   if (loading) return <p>Loading...</p>;
   if (!name) {
-    return (
-      <SideBarWrapper style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        Please choose channel
-      </SideBarWrapper>
-    );
+    return <SideBarWrapper center>Please choose channel</SideBarWrapper>;
   }
   if (error) return <p>Error :(</p>;
   const {

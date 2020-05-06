@@ -1,10 +1,18 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Comment, Label } from 'semantic-ui-react';
+import { Label } from 'semantic-ui-react';
+import prettydate from 'pretty-date';
 import PropTypes from 'prop-types';
 
-import Messages from '../components/styledComponents/Messages';
+import {
+  CreatedAt,
+  Message,
+  MessagesWrapper,
+  MessageText,
+  MessageWrapper,
+  UserName,
+} from '../components/styledComponents/Messages';
 
 const getMessagesQuery = gql`
   query($offset: Int, $limit: Int, $channelId: ID!) {
@@ -12,6 +20,7 @@ const getMessagesQuery = gql`
       id
       text
       user {
+        id
         userName
       }
       createdAt
@@ -25,6 +34,7 @@ const messageSubscription = gql`
       id
       text
       user {
+        id
         userName
       }
       createdAt
@@ -32,7 +42,7 @@ const messageSubscription = gql`
   }
 `;
 
-const MessagesContainer = ({ currentChannelId = '' }) => {
+const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
   const messagesLimit = 30;
   const {
     subscribeToMore,
@@ -54,6 +64,7 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
       }
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
+          console.log('show');
           fetchMore({
             variables: {
               channelId: currentChannelId,
@@ -101,36 +112,32 @@ const MessagesContainer = ({ currentChannelId = '' }) => {
     return (
       <>
         {currentChannelId && error && <Label color="red">{error.message}</Label>}
-        <Messages style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          Please choose channel
-        </Messages>
+        <MessagesWrapper center>Please choose channel</MessagesWrapper>
       </>
     );
   }
 
   return (
-    <Messages>
-      <Comment.Group>
-        {[...messages].reverse().map(({ id, text, user: { userName }, createdAt }, index) => (
-          <Comment key={`message-${id}`}>
-            <Comment.Content>
-              <Comment.Author as="a">{userName}</Comment.Author>
-              <Comment.Metadata>
-                <div ref={index === 7 ? lastMessageElementRef : null}>
-                  {new Date(createdAt * 1000).toString()}
-                </div>
-              </Comment.Metadata>
-              <Comment.Text>{text}</Comment.Text>
-            </Comment.Content>
-          </Comment>
-        ))}
-      </Comment.Group>
-    </Messages>
+    <MessagesWrapper>
+      {[...messages].map(({ id, text, user: { id: userId, userName }, createdAt }, index) => (
+        <MessageWrapper key={`message-${id}`} myMessage={activeUserId === userId}>
+          <Message
+            ref={messages.length === index + 5 ? lastMessageElementRef : null}
+            myMessage={activeUserId === userId}
+          >
+            <UserName>{userName}</UserName>
+            <MessageText>{text}</MessageText>
+            <CreatedAt>{prettydate.format(new Date(Number(createdAt)))}</CreatedAt>
+          </Message>
+        </MessageWrapper>
+      ))}
+    </MessagesWrapper>
   );
 };
 
 MessagesContainer.propTypes = {
   currentChannelId: PropTypes.string,
+  activeUserId: PropTypes.string.isRequired,
 };
 MessagesContainer.defaultProps = {
   currentChannelId: undefined,

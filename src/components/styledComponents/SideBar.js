@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const paddingLeft = 'padding-left: 10px';
 export const PushLeft = styled.div`
@@ -12,6 +12,11 @@ export const SideBarWrapper = styled.div`
   color: #fffafa;
   display: flex;
   flex-direction: column;
+  ${({ center }) =>
+    center && css`
+      align-items: center;
+      justify-content: center;
+    `}
 `;
 
 export const BottomSection = styled.div`
