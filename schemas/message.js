@@ -7,6 +7,12 @@ module.exports = `
     createdAt: String!
   }
   
+  type deleteMessageResponse {
+    ok: Boolean!
+    message: Message
+    errors: [Error!]
+  }
+  
   type Subscription {
     newChannelMessage(channelId: ID!): Message!
   }
@@ -18,5 +24,6 @@ module.exports = `
   
   type Mutation {
     createMessage(channelId: ID!, text: String!): Message!
+    deleteMessage(channelId: ID!, messageId: ID!): deleteMessageResponse!
   }
 `;

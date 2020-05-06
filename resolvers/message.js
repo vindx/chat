@@ -72,5 +72,29 @@ module.exports = {
         }
       }
     ),
+    deleteMessage: requiresChannelAccess.createResolver(
+      async (parent, { channel, messageId }, { models, user }) => {
+        const message = await models.Message.findById(messageId);
+        if (String(message.userId) === user.id) {
+          const deletedMessage = await models.Message.findByIdAndDelete(messageId);
+          const index = channel.messages.indexOf(deletedMessage.id);
+          if (index !== -1) {
+            channel.messages.splice(index, 1);
+            await channel.save();
+          }
+          return { ok: true, message: deletedMessage };
+        }
+        return {
+          ok: false,
+          errors: [
+            {
+              type: 'not an owner',
+              path: 'delete message',
+              message: 'You are not an owner of this message',
+            },
+          ],
+        };
+      }
+    ),
   },
 };
