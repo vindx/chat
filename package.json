@@ -4,7 +4,8 @@
   "description": "chat from vindx",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "Kyril Karelin | kiruha9414@gmail.com",
