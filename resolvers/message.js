@@ -81,6 +81,16 @@ module.exports = {
         }
       }
     ),
+    editMessage: requiresChannelAccess.createResolver(
+      async (parent, { messageId, text }, { models }) => {
+        try {
+          return await models.Message.findByIdAndUpdate(messageId, { text }, { new: true });
+        } catch (err) {
+          console.log(err);
+          return err;
+        }
+      }
+    ),
     deleteMessage: requiresChannelAccess.createResolver(
       async (parent, { channel, messageId, channelId }, { models, user }) => {
         try {

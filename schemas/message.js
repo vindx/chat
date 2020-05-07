@@ -25,6 +25,7 @@ module.exports = `
   
   type Mutation {
     createMessage(channelId: ID!, text: String!): Message!
+    editMessage(channelId: ID!, messageId: ID!, text: String!): Message!
     deleteMessage(channelId: ID!, messageId: ID!): deleteMessageResponse!
   }
 `;
