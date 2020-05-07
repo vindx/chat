@@ -20,7 +20,7 @@ import {
   deleteMessageSubscription,
 } from '../graphql/message';
 
-const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
+const MessagesContainer = ({ currentChannelId = '', activeUserId, initEditing }) => {
   const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
 
   const handleOpenDeleteMessageModal = (e, data) => {
@@ -140,7 +140,13 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
                       messageid={id}
                       onClick={handleOpenDeleteMessageModal}
                     />
-                    <Dropdown.Item text="Edit" icon="edit" onClick={() => console.log('edit')} />
+                    <Dropdown.Item
+                      text="Edit"
+                      icon="edit"
+                      messageid={id}
+                      message={text}
+                      onClick={initEditing}
+                    />
                   </Dropdown.Menu>
                 </Dropdown>
               )}
@@ -166,6 +172,7 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
 MessagesContainer.propTypes = {
   currentChannelId: PropTypes.string,
   activeUserId: PropTypes.string.isRequired,
+  initEditing: PropTypes.func.isRequired,
 };
 MessagesContainer.defaultProps = {
   currentChannelId: undefined,

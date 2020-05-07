@@ -6,10 +6,28 @@ import ChannelsContainer from './ChannelsContainer';
 import SideBarContainer from './SideBarContainer';
 import Header from '../components/Header';
 import MessagesContainer from './MessagesContainer';
-import SendMessage from '../components/SendMessage';
+import EditOrSendMessageContainer from './EditOrSendMessageContainer';
 
 const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   const [channelName, setChannelName] = useState('');
+  const [messageEditing, setMessageEditing] = useState({
+    onEdit: false,
+    message: '',
+    messageId: '',
+  });
+
+  const handleInitiateMessageEditing = (e, { message, messageid: messageId }) => {
+    setMessageEditing((prevState) => ({
+      ...prevState,
+      onEdit: true,
+      message,
+      messageId,
+    }));
+  };
+
+  const handleCancelMessageEditing = () => {
+    setMessageEditing((prevState) => ({ ...prevState, onEdit: false, message: '', messageId: '' }));
+  };
 
   return (
     <AppLayout>
@@ -20,8 +38,19 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         history={history}
       />
       <Header channelName={channelName} />
-      <MessagesContainer currentChannelId={params.channelId} activeUserId={userId} />
-      <SendMessage channelName={channelName} currentChannelId={params.channelId} />
+      <MessagesContainer
+        currentChannelId={params.channelId}
+        activeUserId={userId}
+        initEditing={handleInitiateMessageEditing}
+      />
+      <EditOrSendMessageContainer
+        channelName={channelName}
+        currentChannelId={params.channelId}
+        onEditing={messageEditing.onEdit}
+        messageForEditing={messageEditing.message}
+        messageId={messageEditing.messageId}
+        cancelEditing={handleCancelMessageEditing}
+      />
     </AppLayout>
   );
 };

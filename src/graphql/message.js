@@ -14,6 +14,24 @@ export const getMessagesQuery = gql`
   }
 `;
 
+export const createMessageMutation = gql`
+  mutation($channelId: ID!, $text: String!) {
+    createMessage(channelId: $channelId, text: $text) {
+      id
+      text
+    }
+  }
+`;
+
+export const editMessageMutation = gql`
+  mutation($channelId: ID!, $messageId: ID!, $text: String!) {
+    editMessage(channelId: $channelId, messageId: $messageId, text: $text) {
+      id
+      text
+    }
+  }
+`;
+
 export const newMessageSubscription = gql`
   subscription($channelId: ID!) {
     newChannelMessage(channelId: $channelId) {

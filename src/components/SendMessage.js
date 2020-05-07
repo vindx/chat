@@ -1,15 +1,11 @@
 import React from 'react';
 import { Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-// import FileUpload from './FileUpload';
-import { SendMessageWrapper } from './styledComponents/SendMessage';
-
-const ENTER_KEY = 13;
+import { createMessageMutation } from '../graphql/message';
 
 const SendMessage = ({
   channelName,
@@ -18,28 +14,22 @@ const SendMessage = ({
   handleBlur,
   handleSubmit,
   isSubmitting,
-  // currentChannelId,
-}) =>
-  channelName && (
-    <SendMessageWrapper>
-      {/* <FileUpload channelId={currentChannelId}> */}
-      {/*  <Button icon="upload" /> */}
-      {/* </FileUpload> */}
-      <Input
-        onChange={handleChange}
-        onBlur={handleBlur}
-        name="message"
-        value={values.message}
-        fluid
-        placeholder={`Message #${channelName}`}
-        onKeyDown={(e) => {
-          if (e.keyCode === ENTER_KEY && !isSubmitting) {
-            handleSubmit(e);
-          }
-        }}
-      />
-    </SendMessageWrapper>
-  );
+  enterKey,
+}) => (
+  <Input
+    onChange={handleChange}
+    onBlur={handleBlur}
+    name="message"
+    value={values.message}
+    fluid
+    placeholder={`Message #${channelName}`}
+    onKeyDown={(e) => {
+      if (e.keyCode === enterKey && !isSubmitting) {
+        handleSubmit(e);
+      }
+    }}
+  />
+);
 
 SendMessage.propTypes = {
   channelName: PropTypes.string.isRequired,
@@ -50,20 +40,8 @@ SendMessage.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  // currentChannelId: PropTypes.string,
+  enterKey: PropTypes.number.isRequired,
 };
-// SendMessage.defaultProps = {
-//   currentChannelId: undefined,
-// };
-
-const createMessageMutation = gql`
-  mutation($channelId: ID!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text) {
-      id
-      text
-    }
-  }
-`;
 
 export default compose(
   graphql(createMessageMutation),
