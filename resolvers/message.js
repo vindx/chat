@@ -4,6 +4,7 @@ const { requiresChannelAccess } = require('../helpers/permissions');
 
 const pubSub = new PubSub();
 const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
+const DELETE_CHANNEL_MESSAGE = 'DELETE_CHANNEL_MESSAGE';
 
 module.exports = {
   Subscription: {
@@ -11,6 +12,14 @@ module.exports = {
       subscribe: requiresChannelAccess.createResolver(
         withFilter(
           () => pubSub.asyncIterator(NEW_CHANNEL_MESSAGE),
+          (payload, args) => payload.channelId === args.channelId
+        )
+      ),
+    },
+    deleteMessage: {
+      subscribe: requiresChannelAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator(DELETE_CHANNEL_MESSAGE),
           (payload, args) => payload.channelId === args.channelId
         )
       ),
@@ -73,27 +82,38 @@ module.exports = {
       }
     ),
     deleteMessage: requiresChannelAccess.createResolver(
-      async (parent, { channel, messageId }, { models, user }) => {
-        const message = await models.Message.findById(messageId);
-        if (String(message.userId) === user.id) {
-          const deletedMessage = await models.Message.findByIdAndDelete(messageId);
-          const index = channel.messages.indexOf(deletedMessage.id);
-          if (index !== -1) {
-            channel.messages.splice(index, 1);
-            await channel.save();
+      async (parent, { channel, messageId, channelId }, { models, user }) => {
+        try {
+          const message = await models.Message.findById(messageId);
+          if (String(message.userId) === user.id) {
+            const deletedMessage = await models.Message.findByIdAndDelete(messageId);
+            const index = channel.messages.indexOf(deletedMessage.id);
+            if (index !== -1) {
+              channel.messages.splice(index, 1);
+              await channel.save();
+            }
+
+            await pubSub.publish(DELETE_CHANNEL_MESSAGE, {
+              channelId,
+              deleteMessage: deletedMessage,
+            });
+
+            return { ok: true, message: deletedMessage };
           }
-          return { ok: true, message: deletedMessage };
+          return {
+            ok: false,
+            errors: [
+              {
+                type: 'not an owner',
+                path: 'delete message',
+                message: 'You are not an owner of this message',
+              },
+            ],
+          };
+        } catch (err) {
+          console.log(err);
+          return err;
         }
-        return {
-          ok: false,
-          errors: [
-            {
-              type: 'not an owner',
-              path: 'delete message',
-              message: 'You are not an owner of this message',
-            },
-          ],
-        };
       }
     ),
   },
