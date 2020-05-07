@@ -14,7 +14,11 @@ import {
   UserName,
 } from '../components/styledComponents/Messages';
 import DeleteMessageModal from '../components/DeleteMessageModal';
-import { getMessagesQuery, messageSubscription } from '../graphql/message';
+import {
+  getMessagesQuery,
+  newMessageSubscription,
+  deleteMessageSubscription,
+} from '../graphql/message';
 
 const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
   const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
@@ -74,8 +78,8 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (currentChannelId) {
-      const unSubscribe = subscribeToMore({
-        document: messageSubscription,
+      const newMessageUnSubscribe = subscribeToMore({
+        document: newMessageSubscription,
         variables: { channelId: currentChannelId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData) return prev;
@@ -86,11 +90,26 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId }) => {
           };
         },
       });
+      const deleteMessageUnSubscribe = subscribeToMore({
+        document: deleteMessageSubscription,
+        variables: { channelId: currentChannelId, messageId: messageIdForDeleteMessageModal },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+
+          return {
+            ...prev,
+            getMessages: prev.getMessages.filter(
+              ({ id }) => id !== subscriptionData.data.deleteMessage.id
+            ),
+          };
+        },
+      });
       return () => {
-        unSubscribe();
+        newMessageUnSubscribe();
+        deleteMessageUnSubscribe();
       };
     }
-  }, [currentChannelId, subscribeToMore]);
+  }, [currentChannelId, subscribeToMore, messageIdForDeleteMessageModal]);
 
   if (loading) return <p>Loading...</p>;
   if (!messages) {

@@ -19,7 +19,6 @@ const DeleteMessageModal = ({
       if (!ok) {
         return;
       }
-      console.log(deleteMessage);
       const data = store.readQuery({
         query: getMessagesQuery,
         variables: { channelId, limit, offset },

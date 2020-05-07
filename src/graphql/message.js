@@ -14,7 +14,7 @@ export const getMessagesQuery = gql`
   }
 `;
 
-export const messageSubscription = gql`
+export const newMessageSubscription = gql`
   subscription($channelId: ID!) {
     newChannelMessage(channelId: $channelId) {
       id
@@ -24,6 +24,14 @@ export const messageSubscription = gql`
         userName
       }
       createdAt
+    }
+  }
+`;
+
+export const deleteMessageSubscription = gql`
+  subscription($channelId: ID!, $messageId: ID) {
+    deleteMessage(channelId: $channelId, messageId: $messageId) {
+      id
     }
   }
 `;
