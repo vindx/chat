@@ -16,6 +16,7 @@ module.exports = `
   type Subscription {
     newChannelMessage(channelId: ID!): Message!
     deleteMessage(channelId: ID!, messageId: ID): Message!
+    editMessage(channelId: ID!, messageId: ID, text: String): Message!
   }
   
   type Query {

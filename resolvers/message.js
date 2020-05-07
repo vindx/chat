@@ -5,6 +5,7 @@ const { requiresChannelAccess } = require('../helpers/permissions');
 const pubSub = new PubSub();
 const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
 const DELETE_CHANNEL_MESSAGE = 'DELETE_CHANNEL_MESSAGE';
+const EDIT_CHANNEL_MESSAGE = 'EDIT_CHANNEL_MESSAGE';
 
 module.exports = {
   Subscription: {
@@ -20,6 +21,14 @@ module.exports = {
       subscribe: requiresChannelAccess.createResolver(
         withFilter(
           () => pubSub.asyncIterator(DELETE_CHANNEL_MESSAGE),
+          (payload, args) => payload.channelId === args.channelId
+        )
+      ),
+    },
+    editMessage: {
+      subscribe: requiresChannelAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator(EDIT_CHANNEL_MESSAGE),
           (payload, args) => payload.channelId === args.channelId
         )
       ),
@@ -82,9 +91,20 @@ module.exports = {
       }
     ),
     editMessage: requiresChannelAccess.createResolver(
-      async (parent, { messageId, text }, { models }) => {
+      async (parent, { messageId, text, channelId }, { models }) => {
         try {
-          return await models.Message.findByIdAndUpdate(messageId, { text }, { new: true });
+          const updatedMessage = await models.Message.findByIdAndUpdate(
+            messageId,
+            { text },
+            { new: true }
+          );
+
+          await pubSub.publish(EDIT_CHANNEL_MESSAGE, {
+            channelId,
+            editMessage: updatedMessage,
+          });
+
+          return updatedMessage;
         } catch (err) {
           console.log(err);
           return err;
