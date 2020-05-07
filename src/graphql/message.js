@@ -46,6 +46,15 @@ export const newMessageSubscription = gql`
   }
 `;
 
+export const editingMessageSubscription = gql`
+  subscription($channelId: ID!, $messageId: ID, $text: String) {
+    editMessage(channelId: $channelId, messageId: $messageId, text: $text) {
+      id
+      text
+    }
+  }
+`;
+
 export const deleteMessageSubscription = gql`
   subscription($channelId: ID!, $messageId: ID) {
     deleteMessage(channelId: $channelId, messageId: $messageId) {

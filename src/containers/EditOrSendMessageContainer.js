@@ -40,11 +40,14 @@ const EditOrSendMessageContainer = ({
 
 EditOrSendMessageContainer.propTypes = {
   channelName: PropTypes.string.isRequired,
-  currentChannelId: PropTypes.string.isRequired,
+  currentChannelId: PropTypes.string,
   onEditing: PropTypes.bool.isRequired,
   messageForEditing: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
   cancelEditing: PropTypes.func.isRequired,
+};
+EditOrSendMessageContainer.defaultProps = {
+  currentChannelId: undefined,
 };
 
 export default EditOrSendMessageContainer;

@@ -72,9 +72,9 @@ export default compose(
     enableReinitialize: true,
     handleSubmit: async (
       { message },
-      { props: { currentChannelId, messageId, mutate, close }, setSubmitting }
+      { props: { messageForEditing, currentChannelId, messageId, mutate, close }, setSubmitting }
     ) => {
-      if (!message || !message.trim()) {
+      if (!message || !message.trim() || messageForEditing === message) {
         setSubmitting(false);
         return;
       }

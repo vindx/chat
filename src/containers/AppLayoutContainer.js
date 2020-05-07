@@ -42,6 +42,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         currentChannelId={params.channelId}
         activeUserId={userId}
         initEditing={handleInitiateMessageEditing}
+        messageEditingInfo={messageEditing}
       />
       <EditOrSendMessageContainer
         channelName={channelName}

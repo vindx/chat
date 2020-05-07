@@ -18,9 +18,15 @@ import {
   getMessagesQuery,
   newMessageSubscription,
   deleteMessageSubscription,
+  editingMessageSubscription,
 } from '../graphql/message';
 
-const MessagesContainer = ({ currentChannelId = '', activeUserId, initEditing }) => {
+const MessagesContainer = ({
+  currentChannelId = '',
+  activeUserId,
+  initEditing,
+  messageEditingInfo,
+}) => {
   const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
 
   const handleOpenDeleteMessageModal = (e, data) => {
@@ -90,6 +96,26 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId, initEditing })
           };
         },
       });
+      const editingMessageUnSubscribe = subscribeToMore({
+        document: editingMessageSubscription,
+        variables: {
+          channelId: currentChannelId,
+          messageId: messageEditingInfo.messageId,
+          text: messageEditingInfo.message,
+        },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+          return {
+            ...prev,
+            getMessages: prev.getMessages.map((message) => {
+              if (message.id === subscriptionData.data.editMessage.id) {
+                return { ...message, text: subscriptionData.data.editMessage.text };
+              }
+              return message;
+            }),
+          };
+        },
+      });
       const deleteMessageUnSubscribe = subscribeToMore({
         document: deleteMessageSubscription,
         variables: { channelId: currentChannelId, messageId: messageIdForDeleteMessageModal },
@@ -107,9 +133,10 @@ const MessagesContainer = ({ currentChannelId = '', activeUserId, initEditing })
       return () => {
         newMessageUnSubscribe();
         deleteMessageUnSubscribe();
+        editingMessageUnSubscribe();
       };
     }
-  }, [currentChannelId, subscribeToMore, messageIdForDeleteMessageModal]);
+  }, [currentChannelId, subscribeToMore, messageIdForDeleteMessageModal, messageEditingInfo]);
 
   if (loading) return <p>Loading...</p>;
   if (!messages) {
