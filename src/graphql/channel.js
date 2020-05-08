@@ -87,3 +87,25 @@ export const joinChannelMutation = gql`
     }
   }
 `;
+
+export const smbJoinedChannelSubscription = gql`
+  subscription($channelId: ID!) {
+    smbJoinedChannel(channelId: $channelId) {
+      members {
+        id
+        userName
+      }
+    }
+  }
+`;
+
+export const smbLeftChannelSubscription = gql`
+  subscription($channelId: ID!) {
+    smbLeftChannel(channelId: $channelId) {
+      members {
+        id
+        userName
+      }
+    }
+  }
+`;

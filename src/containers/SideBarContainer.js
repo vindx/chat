@@ -6,7 +6,11 @@ import PropTypes from 'prop-types';
 import SideBar from '../components/SideBar';
 import InvitePeopleModal from '../components/InvitePeopleModal';
 import ChannelOptionsModal from '../components/ChannelOptionsModal';
-import { getChannelQuery } from '../graphql/channel';
+import {
+  getChannelQuery,
+  smbJoinedChannelSubscription,
+  smbLeftChannelSubscription,
+} from '../graphql/channel';
 
 const SideBarContainer = ({
   setChannelName,
@@ -16,6 +20,7 @@ const SideBarContainer = ({
   toggleDisplaySideBar,
 }) => {
   const {
+    subscribeToMore,
     loading,
     error,
     data: {
@@ -28,11 +33,48 @@ const SideBarContainer = ({
   const [invitePeopleModalIsOpen, setToggleInvitePeopleModal] = useState(false);
   const [channelOptionsModalIsOpen, setToggleChannelOptionsModal] = useState(false);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (name) {
       setChannelName(name);
     }
-  }, [name, setChannelName]);
+    if (currentChannelId) {
+      const smbJoinedChannelUnSubscribe = subscribeToMore({
+        document: smbJoinedChannelSubscription,
+        variables: { channelId: currentChannelId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+
+          return {
+            ...prev,
+            getChannel: {
+              ...prev.getChannel,
+              members: subscriptionData.data.smbJoinedChannel.members,
+            },
+          };
+        },
+      });
+      const smbLeftChannelUnSubscribe = subscribeToMore({
+        document: smbLeftChannelSubscription,
+        variables: { channelId: currentChannelId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData) return prev;
+
+          return {
+            ...prev,
+            getChannel: {
+              ...prev.getChannel,
+              members: subscriptionData.data.smbLeftChannel.members,
+            },
+          };
+        },
+      });
+      return () => {
+        smbJoinedChannelUnSubscribe();
+        smbLeftChannelUnSubscribe();
+      };
+    }
+  }, [name, setChannelName, currentChannelId, subscribeToMore]);
 
   const toggleInvitePeopleModal = () => {
     setToggleInvitePeopleModal(!invitePeopleModalIsOpen);
