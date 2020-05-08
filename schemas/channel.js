@@ -13,6 +13,11 @@ module.exports = `
     errors: [Error!]
   }
   
+   type Subscription {
+    smbJoinedChannel(channelId: ID!): Channel!
+    smbLeftChannel(channelId: ID!): Channel!
+  }
+  
   type Query {
     getChannel(channelId: ID!): Channel!
     getAllChannels: [Channel!]!

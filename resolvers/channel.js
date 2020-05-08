@@ -1,7 +1,31 @@
+const { PubSub, withFilter } = require('apollo-server-express');
+
 const formatErrors = require('../helpers/formatErrors');
 const { requiresAuth, requiresChannelAccess } = require('../helpers/permissions');
 
+const pubSub = new PubSub();
+const SMB_JOINED_CHANNEL = 'USER_JOINED_CHANNEL';
+const SMB_LEFT_CHANNEL = 'USER_LEFT_CHANNEL';
+
 module.exports = {
+  Subscription: {
+    smbJoinedChannel: {
+      subscribe: requiresChannelAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator(SMB_JOINED_CHANNEL),
+          (payload, args) => payload.channelId === args.channelId
+        )
+      ),
+    },
+    smbLeftChannel: {
+      subscribe: requiresChannelAccess.createResolver(
+        withFilter(
+          () => pubSub.asyncIterator(SMB_LEFT_CHANNEL),
+          (payload, args) => payload.channelId === args.channelId
+        )
+      ),
+    },
+  },
   Query: {
     getChannel: requiresChannelAccess.createResolver(async (parent, { channel }) => {
       try {
@@ -56,6 +80,13 @@ module.exports = {
       }
       channel.members.push(user.id);
       await channel.save();
+      const channel2 = await models.Channel.findById(channelId);
+
+      await pubSub.publish(SMB_JOINED_CHANNEL, {
+        channelId: String(channelId),
+        smbJoinedChannel: channel2,
+      });
+
       return {
         ok: true,
         channel,
@@ -75,8 +106,17 @@ module.exports = {
             ],
           };
         }
-        const updatedChannel = await models.Channel.findByIdAndUpdate(channelId, {
-          $pull: { members: user.id },
+        const updatedChannel = await models.Channel.findByIdAndUpdate(
+          channelId,
+          {
+            $pull: { members: user.id },
+          },
+          { new: true }
+        );
+
+        await pubSub.publish(SMB_LEFT_CHANNEL, {
+          channelId,
+          smbLeftChannel: updatedChannel,
         });
 
         return { ok: true, channel: updatedChannel };
