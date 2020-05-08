@@ -141,10 +141,10 @@ const MessagesContainer = ({
   if (loading) return <p>Loading...</p>;
   if (!messages) {
     return (
-      <>
+      <MessagesWrapper center>
+        Please choose channel
         {currentChannelId && error && <Label color="red">{error.message}</Label>}
-        <MessagesWrapper center>Please choose channel</MessagesWrapper>
-      </>
+      </MessagesWrapper>
     );
   }
 

@@ -1,12 +1,15 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import {
   BottomSection,
   ChannelNameHeader,
+  DisplayTriggerIcon,
   Green,
   PushLeft,
+  SideBarContent,
+  SideBarDisplayTrigger,
   SideBarList,
   SideBarListHeader,
   SideBarListItem,
@@ -30,26 +33,35 @@ const SideBar = ({
   onInvitePeopleClick,
   viewMode,
   onChannelOptionsClick,
+  display,
+  toggleDisplay,
 }) => (
-  <SideBarWrapper>
-    <PushLeft>
-      <ChannelNameHeader>{channelName}</ChannelNameHeader>
-      {ownerUserName}
-    </PushLeft>
-    <SideBarListWrapper>
-      <SideBarListHeader>Members</SideBarListHeader>
-      <SideBarList>{members.map(member)}</SideBarList>
-      {!viewMode && (
-        <Button onClick={onInvitePeopleClick} positive floated="right">
-          + Invite people
+  <SideBarWrapper display={display.toString()}>
+    <SideBarContent display={display.toString()}>
+      <PushLeft>
+        <ChannelNameHeader>{channelName}</ChannelNameHeader>
+        {ownerUserName}
+      </PushLeft>
+      <SideBarListWrapper>
+        <SideBarListHeader>Members</SideBarListHeader>
+        <SideBarList>{members.map(member)}</SideBarList>
+        {!viewMode && (
+          <Button onClick={onInvitePeopleClick} positive floated="right">
+            + Invite people
+          </Button>
+        )}
+      </SideBarListWrapper>
+      <BottomSection display={display.toString()}>
+        <Button onClick={onChannelOptionsClick} negative>
+          {viewMode ? 'Leave channel' : 'Delete channel'}
         </Button>
-      )}
-    </SideBarListWrapper>
-    <BottomSection>
-      <Button onClick={onChannelOptionsClick} negative>
-        {viewMode ? 'Leave channel' : 'Delete channel'}
-      </Button>
-    </BottomSection>
+      </BottomSection>
+    </SideBarContent>
+    <SideBarDisplayTrigger onClick={toggleDisplay}>
+      <DisplayTriggerIcon display={display.toString()}>
+        <Icon name="play" />
+      </DisplayTriggerIcon>
+    </SideBarDisplayTrigger>
   </SideBarWrapper>
 );
 
@@ -70,6 +82,8 @@ SideBar.propTypes = {
   onInvitePeopleClick: PropTypes.func.isRequired,
   viewMode: PropTypes.bool.isRequired,
   onChannelOptionsClick: PropTypes.func.isRequired,
+  display: PropTypes.bool.isRequired,
+  toggleDisplay: PropTypes.func.isRequired,
 };
 
 export default SideBar;

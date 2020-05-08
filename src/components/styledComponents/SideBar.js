@@ -11,12 +11,35 @@ export const SideBarWrapper = styled.div`
   background-color: #ffa07a;
   color: #fffafa;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   ${({ center }) =>
     center && css`
       align-items: center;
       justify-content: center;
-    `}
+    `};
+`;
+
+export const SideBarContent = styled.div`
+  width: calc(100% - 25px);
+  padding: 0 10px;
+  flex-direction: column;
+  display: ${({ display }) => (display === 'true' ? 'flex' : 'none')};
+`;
+
+export const SideBarDisplayTrigger = styled.div`
+  width: 25px;
+  height: 100vh;
+  background: linear-gradient(90deg, #ffa07a, #ff7f50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
+`;
+
+export const DisplayTriggerIcon = styled.div`
+  transition: transform 0.4s linear;
+  transform: rotate(${({ display }) => (display === 'true' ? '60' : '0')}deg);
 `;
 
 export const BottomSection = styled.div`
@@ -33,6 +56,7 @@ export const BottomSection = styled.div`
 export const ChannelNameHeader = styled.h1`
   font-size: 30px;
   margin: 0;
+  word-wrap: break-word;
 `;
 
 export const SideBarListWrapper = styled.div`

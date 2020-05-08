@@ -6,6 +6,7 @@ export const ChannelWrapper = styled.div`
   background-color: #ff7f50;
   display: flex;
   flex-direction: column;
+  z-index: 2;
 `;
 
 export const ChannelList = styled.ul`

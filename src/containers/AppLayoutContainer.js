@@ -15,6 +15,11 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
     message: '',
     messageId: '',
   });
+  const [displaySideBar, setToggleSideBarDisplay] = useState(false);
+
+  const handleToggleSideBarDisplay = () => {
+    setToggleSideBarDisplay(!displaySideBar);
+  };
 
   const handleInitiateMessageEditing = (e, { message, messageid: messageId }) => {
     setMessageEditing((prevState) => ({
@@ -30,12 +35,14 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   };
 
   return (
-    <AppLayout>
+    <AppLayout displaySideBar={displaySideBar}>
       <ChannelsContainer currentChannelId={params.channelId} history={history} />
       <SideBarContainer
         setChannelName={setChannelName}
         currentChannelId={params.channelId}
         history={history}
+        displaySideBar={displaySideBar}
+        toggleDisplaySideBar={handleToggleSideBarDisplay}
       />
       <Header channelName={channelName} />
       <MessagesContainer
