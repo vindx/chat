@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import AppLayout from '../components/styledComponents/AppLayout';
@@ -33,6 +33,10 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   const handleCancelMessageEditing = () => {
     setMessageEditing((prevState) => ({ ...prevState, onEdit: false, message: '', messageId: '' }));
   };
+
+  useEffect(() => {
+    handleCancelMessageEditing();
+  }, [params.channelId]);
 
   return (
     <AppLayout displaySideBar={displaySideBar}>
