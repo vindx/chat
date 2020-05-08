@@ -55,3 +55,35 @@ export const deleteChannelQuery = gql`
     }
   }
 `;
+
+export const createChannelMutation = gql`
+  mutation($name: String!) {
+    createChannel(name: $name) {
+      ok
+      channel {
+        id
+        name
+      }
+      errors {
+        path
+        type
+        message
+      }
+    }
+  }
+`;
+
+export const joinChannelMutation = gql`
+  mutation($secretKey: String!) {
+    joinChannel(secretKey: $secretKey) {
+      ok
+      channel {
+        id
+        name
+      }
+      errors {
+        message
+      }
+    }
+  }
+`;

@@ -1,12 +1,11 @@
 import React from 'react';
 import { Button, Form, Input, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-import { allChannelsQuery } from '../graphql/channel';
+import { allChannelsQuery, joinChannelMutation } from '../graphql/channel';
 
 const joinChannelForm = ({
   values,
@@ -50,21 +49,6 @@ joinChannelForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   errors: PropTypes.shape({}).isRequired,
 };
-
-const joinChannelMutation = gql`
-  mutation($secretKey: String!) {
-    joinChannel(secretKey: $secretKey) {
-      ok
-      channel {
-        id
-        name
-      }
-      errors {
-        message
-      }
-    }
-  }
-`;
 
 export default compose(
   graphql(joinChannelMutation),

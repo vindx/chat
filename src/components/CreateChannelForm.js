@@ -1,14 +1,20 @@
 import React from 'react';
-import { Button, Form, Input } from 'semantic-ui-react';
+import { Button, Form, Input, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-import { allChannelsQuery } from '../graphql/channel';
+import { allChannelsQuery, createChannelMutation } from '../graphql/channel';
 
-const createChannelForm = ({ values, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
+const createChannelForm = ({
+  values,
+  handleChange,
+  handleBlur,
+  isSubmitting,
+  handleSubmit,
+  errors: error,
+}) => (
   <Form onSubmit={handleSubmit}>
     <Form.Field>
       <Input
@@ -19,6 +25,11 @@ const createChannelForm = ({ values, handleChange, handleBlur, isSubmitting, han
         fluid
         placeholder="Channel name"
       />
+      {error.message && (
+        <Label basic color="red" pointing>
+          {error.message}
+        </Label>
+      )}
     </Form.Field>
     <Form.Field>
       <Button color="blue" fluid disabled={isSubmitting} loading={isSubmitting} type="submit">
@@ -36,24 +47,8 @@ createChannelForm.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  errors: PropTypes.shape({}).isRequired,
 };
-
-const createChannelMutation = gql`
-  mutation($name: String!) {
-    createChannel(name: $name) {
-      ok
-      channel {
-        id
-        name
-      }
-      errors {
-        path
-        type
-        message
-      }
-    }
-  }
-`;
 
 export default compose(
   graphql(createChannelMutation),
@@ -61,7 +56,7 @@ export default compose(
     mapPropsToValues: () => ({ channelName: '' }),
     handleSubmit: async (
       { channelName },
-      { props: { onClose, mutate, history }, setSubmitting }
+      { props: { onClose, mutate, history }, setSubmitting, setErrors }
     ) => {
       const response = await mutate({
         variables: { name: channelName },
@@ -79,8 +74,9 @@ export default compose(
           },
         },
         update: (store, { data: { createChannel } }) => {
-          const { ok, channel } = createChannel;
+          const { ok, channel, errors } = createChannel;
           if (!ok) {
+            setErrors(errors[0]);
             return;
           }
           const data = store.readQuery({ query: allChannelsQuery });
