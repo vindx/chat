@@ -4,9 +4,8 @@ import decode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 import Home from './Home';
-import Register from './Register';
-import Login from './Login';
 import ViewChannel from './ViewChannel';
+import LoginOrRegisterContainer from '../containers/LoginOrResgisterContainer';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -44,8 +43,8 @@ export default () => (
   <BrowserRouter>
     <Switch>
       <PrivateRoute path="/" exact component={() => <Redirect to="/view-channel" />} />
-      <Route path="/register" exact component={Register} />
-      <Route path="/login" exact component={Login} />
+      <Route path="/register" exact component={LoginOrRegisterContainer} />
+      <Route path="/login" exact component={LoginOrRegisterContainer} />
       <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
       <Route path="/users" exact component={Home} />
     </Switch>
