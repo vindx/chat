@@ -3,9 +3,9 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
-import Home from './Home';
 import ViewChannel from './ViewChannel';
 import LoginOrRegisterContainer from '../containers/LoginOrResgisterContainer';
+import PageNotFound from '../components/PageNotFound';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -46,7 +46,7 @@ export default () => (
       <Route path="/register" exact component={LoginOrRegisterContainer} />
       <Route path="/login" exact component={LoginOrRegisterContainer} />
       <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
-      <Route path="/users" exact component={Home} />
+      <PageNotFound />
     </Switch>
   </BrowserRouter>
 );
