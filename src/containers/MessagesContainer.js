@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { Dropdown, Label } from 'semantic-ui-react';
+import { Dimmer, Dropdown, Label, Loader } from 'semantic-ui-react';
 import prettydate from 'pretty-date';
 import PropTypes from 'prop-types';
 
@@ -138,7 +138,13 @@ const MessagesContainer = ({
     }
   }, [currentChannelId, subscribeToMore, messageIdForDeleteMessageModal, messageEditingInfo]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <Dimmer active inverted>
+        <Loader inverted>Loading</Loader>
+      </Dimmer>
+    );
+  }
   if (!messages) {
     return (
       <MessagesWrapper center>

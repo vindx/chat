@@ -21,7 +21,7 @@ const SideBarContainer = ({
 }) => {
   const {
     subscribeToMore,
-    loading,
+    // loading,
     error,
     data: {
       getChannel: { name, owner: { id: ownerId, userName: ownerUserName } = {}, members } = {},
@@ -84,7 +84,7 @@ const SideBarContainer = ({
     setToggleChannelOptionsModal(!channelOptionsModalIsOpen);
   };
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   if (!name) {
     return null;
   }
