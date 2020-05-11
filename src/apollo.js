@@ -7,7 +7,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createUploadLink({
-  uri: 'http://localhost:5000/graphql',
+  uri: '/graphql',
 });
 
 // Setup the header for the request
