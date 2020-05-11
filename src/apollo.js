@@ -7,7 +7,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
 
 const httpLink = createUploadLink({
-  uri: 'http://localhost:5000/graphql',
+  uri: '/graphql',
 });
 
 // Setup the header for the request
@@ -47,12 +47,18 @@ const afterWareLink = new ApolloLink((operation, forward) => {
   });
 });
 
+let wsUri;
+if (process.env.NODE_ENV === 'development') {
+  wsUri = 'ws://localhost:5000/graphql';
+} else {
+  wsUri = `ws://${window.location.host}/graphql`;
+}
+
 // Create a WebSocket link:
 export const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:5000/graphql',
+  uri: wsUri,
   options: {
     reconnect: true,
-
     connectionParams: () => ({
       'auth-token': localStorage.getItem('token'),
       'auth-refresh-token': localStorage.getItem('refreshToken'),
