@@ -15,27 +15,41 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
     message: '',
     messageId: '',
   });
+  const [lastMessageSent, setLastMessageSent] = useState({ message: '', messageId: '' });
   const [displaySideBar, setToggleSideBarDisplay] = useState(false);
 
   const handleToggleSideBarDisplay = () => {
     setToggleSideBarDisplay(!displaySideBar);
   };
 
-  const handleInitiateMessageEditing = (e, { message, messageid: messageId }) => {
-    setMessageEditing((prevState) => ({
-      ...prevState,
-      onEdit: true,
-      message,
-      messageId,
-    }));
+  const handleInitiateMessageEditing = (
+    e,
+    { message, messageid: messageId } = {
+      message: lastMessageSent.message,
+      messageid: lastMessageSent.messageId,
+    }
+  ) => {
+    if (message && messageId) {
+      setMessageEditing((prevState) => ({
+        ...prevState,
+        onEdit: true,
+        message,
+        messageId,
+      }));
+    }
   };
 
   const handleCancelMessageEditing = () => {
     setMessageEditing((prevState) => ({ ...prevState, onEdit: false, message: '', messageId: '' }));
   };
 
+  const handleSetLastMessageSent = (message, messageId) => {
+    setLastMessageSent((prevState) => ({ ...prevState, message, messageId }));
+  };
+
   useEffect(() => {
     handleCancelMessageEditing();
+    handleSetLastMessageSent('', '');
   }, [params.channelId]);
 
   return (
@@ -54,6 +68,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         activeUserId={userId}
         initEditing={handleInitiateMessageEditing}
         messageEditingInfo={messageEditing}
+        setLastMessageSent={handleSetLastMessageSent}
       />
       <EditOrSendMessageContainer
         channelName={channelName}
@@ -61,7 +76,9 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         onEditing={messageEditing.onEdit}
         messageForEditing={messageEditing.message}
         messageId={messageEditing.messageId}
+        startEditing={handleInitiateMessageEditing}
         cancelEditing={handleCancelMessageEditing}
+        setLastMessageSent={handleSetLastMessageSent}
       />
     </AppLayout>
   );

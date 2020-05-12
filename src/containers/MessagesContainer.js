@@ -26,6 +26,7 @@ const MessagesContainer = ({
   activeUserId,
   initEditing,
   messageEditingInfo,
+  setLastMessageSent,
 }) => {
   const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
 
@@ -89,7 +90,12 @@ const MessagesContainer = ({
         variables: { channelId: currentChannelId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData) return prev;
-
+          if (activeUserId === subscriptionData.data.newChannelMessage.user.id) {
+            setLastMessageSent(
+              subscriptionData.data.newChannelMessage.text,
+              subscriptionData.data.newChannelMessage.id
+            );
+          }
           return {
             ...prev,
             getMessages: [subscriptionData.data.newChannelMessage, ...prev.getMessages],

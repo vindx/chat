@@ -13,7 +13,9 @@ const EditOrSendMessageContainer = ({
   onEditing,
   messageForEditing,
   messageId,
+  startEditing,
   cancelEditing,
+  setLastMessageSent,
 }) => (
   <>
     {channelName && (
@@ -25,12 +27,14 @@ const EditOrSendMessageContainer = ({
             messageForEditing={messageForEditing}
             messageId={messageId}
             enterKey={ENTER_KEY}
+            setLastMessageSent={setLastMessageSent}
           />
         ) : (
           <SendMessage
             channelName={channelName}
             currentChannelId={currentChannelId}
             enterKey={ENTER_KEY}
+            startEditing={startEditing}
           />
         )}
       </SendMessageWrapper>
@@ -44,7 +48,9 @@ EditOrSendMessageContainer.propTypes = {
   onEditing: PropTypes.bool.isRequired,
   messageForEditing: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
+  startEditing: PropTypes.func.isRequired,
   cancelEditing: PropTypes.func.isRequired,
+  setLastMessageSent: PropTypes.func.isRequired,
 };
 EditOrSendMessageContainer.defaultProps = {
   currentChannelId: undefined,

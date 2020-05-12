@@ -14,6 +14,8 @@ import {
 } from './styledComponents/EditMessage';
 import { editMessageMutation } from '../graphql/message';
 
+const ESC_KEY = 27;
+
 const EditMessage = ({
   values,
   handleChange,
@@ -36,6 +38,12 @@ const EditMessage = ({
     </EditMessageWrapper>
     <Form>
       <TextArea
+        autoFocus
+        /* eslint-disable-next-line no-return-assign */
+        onFocus={({ target }) => {
+          // eslint-disable-next-line no-param-reassign
+          target.selectionStart = values.message.length;
+        }}
         rows={(messageForEditing.length + 150) / 150}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -45,6 +53,9 @@ const EditMessage = ({
         onKeyDown={(e) => {
           if (e.keyCode === enterKey && !isSubmitting) {
             handleSubmit(e);
+          }
+          if (e.keyCode === ESC_KEY && !isSubmitting) {
+            close();
           }
         }}
       />
@@ -72,7 +83,17 @@ export default compose(
     enableReinitialize: true,
     handleSubmit: async (
       { message },
-      { props: { messageForEditing, currentChannelId, messageId, mutate, close }, setSubmitting }
+      {
+        props: {
+          messageForEditing,
+          currentChannelId,
+          messageId,
+          mutate,
+          close,
+          setLastMessageSent,
+        },
+        setSubmitting,
+      }
     ) => {
       if (!message || !message.trim() || messageForEditing === message) {
         setSubmitting(false);
@@ -83,6 +104,7 @@ export default compose(
         variables: { channelId: currentChannelId, text: message, messageId },
       });
       setSubmitting(false);
+      setLastMessageSent(message, messageId);
       close();
     },
   })

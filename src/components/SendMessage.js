@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 
 import { createMessageMutation } from '../graphql/message';
 
+const ARROW_UP_KEY = 38;
+
 const SendMessage = ({
   channelName,
   values,
@@ -15,8 +17,10 @@ const SendMessage = ({
   handleSubmit,
   isSubmitting,
   enterKey,
+  startEditing,
 }) => (
   <Input
+    autoComplete="off"
     onChange={handleChange}
     onBlur={handleBlur}
     name="message"
@@ -26,6 +30,9 @@ const SendMessage = ({
     onKeyDown={(e) => {
       if (e.keyCode === enterKey && !isSubmitting) {
         handleSubmit(e);
+      }
+      if (e.keyCode === ARROW_UP_KEY) {
+        startEditing();
       }
     }}
   />
@@ -41,6 +48,7 @@ SendMessage.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   enterKey: PropTypes.number.isRequired,
+  startEditing: PropTypes.func.isRequired,
 };
 
 export default compose(
