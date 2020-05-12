@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Login from '../routes/Login';
-import Register from '../routes/Register';
+import SignUp from '../routes/SignUp';
 import WelcomeBlock from '../components/WelcomeBlock';
 
 const LoginOrRegisterContainer = ({ match: { path }, history }) => {
@@ -18,7 +18,7 @@ const LoginOrRegisterContainer = ({ match: { path }, history }) => {
       return (
         <>
           <WelcomeBlock />
-          <Register history={history} />
+          <SignUp history={history} />
         </>
       );
     default:

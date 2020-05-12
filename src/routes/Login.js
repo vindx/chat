@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import { wsLink } from '../apollo';
+import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
 
 const loginMutation = gql`
   mutation($email: String!, $password: String!) {
@@ -83,15 +84,14 @@ const Login = (props) => {
             onChange={handleChangeLoginData}
           />
         </Form.Field>
-        <Button negative={!!emailError || !!passwordError} loading={loading} compact>
+        <Button negative={!!emailError || !!passwordError} loading={loading} compact floated="left">
           Submit
         </Button>
       </Form>
-      <Link to="/register">
-        <Button compact floated="right">
-          Register
-        </Button>
-      </Link>
+      <RedirectToOtherFormContainer>
+        Don&#39;t have an account? &#9658;
+        <Link to="/register">Sign up</Link>
+      </RedirectToOtherFormContainer>
       {(emailError || passwordError) && (
         <Message
           error

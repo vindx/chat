@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import { wsLink } from '../apollo';
+import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
 
 const registerMutation = gql`
   mutation($userName: String!, $email: String!, $password: String!) {
@@ -22,7 +23,7 @@ const registerMutation = gql`
   }
 `;
 
-const Register = ({ history }) => {
+const SignUp = ({ history }) => {
   const [register, { loading }] = useMutation(registerMutation);
   const [loginData, setLoginData] = useState({
     userName: '',
@@ -64,7 +65,7 @@ const Register = ({ history }) => {
 
   return (
     <Container text>
-      <Header as="h2">Register</Header>
+      <Header as="h2">Sign up</Header>
       <Form onSubmit={handleSubmit}>
         <Form.Field error={!!userNameError}>
           <Input
@@ -98,15 +99,15 @@ const Register = ({ history }) => {
           negative={!!userNameError || !!emailError || !!passwordError}
           loading={loading}
           compact
+          floated="left"
         >
           Submit
         </Button>
       </Form>
-      <Link to="/login">
-        <Button compact floated="right">
-          Login
-        </Button>
-      </Link>
+      <RedirectToOtherFormContainer>
+        Have an account? &#9658;
+        <Link to="/login">Log in</Link>
+      </RedirectToOtherFormContainer>
       {(userNameError || emailError || passwordError) && (
         <Message
           error
@@ -118,10 +119,10 @@ const Register = ({ history }) => {
   );
 };
 
-Register.propTypes = {
+SignUp.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default Register;
+export default SignUp;
