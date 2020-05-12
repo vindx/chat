@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import decode from 'jwt-decode';
+import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import SideBar from '../components/SideBar';
@@ -45,6 +46,18 @@ const SideBarContainer = ({
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData) return prev;
 
+          const whoJoinedChannel = subscriptionData.data.smbJoinedChannel.members.reduce(
+            // eslint-disable-next-line array-callback-return,consistent-return
+            (member, acc) => {
+              if (member) {
+                const newMember = prev.getChannel.members.find(({ id }) => id !== member.id);
+                return { ...acc, ...newMember };
+              }
+            },
+            {}
+          );
+          toast.success(`User '${whoJoinedChannel.userName}' has joined the channel`);
+
           return {
             ...prev,
             getChannel: {
@@ -59,6 +72,20 @@ const SideBarContainer = ({
         variables: { channelId: currentChannelId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData) return prev;
+
+          const whoLeftChannel = prev.getChannel.members.reduce(
+            // eslint-disable-next-line array-callback-return,consistent-return
+            (member, acc) => {
+              if (member) {
+                const userWhoLeft = subscriptionData.data.smbLeftChannel.members.find(
+                  ({ id }) => id !== member.id
+                );
+                return { ...acc, ...userWhoLeft };
+              }
+            },
+            {}
+          );
+          toast.error(`User '${whoLeftChannel.userName}' has left the channel`);
 
           return {
             ...prev,

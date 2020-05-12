@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import AppLayout from '../components/styledComponents/AppLayout';
@@ -80,6 +81,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         cancelEditing={handleCancelMessageEditing}
         setLastMessageSent={handleSetLastMessageSent}
       />
+      <ToastContainer />
     </AppLayout>
   );
 };
