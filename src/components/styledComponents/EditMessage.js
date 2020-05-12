@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+export const EditMessageContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const EditMessageWrapper = styled.div`
   width: 90%;
   margin: 0 auto;

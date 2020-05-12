@@ -8,11 +8,13 @@ import PropTypes from 'prop-types';
 import {
   EditMessageBody,
   EditMessageButton,
+  EditMessageContainer,
   EditMessageHeader,
   EditMessageText,
   EditMessageWrapper,
 } from './styledComponents/EditMessage';
 import { editMessageMutation } from '../graphql/message';
+import { ButtonsWrapper } from './styledComponents/SendMessage';
 
 const ESC_KEY = 27;
 
@@ -25,8 +27,8 @@ const EditMessage = ({
   messageForEditing,
   close,
   enterKey,
-}) => (
-  <>
+}) => [
+  <EditMessageContainer key="edit-message-container">
     <EditMessageWrapper>
       <EditMessageBody>
         <EditMessageHeader>Edit message</EditMessageHeader>
@@ -60,8 +62,13 @@ const EditMessage = ({
         }}
       />
     </Form>
-  </>
-);
+  </EditMessageContainer>,
+  <ButtonsWrapper key="buttons-wrapper">
+    <Button onClick={handleSubmit} type="submit" compact color="instagram" loading={isSubmitting}>
+      Edit
+    </Button>
+  </ButtonsWrapper>,
+];
 
 EditMessage.propTypes = {
   values: PropTypes.shape({

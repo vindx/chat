@@ -1,11 +1,12 @@
 import React from 'react';
-import { Input } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
 import { createMessageMutation } from '../graphql/message';
+import { ButtonsWrapper } from './styledComponents/SendMessage';
 
 const ARROW_UP_KEY = 38;
 
@@ -18,8 +19,9 @@ const SendMessage = ({
   isSubmitting,
   enterKey,
   startEditing,
-}) => (
+}) => [
   <Input
+    key="message-input"
     autoComplete="off"
     onChange={handleChange}
     onBlur={handleBlur}
@@ -35,8 +37,13 @@ const SendMessage = ({
         startEditing();
       }
     }}
-  />
-);
+  />,
+  <ButtonsWrapper key="buttons-wrapper">
+    <Button onClick={handleSubmit} type="submit" compact color="green" loading={isSubmitting}>
+      Send
+    </Button>
+  </ButtonsWrapper>,
+];
 
 SendMessage.propTypes = {
   channelName: PropTypes.string.isRequired,
@@ -63,7 +70,6 @@ export default compose(
         setSubmitting(false);
         return;
       }
-
       await mutate({
         variables: { channelId: currentChannelId, text: message },
       });
