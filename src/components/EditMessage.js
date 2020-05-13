@@ -54,6 +54,10 @@ const EditMessage = ({
         placeholder="Message"
         onKeyDown={(e) => {
           if (e.keyCode === enterKey && !isSubmitting) {
+            if (messageForEditing === values.message) {
+              close();
+              return;
+            }
             handleSubmit(e);
           }
           if (e.keyCode === ESC_KEY && !isSubmitting) {
@@ -90,19 +94,9 @@ export default compose(
     enableReinitialize: true,
     handleSubmit: async (
       { message },
-      {
-        props: {
-          messageForEditing,
-          currentChannelId,
-          messageId,
-          mutate,
-          close,
-          setLastMessageSent,
-        },
-        setSubmitting,
-      }
+      { props: { currentChannelId, messageId, mutate, close, setLastMessageSent }, setSubmitting }
     ) => {
-      if (!message || !message.trim() || messageForEditing === message) {
+      if (!message || !message.trim()) {
         setSubmitting(false);
         return;
       }
