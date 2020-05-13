@@ -68,6 +68,7 @@ const Login = (props) => {
         <Form.Field error={!!emailError}>
           <Input
             fluid
+            autoComplete="username"
             placeholder="Email"
             name="email"
             value={email}
@@ -77,6 +78,7 @@ const Login = (props) => {
         <Form.Field error={!!passwordError}>
           <Input
             fluid
+            autoComplete="current-password"
             placeholder="Password"
             name="password"
             type="password"

@@ -70,6 +70,7 @@ const SignUp = ({ history }) => {
         <Form.Field error={!!userNameError}>
           <Input
             fluid
+            autoComplete="off"
             placeholder="Username"
             name="userName"
             value={userName}
@@ -79,6 +80,7 @@ const SignUp = ({ history }) => {
         <Form.Field error={!!emailError}>
           <Input
             fluid
+            autoComplete="off"
             placeholder="Email"
             name="email"
             value={email}
@@ -88,6 +90,7 @@ const SignUp = ({ history }) => {
         <Form.Field error={!!passwordError}>
           <Input
             fluid
+            autoComplete="off"
             placeholder="Password"
             name="password"
             type="password"
