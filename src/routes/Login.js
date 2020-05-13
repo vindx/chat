@@ -1,27 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Container, Header, Input, Message } from 'semantic-ui-react';
-import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import { wsLink } from '../apollo';
 import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
-
-const loginMutation = gql`
-  mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      ok
-      token
-      refreshToken
-      errors {
-        type
-        path
-        message
-      }
-    }
-  }
-`;
+import { loginMutation } from '../graphql/user';
 
 const Login = (props) => {
   const [login, { loading }] = useMutation(loginMutation);
