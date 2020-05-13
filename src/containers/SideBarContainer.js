@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -12,6 +11,7 @@ import {
   smbJoinedChannelSubscription,
   smbLeftChannelSubscription,
 } from '../graphql/channel';
+import setViewModeStatus from '../helpers/setViewModeStatus';
 
 const SideBarContainer = ({
   setChannelName,
@@ -116,10 +116,7 @@ const SideBarContainer = ({
     return null;
   }
   if (error) return <p>Error :(</p>;
-  const {
-    user: { id },
-  } = decode(localStorage.getItem('token'));
-  const viewMode = ownerId !== id;
+  const viewMode = setViewModeStatus(ownerId);
 
   return [
     <SideBar

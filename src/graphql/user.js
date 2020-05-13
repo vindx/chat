@@ -29,3 +29,24 @@ export const registerMutation = gql`
     }
   }
 `;
+
+export const getUserQuery = gql`
+  query($id: ID) {
+    getUser(id: $id) {
+      userName
+      email
+      channels {
+        id
+        name
+      }
+      messages {
+        id
+        text
+        channel {
+          name
+        }
+        createdAt
+      }
+    }
+  }
+`;

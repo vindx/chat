@@ -6,7 +6,7 @@ import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
 import { allChannelsQuery } from '../graphql/channel';
 
-const ChannelsContainer = ({ currentChannelId, history }) => {
+const ChannelsContainer = ({ currentChannelId, history, onProfileClick }) => {
   const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery, {
     fetchPolicy: 'network-only',
   });
@@ -14,12 +14,6 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
 
   const toggleAddChannelModal = () => {
     setToggleAddChannelModal(!addChannelModalIsOpen);
-  };
-
-  const handleLogOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    history.push('/');
   };
 
   if (loading) return <p>Loading...</p>;
@@ -31,7 +25,7 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
       channels={channels}
       currentChannelId={currentChannelId}
       onAddChannelClick={toggleAddChannelModal}
-      onLogOutClick={handleLogOut}
+      onProfileClick={onProfileClick}
     />,
     <AddChannelModal
       key="add-channel-modal"
@@ -44,6 +38,8 @@ const ChannelsContainer = ({ currentChannelId, history }) => {
 
 ChannelsContainer.propTypes = {
   currentChannelId: PropTypes.string,
+  history: PropTypes.shape({}).isRequired,
+  onProfileClick: PropTypes.func.isRequired,
 };
 ChannelsContainer.defaultProps = {
   currentChannelId: undefined,

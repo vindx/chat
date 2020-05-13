@@ -14,7 +14,7 @@ const channel = ({ id, name, active }) => (
   </Link>
 );
 
-const Channels = ({ channels, currentChannelId, onAddChannelClick, onLogOutClick }) => {
+const Channels = ({ channels, currentChannelId, onAddChannelClick, onProfileClick }) => {
   // eslint-disable-next-line no-confusing-arrow
   const channelsWithActive = channels.map((ch) =>
     currentChannelId === ch.id ? { ...ch, active: true } : ch
@@ -33,8 +33,8 @@ const Channels = ({ channels, currentChannelId, onAddChannelClick, onLogOutClick
         {channelsWithActive.map(channel)}
       </ChannelList>
       <BottomSection>
-        <Button onClick={onLogOutClick} negative compact>
-          Sign out
+        <Button onClick={onProfileClick} color="instagram" compact>
+          Profile
         </Button>
       </BottomSection>
     </ChannelWrapper>
@@ -55,7 +55,7 @@ Channels.propTypes = {
   channels: PropTypes.array.isRequired,
   currentChannelId: PropTypes.string,
   onAddChannelClick: PropTypes.func.isRequired,
-  onLogOutClick: PropTypes.func.isRequired,
+  onProfileClick: PropTypes.func.isRequired,
 };
 Channels.defaultProps = {
   currentChannelId: undefined,

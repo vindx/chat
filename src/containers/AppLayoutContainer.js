@@ -8,6 +8,7 @@ import SideBarContainer from './SideBarContainer';
 import Header from '../components/Header';
 import MessagesContainer from './MessagesContainer';
 import EditOrSendMessageContainer from './EditOrSendMessageContainer';
+import UserInfoModal from '../components/UserInfoModal';
 
 const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   const [channelName, setChannelName] = useState('');
@@ -18,9 +19,14 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   });
   const [lastMessageSent, setLastMessageSent] = useState({ message: '', messageId: '' });
   const [displaySideBar, setToggleSideBarDisplay] = useState(false);
+  const [displayProfileInfoModal, setToggleProfileInfoModalDisplay] = useState(false);
 
   const handleToggleSideBarDisplay = () => {
     setToggleSideBarDisplay(!displaySideBar);
+  };
+
+  const handleToggleProfileInfoModalDisplay = () => {
+    setToggleProfileInfoModalDisplay(!displayProfileInfoModal);
   };
 
   const handleInitiateMessageEditing = (
@@ -55,7 +61,11 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
 
   return (
     <AppLayout displaySideBar={displaySideBar}>
-      <ChannelsContainer currentChannelId={params.channelId} history={history} />
+      <ChannelsContainer
+        currentChannelId={params.channelId}
+        history={history}
+        onProfileClick={handleToggleProfileInfoModalDisplay}
+      />
       <SideBarContainer
         setChannelName={setChannelName}
         currentChannelId={params.channelId}
@@ -80,6 +90,11 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         startEditing={handleInitiateMessageEditing}
         cancelEditing={handleCancelMessageEditing}
         setLastMessageSent={handleSetLastMessageSent}
+      />
+      <UserInfoModal
+        history={history}
+        onClose={handleToggleProfileInfoModalDisplay}
+        open={displayProfileInfoModal}
       />
       <ToastContainer />
     </AppLayout>
