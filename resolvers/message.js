@@ -34,9 +34,6 @@ module.exports = {
       ),
     },
   },
-  Message: {
-    user: async ({ userId }, args, { models }) => await models.User.findById(userId),
-  },
   Query: {
     getMessage: async (parent, { id }, { models }) => {
       try {
@@ -146,5 +143,9 @@ module.exports = {
         }
       }
     ),
+  },
+  Message: {
+    user: async ({ userId }, args, { models }) => await models.User.findById(userId),
+    channel: async ({ channelId }, args, { models }) => await models.Channel.findById(channelId),
   },
 };

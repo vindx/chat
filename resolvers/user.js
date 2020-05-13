@@ -1,19 +1,22 @@
-const { tryLogin } = require('../helpers/auth');
 const formatErrors = require('../helpers/formatErrors');
+
+const { tryLogin } = require('../helpers/auth');
+const { requiresAuth } = require('../helpers/permissions');
 
 module.exports = {
   Query: {
-    getUser: async (parent, { id }, { models }) => {
+    getUser: requiresAuth.createResolver(async (parent, { id }, { models, user }) => {
       try {
-        const user = await models.User.findById(id);
-        if (!user) {
+        const foundUser = await models.User.findById(id || user.id);
+        console.log(foundUser);
+        if (!foundUser) {
           throw new Error("User didn't found");
         }
-        return user;
+        return foundUser;
       } catch (err) {
         return err;
       }
-    },
+    }),
     getAllUsers: async (parent, args, { models }) => await models.User.find(),
   },
   Mutation: {
@@ -31,5 +34,9 @@ module.exports = {
 
     login: async (parent, { email, password }, { models, SECRET, SECRET2 }) =>
       await tryLogin(email, password, models, SECRET, SECRET2),
+  },
+  User: {
+    channels: async ({ id }, args, { models }) => await models.Channel.find({ owner: id }),
+    messages: async ({ id }, args, { models }) => await models.Message.find({ userId: id }),
   },
 };
