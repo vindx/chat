@@ -142,7 +142,14 @@ const MessagesContainer = ({
         editingMessageUnSubscribe();
       };
     }
-  }, [currentChannelId, subscribeToMore, messageIdForDeleteMessageModal, messageEditingInfo]);
+  }, [
+    currentChannelId,
+    subscribeToMore,
+    messageIdForDeleteMessageModal,
+    messageEditingInfo,
+    activeUserId,
+    setLastMessageSent,
+  ]);
 
   if (loading) {
     return (
