@@ -27,6 +27,7 @@ const MessagesContainer = ({
   initEditing,
   messageEditingInfo,
   setLastMessageSent,
+  onProfileClick,
 }) => {
   const [messageIdForDeleteMessageModal, setMessageIdForDeleteMessageModal] = useState(null);
 
@@ -176,7 +177,9 @@ const MessagesContainer = ({
             myMessage={activeUserId === userId}
           >
             <MessageHeader myMessage={activeUserId === userId}>
-              <UserName>{userName}</UserName>
+              <UserName id={userId} onClick={onProfileClick}>
+                {userName}
+              </UserName>
               {activeUserId === userId && (
                 <Dropdown icon="options" style={{ margin: '0 10px' }} pointing="bottom right">
                   <Dropdown.Menu>

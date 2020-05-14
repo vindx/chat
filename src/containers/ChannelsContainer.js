@@ -6,7 +6,7 @@ import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
 import { allChannelsQuery } from '../graphql/channel';
 
-const ChannelsContainer = ({ currentChannelId, history, onProfileClick }) => {
+const ChannelsContainer = ({ currentChannelId, history, onProfileClick, activeUserId }) => {
   const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery, {
     fetchPolicy: 'network-only',
   });
@@ -26,6 +26,7 @@ const ChannelsContainer = ({ currentChannelId, history, onProfileClick }) => {
       currentChannelId={currentChannelId}
       onAddChannelClick={toggleAddChannelModal}
       onProfileClick={onProfileClick}
+      activeUserId={activeUserId}
     />,
     <AddChannelModal
       key="add-channel-modal"

@@ -19,6 +19,7 @@ const SideBarContainer = ({
   history,
   displaySideBar,
   toggleDisplaySideBar,
+  onProfileClick,
 }) => {
   const {
     subscribeToMore,
@@ -129,6 +130,7 @@ const SideBarContainer = ({
       viewMode={viewMode}
       display={displaySideBar}
       toggleDisplay={toggleDisplaySideBar}
+      onProfileClick={onProfileClick}
     />,
     <InvitePeopleModal
       key="invite-people-modal"

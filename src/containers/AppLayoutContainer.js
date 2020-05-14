@@ -19,14 +19,22 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   });
   const [lastMessageSent, setLastMessageSent] = useState({ message: '', messageId: '' });
   const [displaySideBar, setToggleSideBarDisplay] = useState(false);
-  const [displayProfileInfoModal, setToggleProfileInfoModalDisplay] = useState(false);
+  const [displayProfileInfoModal, setToggleProfileInfoModalDisplay] = useState({
+    open: false,
+    userId: '',
+  });
 
   const handleToggleSideBarDisplay = () => {
     setToggleSideBarDisplay(!displaySideBar);
   };
 
-  const handleToggleProfileInfoModalDisplay = () => {
-    setToggleProfileInfoModalDisplay(!displayProfileInfoModal);
+  const handleToggleProfileInfoModalDisplay = (e) => {
+    const { id } = e.target;
+    if (displayProfileInfoModal.open) {
+      setToggleProfileInfoModalDisplay((prevState) => ({ ...prevState, open: false, userId: '' }));
+    } else {
+      setToggleProfileInfoModalDisplay((prevState) => ({ ...prevState, open: true, userId: id }));
+    }
   };
 
   const handleInitiateMessageEditing = (
@@ -65,6 +73,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         currentChannelId={params.channelId}
         history={history}
         onProfileClick={handleToggleProfileInfoModalDisplay}
+        activeUserId={userId}
       />
       <SideBarContainer
         setChannelName={setChannelName}
@@ -72,6 +81,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         history={history}
         displaySideBar={displaySideBar}
         toggleDisplaySideBar={handleToggleSideBarDisplay}
+        onProfileClick={handleToggleProfileInfoModalDisplay}
       />
       <Header channelName={channelName} />
       <MessagesContainer
@@ -80,6 +90,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         initEditing={handleInitiateMessageEditing}
         messageEditingInfo={messageEditing}
         setLastMessageSent={handleSetLastMessageSent}
+        onProfileClick={handleToggleProfileInfoModalDisplay}
       />
       <EditOrSendMessageContainer
         channelName={channelName}
@@ -94,7 +105,8 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
       <UserInfoModal
         history={history}
         onClose={handleToggleProfileInfoModalDisplay}
-        open={displayProfileInfoModal}
+        open={displayProfileInfoModal.open}
+        userId={displayProfileInfoModal.userId}
       />
       <ToastContainer />
     </AppLayout>

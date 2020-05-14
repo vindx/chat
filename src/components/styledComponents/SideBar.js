@@ -76,6 +76,7 @@ export const SideBarList = styled.ul`
 `;
 
 export const SideBarListItem = styled.li`
+  cursor: pointer;
   ${paddingLeft};
   &:hover {
     background: #6ab0c1;

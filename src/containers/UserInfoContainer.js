@@ -7,12 +7,13 @@ import { getUserQuery } from '../graphql/user';
 import UserInfoProfile from '../components/UserInfo/UserInfoProfile';
 import UserInfoChannels from '../components/UserInfo/UserInfoChannels';
 import UserInfoMessages from '../components/UserInfo/UserInfoMessages';
+import setViewModeStatus from '../helpers/setViewModeStatus';
 
 const UserInfoContainer = ({ userId = '', history }) => {
   const {
     data: { getUser: { userName, email, channels, messages } = {} } = {},
     loading,
-  } = useQuery(getUserQuery, { fetchPolicy: 'network-only' });
+  } = useQuery(getUserQuery, { variables: { id: userId }, fetchPolicy: 'network-only' });
 
   const [activeItem, setActiveItem] = useState('profile');
   const handleItemClick = (e, { name }) => setActiveItem(name);
@@ -21,12 +22,16 @@ const UserInfoContainer = ({ userId = '', history }) => {
     handleItemClick('', { name: 'profile' });
   }, [userId]);
 
+  const viewMode = setViewModeStatus(userId);
+
   return (
     <div>
       <Menu pointing>
         <Menu.Item name="profile" active={activeItem === 'profile'} onClick={handleItemClick} />
         <Menu.Item name="channels" active={activeItem === 'channels'} onClick={handleItemClick} />
-        <Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleItemClick} />
+        {!viewMode && (
+          <Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleItemClick} />
+        )}
       </Menu>
       {loading ? (
         <Dimmer active inverted>
@@ -35,10 +40,10 @@ const UserInfoContainer = ({ userId = '', history }) => {
       ) : (
         <>
           {activeItem === 'profile' && (
-            <UserInfoProfile viewMode={false} user={{ userName, email }} history={history} />
+            <UserInfoProfile viewMode={viewMode} user={{ userName, email }} history={history} />
           )}
           {activeItem === 'channels' && <UserInfoChannels channels={channels} />}
-          {activeItem === 'messages' && <UserInfoMessages messages={messages} />}
+          {!viewMode && activeItem === 'messages' && <UserInfoMessages messages={messages} />}
         </>
       )}
     </div>

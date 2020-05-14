@@ -19,8 +19,8 @@ import {
 
 const Bubble = ({ online }) => (online ? <Green>● </Green> : '○ ');
 
-const member = ({ id, userName }) => (
-  <SideBarListItem key={`member-${id}`}>
+const member = ({ id, userName, onProfileClick }) => (
+  <SideBarListItem key={`member-${id}`} id={id} onClick={onProfileClick}>
     <Bubble online />
     {userName}
   </SideBarListItem>
@@ -35,6 +35,7 @@ const SideBar = ({
   onChannelOptionsClick,
   display,
   toggleDisplay,
+  onProfileClick,
 }) => (
   <SideBarWrapper display={display.toString()}>
     <SideBarContent display={display.toString()}>
@@ -44,7 +45,9 @@ const SideBar = ({
       </PushLeft>
       <SideBarListWrapper>
         <SideBarListHeader>Members</SideBarListHeader>
-        <SideBarList>{members.map(member)}</SideBarList>
+        <SideBarList>
+          {members.map((memberInfo) => member({ ...memberInfo, onProfileClick }))}
+        </SideBarList>
         {!viewMode && (
           <Button onClick={onInvitePeopleClick} positive floated="right">
             + Invite people
@@ -72,6 +75,7 @@ Bubble.propTypes = {
 member.propTypes = {
   id: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
+  onProfileClick: PropTypes.func.isRequired,
 };
 
 SideBar.propTypes = {
@@ -84,6 +88,7 @@ SideBar.propTypes = {
   onChannelOptionsClick: PropTypes.func.isRequired,
   display: PropTypes.bool.isRequired,
   toggleDisplay: PropTypes.func.isRequired,
+  onProfileClick: PropTypes.func.isRequired,
 };
 
 export default SideBar;
