@@ -36,7 +36,7 @@ export const ProfileInfoItemWrapper = styled.div`
   margin: 10px 0;
   width: fit-content;
   > i {
-    display: none;
+    display: ${({ editMode }) => (editMode ? 'inline-block' : 'none')};
     cursor: pointer;
   }
   &:hover {
