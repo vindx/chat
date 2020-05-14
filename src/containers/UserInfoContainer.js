@@ -21,14 +21,6 @@ const UserInfoContainer = ({ userId = '', history }) => {
     handleItemClick('', { name: 'profile' });
   }, [userId]);
 
-  if (loading) {
-    return (
-      <Dimmer active inverted>
-        <Loader inverted>Loading</Loader>
-      </Dimmer>
-    );
-  }
-
   return (
     <div>
       <Menu pointing>
@@ -36,11 +28,19 @@ const UserInfoContainer = ({ userId = '', history }) => {
         <Menu.Item name="channels" active={activeItem === 'channels'} onClick={handleItemClick} />
         <Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleItemClick} />
       </Menu>
-      {activeItem === 'profile' && (
-        <UserInfoProfile viewMode={false} user={{ userName, email }} history={history} />
+      {loading ? (
+        <Dimmer active inverted>
+          <Loader inverted>Loading</Loader>
+        </Dimmer>
+      ) : (
+        <>
+          {activeItem === 'profile' && (
+            <UserInfoProfile viewMode={false} user={{ userName, email }} history={history} />
+          )}
+          {activeItem === 'channels' && <UserInfoChannels channels={channels} />}
+          {activeItem === 'messages' && <UserInfoMessages messages={messages} />}
+        </>
       )}
-      {activeItem === 'channels' && <UserInfoChannels channels={channels} />}
-      {activeItem === 'messages' && <UserInfoMessages messages={messages} />}
     </div>
   );
 };
