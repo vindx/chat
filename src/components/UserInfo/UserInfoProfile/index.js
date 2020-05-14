@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,12 +13,18 @@ import {
 } from '../../styledComponents/UserInfo';
 import SignOutButton from '../../SignOutButton';
 import ChangeUserNameForm from './ChangeUserNameForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, history }) => {
-  const [editUserNameMode, setUserNameMode] = useState(false);
+  const [editUserNameMode, setEditUserNameMode] = useState(false);
+  const [editPasswordMode, setEditPasswordMode] = useState(false);
 
   const handleToggleUserNameMode = () => {
-    setUserNameMode(!editUserNameMode);
+    setEditUserNameMode(!editUserNameMode);
+  };
+
+  const handleTogglePasswordMode = () => {
+    setEditPasswordMode(!editPasswordMode);
   };
 
   return (
@@ -43,6 +49,12 @@ const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, h
         <ProfileInfoItemWrapper>
           <ProfileInfoItemAttribute>email:</ProfileInfoItemAttribute>
           <ProfileInfoItemValue>{email}</ProfileInfoItemValue>
+        </ProfileInfoItemWrapper>
+        <ProfileInfoItemWrapper>
+          {editPasswordMode && <ChangePasswordForm close={handleTogglePasswordMode} />}
+          <Button size="tiny" compact basic onClick={handleTogglePasswordMode}>
+            {editPasswordMode ? 'Close' : 'Change password'}
+          </Button>
         </ProfileInfoItemWrapper>
         {!viewMode && <SignOutButton compact floated="right" history={history} />}
       </ProfileInfoWrapper>
