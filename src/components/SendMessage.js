@@ -23,6 +23,7 @@ const SendMessage = ({
   <Input
     key="message-input"
     autoComplete="off"
+    size="small"
     onChange={handleChange}
     onBlur={handleBlur}
     name="message"
@@ -39,7 +40,7 @@ const SendMessage = ({
     }}
   />,
   <ButtonsWrapper key="buttons-wrapper">
-    <Button onClick={handleSubmit} type="submit" compact color="green" loading={isSubmitting}>
+    <Button onClick={handleSubmit} type="submit" color="green" loading={isSubmitting}>
       Send
     </Button>
   </ButtonsWrapper>,
