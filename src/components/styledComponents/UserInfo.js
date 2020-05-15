@@ -65,12 +65,25 @@ export const ChannelsInfoWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
+export const ButtonSection = styled.div`
+  margin-left: 20px;
+  display: none;
+  > button {
+    cursor: pointer;
+  }
+`;
+
 export const ChannelInfo = styled.div`
   display: flex;
   flex-direction: row;
   display: flex;
   align-items: center;
   padding: 5px 10px 5px 10%;
+  &:hover {
+    ${ButtonSection} {
+      display: inline-block;
+    }
+  }
 `;
 
 export const ChannelImage = styled.div`

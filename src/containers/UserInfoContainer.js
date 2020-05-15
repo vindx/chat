@@ -42,7 +42,14 @@ const UserInfoContainer = ({ userId = '', history }) => {
           {activeItem === 'profile' && (
             <UserInfoProfile viewMode={viewMode} user={{ userName, email }} history={history} />
           )}
-          {activeItem === 'channels' && <UserInfoChannels channels={channels} />}
+          {activeItem === 'channels' && (
+            <UserInfoChannels
+              viewMode={viewMode}
+              channels={channels}
+              history={history}
+              userId={userId}
+            />
+          )}
           {!viewMode && activeItem === 'messages' && <UserInfoMessages messages={messages} />}
         </>
       )}

@@ -88,6 +88,21 @@ export const joinChannelMutation = gql`
   }
 `;
 
+export const editChannelNameMutation = gql`
+  mutation($channelId: ID!, $channelName: String!) {
+    editChannelName(channelId: $channelId, channelName: $channelName) {
+      ok
+      channel {
+        id
+        name
+      }
+      errors {
+        message
+      }
+    }
+  }
+`;
+
 export const smbJoinedChannelSubscription = gql`
   subscription($channelId: ID!) {
     smbJoinedChannel(channelId: $channelId) {

@@ -8,8 +8,8 @@ import {
   MessageInfoText,
   MessageInfoWrapper,
   MessagesInfoWrapper,
-} from '../styledComponents/UserInfo';
-import { CreatedAt } from '../styledComponents/Messages';
+} from '../../styledComponents/UserInfo';
+import { CreatedAt } from '../../styledComponents/Messages';
 
 const UserInfoMessage = ({ message: { text, createdAt, channel } }) => (
   <MessageInfoWrapper>
