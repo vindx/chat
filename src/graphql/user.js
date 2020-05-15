@@ -80,6 +80,8 @@ export const editPasswordMutation = gql`
       errors {
         message
       }
+      token
+      refreshToken
     }
   }
 `;

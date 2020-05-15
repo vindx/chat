@@ -134,11 +134,13 @@ export default compose(
       await mutate({
         variables: { oldPassword, newPassword },
         update: (store, { data: { editPassword } }) => {
-          const { ok, errors } = editPassword;
+          const { ok, errors, token, refreshToken } = editPassword;
           if (!ok) {
             setErrors(errors[0]);
             return;
           }
+          localStorage.setItem('token', token);
+          localStorage.setItem('refreshToken', refreshToken);
           setSubmitting(false);
           close();
         },
