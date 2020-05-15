@@ -51,10 +51,14 @@ const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, h
           <ProfileInfoItemValue>{email}</ProfileInfoItemValue>
         </ProfileInfoItemWrapper>
         <ProfileInfoItemWrapper>
-          {editPasswordMode && <ChangePasswordForm close={handleTogglePasswordMode} />}
-          <Button size="tiny" compact basic onClick={handleTogglePasswordMode}>
-            {editPasswordMode ? 'Close' : 'Change password'}
-          </Button>
+          {!viewMode && (
+            <>
+              {editPasswordMode && <ChangePasswordForm close={handleTogglePasswordMode} />}
+              <Button size="tiny" compact basic onClick={handleTogglePasswordMode}>
+                {editPasswordMode ? 'Close' : 'Change password'}
+              </Button>
+            </>
+          )}
         </ProfileInfoItemWrapper>
         {!viewMode && <SignOutButton compact floated="right" history={history} />}
       </ProfileInfoWrapper>
