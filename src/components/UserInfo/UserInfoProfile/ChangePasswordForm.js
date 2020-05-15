@@ -81,7 +81,7 @@ const ChangePasswordForm = ({
         }}
       />
     </Form.Field>
-    <Button type="submit" size="tiny" compact basic loading={isSubmitting}>
+    <Button type="submit" size="tiny" compact basic loading={isSubmitting} onClick={handleSubmit}>
       Submit
     </Button>
     {error.message && (
