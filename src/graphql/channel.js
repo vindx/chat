@@ -26,7 +26,7 @@ export const getChannelQuery = gql`
   }
 `;
 
-export const leaveChannelQuery = gql`
+export const leaveChannelMutation = gql`
   mutation($channelId: ID!) {
     leaveChannel(channelId: $channelId) {
       ok
@@ -41,7 +41,7 @@ export const leaveChannelQuery = gql`
   }
 `;
 
-export const deleteChannelQuery = gql`
+export const deleteChannelMutation = gql`
   mutation($channelId: ID!) {
     deleteChannel(channelId: $channelId) {
       ok

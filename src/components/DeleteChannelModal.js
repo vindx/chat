@@ -3,10 +3,10 @@ import { useMutation } from '@apollo/react-hooks';
 import { Button, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { deleteChannelQuery } from '../graphql/channel';
+import { deleteChannelMutation } from '../graphql/channel';
 
 const DeleteChannelModal = ({ onClose, channelId, history, updateQuery }) => {
-  const [handleDeleteChannel, { loading }] = useMutation(deleteChannelQuery, {
+  const [handleDeleteChannel, { loading }] = useMutation(deleteChannelMutation, {
     variables: { channelId },
     update: (store, { data: { deleteChannel } }) => {
       const { ok, channel } = deleteChannel;
