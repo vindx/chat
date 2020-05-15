@@ -86,7 +86,19 @@ export const ChannelInfo = styled.div`
   }
 `;
 
-export const ChannelImage = styled.div`
+export const ChannelName = styled.div`
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &:active {
+    position: relative;
+    top: 3px;
+    left: 3px;
+  }
+`;
+
+export const ChannelNameFirstLetter = styled.div`
   width: 30px;
   height: 30px;
   background-color: #679ed2;
@@ -98,7 +110,7 @@ export const ChannelImage = styled.div`
   border-radius: 50%;
 `;
 
-export const ChannelName = styled.div`
+export const ChannelNameRemainingLetters = styled.div`
   font-size: 16px;
 `;
 
@@ -111,6 +123,7 @@ export const MessagesInfoWrapper = styled.div`
 `;
 
 export const MessageInfoWrapper = styled.div`
+  max-width: 90%;
   display: flex;
   flex-direction: column;
   width: fit-content;
@@ -120,6 +133,7 @@ export const MessageInfoWrapper = styled.div`
 export const MessageInfoText = styled.div`
   font-size: 16px;
   font-weight: bold;
+  word-wrap: break-word;
 `;
 
 export const MessageInfoChannelWrapper = styled.div`
@@ -134,4 +148,5 @@ export const MessageInfoChannel = styled.span`
   border-radius: 5px;
   padding: 0 3px 3px 3px;
   margin: 0 5px;
+  cursor: pointer;
 `;

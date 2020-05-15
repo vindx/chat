@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 
 import {
   ButtonSection,
-  ChannelImage,
   ChannelInfo,
   ChannelName,
+  ChannelNameFirstLetter,
+  ChannelNameRemainingLetters,
 } from '../../styledComponents/UserInfo';
 import ChangeChannelNameForm from './ChangeChannelNameForm';
 
-const UserInfoChannel = ({ channel: { id, name }, viewMode }) => {
+const UserInfoChannel = ({ channel: { id, name }, viewMode, switchChannel }) => {
   const [editChannelNameMode, setEditChannelNameMode] = useState(false);
 
   const handleToggleChannelNameMode = () => {
@@ -26,10 +27,10 @@ const UserInfoChannel = ({ channel: { id, name }, viewMode }) => {
           oldChannelName={name}
         />
       ) : (
-        <>
-          <ChannelImage>{name.charAt(0).toUpperCase()}</ChannelImage>
-          <ChannelName>{name.slice(1)}</ChannelName>
-        </>
+        <ChannelName id={id} onClick={switchChannel}>
+          <ChannelNameFirstLetter>{name.charAt(0).toUpperCase()}</ChannelNameFirstLetter>
+          <ChannelNameRemainingLetters>{name.slice(1)}</ChannelNameRemainingLetters>
+        </ChannelName>
       )}
       {!viewMode && !editChannelNameMode && (
         <ButtonSection>
@@ -48,6 +49,7 @@ UserInfoChannel.propTypes = {
     name: PropTypes.string,
   }).isRequired,
   viewMode: PropTypes.bool.isRequired,
+  switchChannel: PropTypes.func.isRequired,
 };
 
 export default UserInfoChannel;

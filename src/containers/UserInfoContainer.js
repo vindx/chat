@@ -8,6 +8,7 @@ import UserInfoProfile from '../components/UserInfo/UserInfoProfile';
 import UserInfoChannels from '../components/UserInfo/UserInfoChannels';
 import UserInfoMessages from '../components/UserInfo/UserInfoMessages';
 import setViewModeStatus from '../helpers/setViewModeStatus';
+import switchChannelById from '../helpers/switchChannelById';
 
 const UserInfoContainer = ({ userId = '', history }) => {
   const {
@@ -23,6 +24,10 @@ const UserInfoContainer = ({ userId = '', history }) => {
   }, [userId]);
 
   const viewMode = setViewModeStatus(userId);
+
+  const handleSwitchChannel = (e) => {
+    switchChannelById(e.currentTarget.id, history);
+  };
 
   return (
     <div>
@@ -48,9 +53,12 @@ const UserInfoContainer = ({ userId = '', history }) => {
               channels={channels}
               history={history}
               userId={userId}
+              switchChannel={handleSwitchChannel}
             />
           )}
-          {!viewMode && activeItem === 'messages' && <UserInfoMessages messages={messages} />}
+          {!viewMode && activeItem === 'messages' && (
+            <UserInfoMessages messages={messages} switchChannel={handleSwitchChannel} />
+          )}
         </>
       )}
     </div>

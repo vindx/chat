@@ -44,6 +44,7 @@ export const getUserQuery = gql`
         id
         text
         channel {
+          id
           name
         }
         createdAt
