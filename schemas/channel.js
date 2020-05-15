@@ -28,5 +28,6 @@ module.exports = `
     joinChannel(secretKey: String!): channelResponse!
     leaveChannel(channelId: ID!): channelResponse!
     deleteChannel(channelId: ID!): channelResponse!
+    editChannelName(channelId: ID!, channelName: String!): channelResponse!
   }
 `;

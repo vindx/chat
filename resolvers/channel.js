@@ -92,6 +92,18 @@ module.exports = {
         channel,
       };
     }),
+    editChannelName: requiresChannelAccess.createResolver(
+      async (parent, { channel, channelName }) => {
+        try {
+          // eslint-disable-next-line no-param-reassign
+          channel.name = channelName;
+          await channel.save();
+          return { ok: true, channel };
+        } catch (err) {
+          return { ok: false, errors: formatErrors(err) };
+        }
+      }
+    ),
     leaveChannel: requiresChannelAccess.createResolver(
       async (parent, { channel, channelId }, { models, user }) => {
         if (String(channel.owner) === user.id) {
