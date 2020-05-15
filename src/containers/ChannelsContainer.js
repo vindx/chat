@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import Channels from '../components/Channels';
-import AddChannelModal from '../components/AddChannelModal';
+import AddChannelModal from '../components/modals/AddChannelModal';
 import { allChannelsQuery } from '../graphql/channel';
 
 const ChannelsContainer = ({ currentChannelId, history, onProfileClick, activeUserId }) => {

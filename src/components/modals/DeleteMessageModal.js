@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { Button, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { deleteMessageMutation, getMessagesQuery } from '../graphql/message';
+import { deleteMessageMutation, getMessagesQuery } from '../../graphql/message';
 
 const DeleteMessageModal = ({
   isOpen,

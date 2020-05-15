@@ -13,7 +13,7 @@ import {
   MessageWrapper,
   UserName,
 } from '../components/styledComponents/Messages';
-import DeleteMessageModal from '../components/DeleteMessageModal';
+import DeleteMessageModal from '../components/modals/DeleteMessageModal';
 import {
   getMessagesQuery,
   newMessageSubscription,

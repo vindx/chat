@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import UserInfoContainer from '../containers/UserInfoContainer';
+import UserInfoContainer from '../../containers/UserInfoContainer';
 
 const UserInfoModal = ({ open, onClose, history, userId }) => (
   <Modal open={open} onClose={onClose} size="large" closeIcon>

@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { Button, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { leaveChannelMutation } from '../graphql/channel';
+import { leaveChannelMutation } from '../../graphql/channel';
 
 const LeaveChannelModal = ({ onClose, channelId, history, updateQuery }) => {
   const [handleLeaveChannel, { loading }] = useMutation(leaveChannelMutation, {

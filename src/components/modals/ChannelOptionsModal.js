@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import LeaveChannelModal from './LeaveChannelModal';
 import DeleteChannelModal from './DeleteChannelModal';
-import { allChannelsQuery } from '../graphql/channel';
+import { allChannelsQuery } from '../../graphql/channel';
 
 const updateQuery = (store, channel) => {
   const data = store.readQuery({ query: allChannelsQuery });

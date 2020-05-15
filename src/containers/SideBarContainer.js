@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 
 import SideBar from '../components/SideBar';
-import InvitePeopleModal from '../components/InvitePeopleModal';
-import ChannelOptionsModal from '../components/ChannelOptionsModal';
+import InvitePeopleModal from '../components/modals/InvitePeopleModal';
+import ChannelOptionsModal from '../components/modals/ChannelOptionsModal';
 import {
   getChannelQuery,
   smbJoinedChannelSubscription,

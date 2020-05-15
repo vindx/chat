@@ -8,7 +8,7 @@ import SideBarContainer from './SideBarContainer';
 import Header from '../components/Header';
 import MessagesContainer from './MessagesContainer';
 import EditOrSendMessageContainer from './EditOrSendMessageContainer';
-import UserInfoModal from '../components/UserInfoModal';
+import UserInfoModal from '../components/modals/UserInfoModal';
 
 const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   const [channelName, setChannelName] = useState('');

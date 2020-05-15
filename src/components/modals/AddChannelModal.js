@@ -2,8 +2,8 @@ import React from 'react';
 import { Header, Modal, Segment, Grid, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import CreateChannelForm from './CreateChannelForm';
-import JoinChannelForm from './JoinChannelForm';
+import CreateChannelForm from '../CreateChannelForm';
+import JoinChannelForm from '../JoinChannelForm';
 
 const AddChannelModal = ({ isOpen, onClose, history }) => (
   <Modal open={isOpen} onClose={onClose} closeIcon>
