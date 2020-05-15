@@ -91,7 +91,9 @@ module.exports = {
     }),
 
     editPassword: requiresAuth.createResolver(
-      async (parent, { oldPassword, newPassword }, { models, user }) => {
+      async (parent, { oldPassword, newPassword }, {
+        models, user, SECRET, SECRET2
+      }) => {
         try {
           const foundUser = await models.User.findById(user.id);
           const valid = await bcrypt.compare(oldPassword, foundUser.password);
@@ -105,10 +107,7 @@ module.exports = {
           }
           foundUser.password = newPassword;
           await foundUser.save();
-          return {
-            ok: true,
-            user: foundUser,
-          };
+          return await tryLogin(foundUser.email, newPassword, models, SECRET, SECRET2);
         } catch (err) {
           return {
             ok: false,

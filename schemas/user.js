@@ -16,6 +16,8 @@ module.exports = `
     ok: Boolean!
     user: User
     errors: [Error!]
+    token: String
+    refreshToken: String
   }
   
   type RegisterResponse {
