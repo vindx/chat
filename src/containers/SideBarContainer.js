@@ -37,7 +37,9 @@ const SideBarContainer = ({
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    if (name) {
+    if (error) {
+      setChannelName('');
+    } else if (name) {
       setChannelName(name);
     }
     if (currentChannelId) {
@@ -102,7 +104,7 @@ const SideBarContainer = ({
         smbLeftChannelUnSubscribe();
       };
     }
-  }, [name, setChannelName, currentChannelId, subscribeToMore]);
+  }, [name, setChannelName, currentChannelId, subscribeToMore, error]);
 
   const toggleInvitePeopleModal = () => {
     setToggleInvitePeopleModal(!invitePeopleModalIsOpen);
@@ -116,7 +118,7 @@ const SideBarContainer = ({
   if (!name) {
     return null;
   }
-  if (error) return <p>Error :(</p>;
+  if (error) return null;
   const viewMode = setViewModeStatus(ownerId);
 
   return [

@@ -159,7 +159,7 @@ const MessagesContainer = ({
       </Dimmer>
     );
   }
-  if (!messages) {
+  if (error || !messages) {
     return (
       <MessagesWrapper center>
         Please choose channel
