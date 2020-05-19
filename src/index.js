@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'semantic-ui-css/semantic.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'emoji-mart/css/emoji-mart.css';
 
 import * as serviceWorker from './serviceWorker';
 import Routes from './routes';

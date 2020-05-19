@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Picker } from 'emoji-mart';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { SendMessageWrapper } from '../components/styledComponents/SendMessage';
+import {
+  ButtonsWrapper,
+  SendMessageWrapper,
+  EmojiWrapper,
+} from '../components/styledComponents/SendMessage';
 import SendMessage from '../components/SendMessage';
 import EditMessage from '../components/EditMessage';
 
@@ -16,31 +22,51 @@ const EditOrSendMessageContainer = ({
   startEditing,
   cancelEditing,
   setLastMessageSent,
-}) => (
-  <>
-    {channelName && (
-      <SendMessageWrapper>
-        {onEditing ? (
-          <EditMessage
-            currentChannelId={currentChannelId}
-            close={cancelEditing}
-            messageForEditing={messageForEditing}
-            messageId={messageId}
-            enterKey={ENTER_KEY}
-            setLastMessageSent={setLastMessageSent}
-          />
-        ) : (
-          <SendMessage
-            channelName={channelName}
-            currentChannelId={currentChannelId}
-            enterKey={ENTER_KEY}
-            startEditing={startEditing}
-          />
-        )}
-      </SendMessageWrapper>
-    )}
-  </>
-);
+}) => {
+  const [emojiPickerState, SetEmojiPicker] = useState(false);
+  const [emoji2, SetEmoji] = useState({ colons: '' });
+
+  const triggerPicker = (e) => {
+    e.preventDefault();
+    SetEmojiPicker(!emojiPickerState);
+  };
+
+  return (
+    <>
+      {channelName && (
+        <SendMessageWrapper>
+          {emojiPickerState && (
+            <EmojiWrapper>
+              <Picker emojiSize={20} onSelect={(emoji) => SetEmoji(emoji)} />
+            </EmojiWrapper>
+          )}
+          <ButtonsWrapper>
+            <Button onClick={triggerPicker} basic icon="smile outline" />
+          </ButtonsWrapper>
+          {onEditing ? (
+            <EditMessage
+              emoji={emoji2}
+              currentChannelId={currentChannelId}
+              close={cancelEditing}
+              messageForEditing={messageForEditing}
+              messageId={messageId}
+              enterKey={ENTER_KEY}
+              setLastMessageSent={setLastMessageSent}
+            />
+          ) : (
+            <SendMessage
+              emoji={emoji2}
+              channelName={channelName}
+              currentChannelId={currentChannelId}
+              enterKey={ENTER_KEY}
+              startEditing={startEditing}
+            />
+          )}
+        </SendMessageWrapper>
+      )}
+    </>
+  );
+};
 
 EditOrSendMessageContainer.propTypes = {
   channelName: PropTypes.string.isRequired,

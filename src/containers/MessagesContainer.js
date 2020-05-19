@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { Dimmer, Dropdown, Label, Loader } from 'semantic-ui-react';
 import prettydate from 'pretty-date';
+import reactStringReplace from 'react-string-replace';
+import { Emoji } from 'emoji-mart';
 import PropTypes from 'prop-types';
 
 import {
@@ -201,7 +203,11 @@ const MessagesContainer = ({
               )}
             </MessageHeader>
 
-            <MessageText>{text}</MessageText>
+            <MessageText>
+              {reactStringReplace(text, /:(.+?):/g, (match, i) => (
+                <Emoji key={i} emoji={match} size={18} />
+              ))}
+            </MessageText>
             <CreatedAt>{prettydate.format(new Date(Number(createdAt)))}</CreatedAt>
           </Message>
         </MessageWrapper>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, TextArea } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
@@ -27,52 +27,60 @@ const EditMessage = ({
   messageForEditing,
   close,
   enterKey,
-}) => [
-  <EditMessageContainer key="edit-message-container">
-    <EditMessageWrapper>
-      <EditMessageBody>
-        <EditMessageHeader>Edit message</EditMessageHeader>
-        <EditMessageText>{messageForEditing}</EditMessageText>
-      </EditMessageBody>
-      <EditMessageButton>
-        <Button icon="cancel" basic size="mini" circular color="yellow" onClick={close} />
-      </EditMessageButton>
-    </EditMessageWrapper>
-    <Form>
-      <TextArea
-        autoFocus
-        /* eslint-disable-next-line no-return-assign */
-        onFocus={({ target }) => {
-          // eslint-disable-next-line no-param-reassign
-          target.selectionStart = values.message.length;
-        }}
-        rows={(messageForEditing.length + 150) / 150}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        name="message"
-        value={values.message}
-        placeholder="Message"
-        onKeyDown={(e) => {
-          if (e.keyCode === enterKey && !isSubmitting) {
-            if (messageForEditing === values.message) {
-              close();
-              return;
+  emoji,
+}) => {
+  useEffect(() => {
+    // eslint-disable-next-line no-param-reassign
+    values.message += emoji.colons;
+  }, [emoji]);
+
+  return [
+    <EditMessageContainer key="edit-message-container">
+      <EditMessageWrapper>
+        <EditMessageBody>
+          <EditMessageHeader>Edit message</EditMessageHeader>
+          <EditMessageText>{messageForEditing}</EditMessageText>
+        </EditMessageBody>
+        <EditMessageButton>
+          <Button icon="cancel" basic size="mini" circular color="yellow" onClick={close} />
+        </EditMessageButton>
+      </EditMessageWrapper>
+      <Form>
+        <TextArea
+          autoFocus
+          /* eslint-disable-next-line no-return-assign */
+          onFocus={({ target }) => {
+            // eslint-disable-next-line no-param-reassign
+            target.selectionStart = values.message.length;
+          }}
+          rows={(messageForEditing.length + 150) / 150}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          name="message"
+          value={values.message}
+          placeholder="Message"
+          onKeyDown={(e) => {
+            if (e.keyCode === enterKey && !isSubmitting) {
+              if (messageForEditing === values.message) {
+                close();
+                return;
+              }
+              handleSubmit(e);
             }
-            handleSubmit(e);
-          }
-          if (e.keyCode === ESC_KEY && !isSubmitting) {
-            close();
-          }
-        }}
-      />
-    </Form>
-  </EditMessageContainer>,
-  <ButtonsWrapper key="buttons-wrapper">
-    <Button onClick={handleSubmit} type="submit" compact color="instagram" loading={isSubmitting}>
-      Edit
-    </Button>
-  </ButtonsWrapper>,
-];
+            if (e.keyCode === ESC_KEY && !isSubmitting) {
+              close();
+            }
+          }}
+        />
+      </Form>
+    </EditMessageContainer>,
+    <ButtonsWrapper key="buttons-wrapper">
+      <Button onClick={handleSubmit} type="submit" compact color="instagram" loading={isSubmitting}>
+        Edit
+      </Button>
+    </ButtonsWrapper>,
+  ];
+};
 
 EditMessage.propTypes = {
   values: PropTypes.shape({

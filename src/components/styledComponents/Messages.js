@@ -50,6 +50,7 @@ export const UserName = styled.span`
   cursor: pointer;
 `;
 export const MessageText = styled.div`
+  font-size: 16px;
   max-width: 80%;
   word-wrap: break-word;
 `;

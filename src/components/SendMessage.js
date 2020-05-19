@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Input } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
@@ -19,32 +19,40 @@ const SendMessage = ({
   isSubmitting,
   enterKey,
   startEditing,
-}) => [
-  <Input
-    key="message-input"
-    autoComplete="off"
-    size="small"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    name="message"
-    value={values.message}
-    fluid
-    placeholder={`Message #${channelName}`}
-    onKeyDown={(e) => {
-      if (e.keyCode === enterKey && !isSubmitting) {
-        handleSubmit(e);
-      }
-      if (e.keyCode === ARROW_UP_KEY) {
-        startEditing();
-      }
-    }}
-  />,
-  <ButtonsWrapper key="buttons-wrapper">
-    <Button onClick={handleSubmit} type="submit" color="green" loading={isSubmitting}>
-      Send
-    </Button>
-  </ButtonsWrapper>,
-];
+  emoji,
+}) => {
+  useEffect(() => {
+    // eslint-disable-next-line no-param-reassign
+    values.message += emoji.colons;
+  }, [emoji]);
+
+  return [
+    <Input
+      key="message-input"
+      autoComplete="off"
+      size="small"
+      onChange={handleChange}
+      onBlur={handleBlur}
+      name="message"
+      value={values.message}
+      fluid
+      placeholder={`Message #${channelName}`}
+      onKeyDown={(e) => {
+        if (e.keyCode === enterKey && !isSubmitting) {
+          handleSubmit(e);
+        }
+        if (e.keyCode === ARROW_UP_KEY) {
+          startEditing();
+        }
+      }}
+    />,
+    <ButtonsWrapper key="buttons-wrapper">
+      <Button onClick={handleSubmit} type="submit" color="green" loading={isSubmitting}>
+        Send
+      </Button>
+    </ButtonsWrapper>,
+  ];
+};
 
 SendMessage.propTypes = {
   channelName: PropTypes.string.isRequired,
@@ -63,6 +71,7 @@ export default compose(
   graphql(createMessageMutation),
   withFormik({
     mapPropsToValues: () => ({ message: '' }),
+    enableReinitialize: true,
     handleSubmit: async (
       { message },
       { props: { currentChannelId, mutate }, setSubmitting, setFieldValue }
