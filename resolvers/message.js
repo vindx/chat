@@ -147,5 +147,6 @@ module.exports = {
   Message: {
     user: async ({ userId }, args, { models }) => await models.User.findById(userId),
     channel: async ({ channelId }, args, { models }) => await models.Channel.findById(channelId),
+    replyTo: async ({ replyTo }, args, { models }) => await models.Message.findById(replyTo),
   },
 };
