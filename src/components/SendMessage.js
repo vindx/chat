@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Input } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import { createMessageMutation } from '../graphql/message';
 import { ButtonsWrapper } from './styledComponents/SendMessage';
+import { CustomTextArea } from './styledComponents/GlobalStyle';
 
 const ARROW_UP_KEY = 38;
 
@@ -27,25 +28,33 @@ const SendMessage = ({
   }, [emoji]);
 
   return [
-    <Input
-      key="message-input"
-      autoComplete="off"
-      size="small"
-      onChange={handleChange}
-      onBlur={handleBlur}
-      name="message"
-      value={values.message}
-      fluid
-      placeholder={`Message #${channelName}`}
-      onKeyDown={(e) => {
-        if (e.keyCode === enterKey && !isSubmitting) {
-          handleSubmit(e);
+    <Form key="message-input">
+      <CustomTextArea
+        autoComplete="off"
+        rows={
+          /* automatic update rows counter depend of window's width
+           * 0.8 means that input ≈ 80% of window's width
+           * 7.7 means that letter width ≈ 7.7px
+           * on big and small screens that might work not perfect
+           * cause 0.8 and 7.7 just approximate values */
+          (values.message.length + (window.innerWidth * 0.8) / 7.7)
+          / ((window.innerWidth * 0.8) / 7.7)
         }
-        if (e.keyCode === ARROW_UP_KEY) {
-          startEditing();
-        }
-      }}
-    />,
+        onChange={handleChange}
+        onBlur={handleBlur}
+        name="message"
+        value={values.message}
+        placeholder={`Message #${channelName}`}
+        onKeyDown={(e) => {
+          if (e.keyCode === enterKey && !isSubmitting) {
+            handleSubmit(e);
+          }
+          if (e.keyCode === ARROW_UP_KEY) {
+            startEditing();
+          }
+        }}
+      />
+    </Form>,
     <ButtonsWrapper key="buttons-wrapper">
       <Button onClick={handleSubmit} type="submit" color="green" loading={isSubmitting}>
         Send

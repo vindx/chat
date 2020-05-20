@@ -1,4 +1,9 @@
 import styled from 'styled-components';
+import { getBackground } from './GlobalStyle';
+
+export const UserInfoWrapper = styled.div`
+  background: ${getBackground} !important;
+`;
 
 export const ProfileWrapper = styled.div`
   display: flex;

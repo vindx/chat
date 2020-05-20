@@ -1,9 +1,14 @@
 import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { Button, Modal } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { deleteChannelMutation } from '../../graphql/channel';
+import {
+  CustomModalActions,
+  CustomModalContent,
+  CustomModalHeader,
+} from '../styledComponents/GlobalStyle';
 
 const DeleteChannelModal = ({ onClose, channelId, history, updateQuery }) => {
   const [handleDeleteChannel, { loading }] = useMutation(deleteChannelMutation, {
@@ -21,15 +26,15 @@ const DeleteChannelModal = ({ onClose, channelId, history, updateQuery }) => {
 
   return (
     <>
-      <Modal.Header>Delete This Channel?</Modal.Header>
-      <Modal.Content>
+      <CustomModalHeader>Delete This Channel?</CustomModalHeader>
+      <CustomModalContent>
         <p>
           Are you sure you want to delete this channel?
           <br />
           All data will be lost!
         </p>
-      </Modal.Content>
-      <Modal.Actions>
+      </CustomModalContent>
+      <CustomModalActions>
         <Button positive onClick={onClose}>
           No
         </Button>
@@ -41,7 +46,7 @@ const DeleteChannelModal = ({ onClose, channelId, history, updateQuery }) => {
           loading={loading}
           onClick={handleDeleteChannel}
         />
-      </Modal.Actions>
+      </CustomModalActions>
     </>
   );
 };

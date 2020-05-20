@@ -2,10 +2,11 @@ import React from 'react';
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import { withFormik } from 'formik';
-import { Icon, Input, Label } from 'semantic-ui-react';
+import { Icon, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { editUserNameMutation } from '../../../graphql/user';
+import { CustomInput } from '../../styledComponents/GlobalStyle';
 
 const ChangeUserNameForm = ({
   handleSubmit,
@@ -18,7 +19,7 @@ const ChangeUserNameForm = ({
   errors: error,
 }) => (
   <>
-    <Input
+    <CustomInput
       autoComplete="off"
       size="small"
       name="newUserName"

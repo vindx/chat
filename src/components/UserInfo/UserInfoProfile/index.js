@@ -11,9 +11,10 @@ import {
   ProfileInfoWrapper,
   ProfileWrapper,
 } from '../../styledComponents/UserInfo';
-import SignOutButton from '../../SignOutButton';
+import SignOutButton from '../../buttons/SignOutButton';
 import ChangeUserNameForm from './ChangeUserNameForm';
 import ChangePasswordForm from './ChangePasswordForm';
+import ToggleThemeButton from '../../buttons/ToggleThemeButton';
 
 const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, history }) => {
   const [editUserNameMode, setEditUserNameMode] = useState(false);
@@ -33,6 +34,7 @@ const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, h
         <ProfileImage>{userName.charAt(0).toUpperCase()}</ProfileImage>
       </ProfileImageWrapper>
       <ProfileInfoWrapper>
+        {!viewMode && <ToggleThemeButton />}
         <ProfileInfoItemWrapper editMode={editUserNameMode}>
           <ProfileInfoItemAttribute>username:</ProfileInfoItemAttribute>
 
@@ -54,7 +56,7 @@ const UserInfoProfile = ({ user: { userName = '', email = '' } = {}, viewMode, h
           {!viewMode && (
             <>
               {editPasswordMode && <ChangePasswordForm close={handleTogglePasswordMode} />}
-              <Button size="tiny" compact basic onClick={handleTogglePasswordMode}>
+              <Button size="tiny" color="grey" compact basic onClick={handleTogglePasswordMode}>
                 {editPasswordMode ? 'Close' : 'Change password'}
               </Button>
             </>

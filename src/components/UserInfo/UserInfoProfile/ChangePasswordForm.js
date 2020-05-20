@@ -2,10 +2,11 @@ import React from 'react';
 import { compose } from 'recompose';
 import { graphql } from 'react-apollo';
 import { withFormik } from 'formik';
-import { Button, Form, Input, Label } from 'semantic-ui-react';
+import { Button, Form, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { editPasswordMutation } from '../../../graphql/user';
+import { CustomInput } from '../../styledComponents/GlobalStyle';
 
 const ChangePasswordForm = ({
   handleSubmit,
@@ -18,7 +19,7 @@ const ChangePasswordForm = ({
 }) => (
   <Form>
     <Form.Field>
-      <Input
+      <CustomInput
         autoComplete="off"
         size="small"
         name="oldPassword"
@@ -40,7 +41,7 @@ const ChangePasswordForm = ({
       />
     </Form.Field>
     <Form.Field>
-      <Input
+      <CustomInput
         autoComplete="off"
         size="small"
         name="newPassword"
@@ -61,7 +62,7 @@ const ChangePasswordForm = ({
       />
     </Form.Field>
     <Form.Field>
-      <Input
+      <CustomInput
         autoComplete="off"
         size="small"
         name="newPasswordAgain"
@@ -81,7 +82,15 @@ const ChangePasswordForm = ({
         }}
       />
     </Form.Field>
-    <Button type="submit" size="tiny" compact basic loading={isSubmitting} onClick={handleSubmit}>
+    <Button
+      type="submit"
+      color="grey"
+      size="tiny"
+      compact
+      basic
+      loading={isSubmitting}
+      onClick={handleSubmit}
+    >
       Submit
     </Button>
     {error.message && (

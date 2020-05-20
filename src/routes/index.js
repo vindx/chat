@@ -1,11 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
+import { ThemeProvider } from 'styled-components';
 import PropTypes from 'prop-types';
 
 import ViewChannel from './ViewChannel';
 import LoginOrRegisterContainer from '../containers/LoginOrResgisterContainer';
 import PageNotFound from '../components/PageNotFound';
+import useTheme from '../hooks/useTheme';
+import GlobalStyle from '../components/styledComponents/GlobalStyle';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -39,17 +42,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   />
 );
 
-export default () => (
-  <BrowserRouter>
-    <Switch>
-      <PrivateRoute path="/" exact component={() => <Redirect to="/view-channel" />} />
-      <Route path="/register" exact component={LoginOrRegisterContainer} />
-      <Route path="/login" exact component={LoginOrRegisterContainer} />
-      <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
-      <PageNotFound />
-    </Switch>
-  </BrowserRouter>
-);
+export default () => {
+  const theme = useTheme();
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Switch>
+          <PrivateRoute path="/" exact component={() => <Redirect to="/view-channel" />} />
+          <Route path="/register" exact component={LoginOrRegisterContainer} />
+          <Route path="/login" exact component={LoginOrRegisterContainer} />
+          <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
+          <PageNotFound />
+        </Switch>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+};
 
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,

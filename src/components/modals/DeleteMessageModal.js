@@ -1,9 +1,15 @@
 import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { Button, Modal } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { deleteMessageMutation, getMessagesQuery } from '../../graphql/message';
+import {
+  CustomModal,
+  CustomModalActions,
+  CustomModalContent,
+  CustomModalHeader
+} from '../styledComponents/GlobalStyle';
 
 const DeleteMessageModal = ({
   isOpen,
@@ -30,16 +36,16 @@ const DeleteMessageModal = ({
   });
 
   return (
-    <Modal size="mini" open={isOpen} onClose={onClose}>
-      <Modal.Header>Delete this message?</Modal.Header>
-      <Modal.Content>
+    <CustomModal size="mini" open={isOpen} onClose={onClose}>
+      <CustomModalHeader>Delete this message?</CustomModalHeader>
+      <CustomModalContent>
         <p>
           Are you sure you want to delete this message?
           <br />
           It will be lost forever!
         </p>
-      </Modal.Content>
-      <Modal.Actions>
+      </CustomModalContent>
+      <CustomModalActions>
         <Button positive onClick={onClose}>
           No
         </Button>
@@ -51,8 +57,8 @@ const DeleteMessageModal = ({
           loading={loading}
           onClick={handleDeleteChannel}
         />
-      </Modal.Actions>
-    </Modal>
+      </CustomModalActions>
+    </CustomModal>
   );
 };
 

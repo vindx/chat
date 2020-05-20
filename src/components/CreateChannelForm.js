@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Form, Input, Label } from 'semantic-ui-react';
+import { Button, Form, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
 import { allChannelsQuery, createChannelMutation } from '../graphql/channel';
+import { CustomInput } from './styledComponents/GlobalStyle';
 
 const createChannelForm = ({
   values,
@@ -17,7 +18,7 @@ const createChannelForm = ({
 }) => (
   <Form onSubmit={handleSubmit}>
     <Form.Field>
-      <Input
+      <CustomInput
         value={values.channelName}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -26,7 +27,7 @@ const createChannelForm = ({
         placeholder="Channel name"
       />
       {error.message && (
-        <Label basic color="red" pointing>
+        <Label color="red" pointing>
           {error.message}
         </Label>
       )}

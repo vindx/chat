@@ -1,10 +1,10 @@
 import React from 'react';
-import { Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import LeaveChannelModal from './LeaveChannelModal';
 import DeleteChannelModal from './DeleteChannelModal';
 import { allChannelsQuery } from '../../graphql/channel';
+import { CustomModal } from '../styledComponents/GlobalStyle';
 
 const updateQuery = (store, channel) => {
   const data = store.readQuery({ query: allChannelsQuery });
@@ -13,7 +13,7 @@ const updateQuery = (store, channel) => {
 };
 
 const ChannelOptionsModal = ({ isOpen, onClose, viewMode, channelId, history }) => (
-  <Modal size="mini" open={isOpen} onClose={onClose}>
+  <CustomModal size="mini" open={isOpen} onClose={onClose}>
     {viewMode ? (
       <LeaveChannelModal
         onClose={onClose}
@@ -29,7 +29,7 @@ const ChannelOptionsModal = ({ isOpen, onClose, viewMode, channelId, history }) 
         updateQuery={updateQuery}
       />
     )}
-  </Modal>
+  </CustomModal>
 );
 
 ChannelOptionsModal.propTypes = {

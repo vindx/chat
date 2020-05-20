@@ -22,6 +22,7 @@ import {
   deleteMessageSubscription,
   editingMessageSubscription,
 } from '../graphql/message';
+import { CustomDropdownMenu } from '../components/styledComponents/GlobalStyle';
 
 const MessagesContainer = ({
   currentChannelId = '',
@@ -184,7 +185,7 @@ const MessagesContainer = ({
               </UserName>
               {activeUserId === userId && (
                 <Dropdown icon="options" style={{ margin: '0 10px' }} pointing="bottom right">
-                  <Dropdown.Menu>
+                  <CustomDropdownMenu>
                     <Dropdown.Item
                       text="Delete"
                       icon="trash"
@@ -198,7 +199,7 @@ const MessagesContainer = ({
                       message={text}
                       onClick={initEditing}
                     />
-                  </Dropdown.Menu>
+                  </CustomDropdownMenu>
                 </Dropdown>
               )}
             </MessageHeader>

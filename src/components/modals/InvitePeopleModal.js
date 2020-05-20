@@ -1,8 +1,16 @@
 import React from 'react';
-import { Header, Modal, Segment, Grid, Divider, Button, Label } from 'semantic-ui-react';
+import { Grid, Button, Label } from 'semantic-ui-react';
 import { gql } from 'apollo-boost';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
+
+import {
+  CustomDivider,
+  CustomHeader,
+  CustomModal,
+  CustomModalContent,
+  CustomSegment,
+} from '../styledComponents/GlobalStyle';
 
 const generateChannelKeyMutation = gql`
   mutation($channelId: ID!) {
@@ -33,21 +41,21 @@ const InvitePeopleModal = ({ isOpen, onClose, channelId }) => {
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose} closeIcon>
-      <Modal.Content>
-        <Segment>
+    <CustomModal open={isOpen} onClose={onClose} closeIcon>
+      <CustomModalContent>
+        <CustomSegment>
           <Grid columns={2} relaxed="very">
             <Grid.Column>
-              <Header as="h3" textAlign="center">
+              <CustomHeader as="h3" textAlign="center">
                 Create a secret
                 <Label color="green" horizontal>
                   KEY
                 </Label>
                 !
-              </Header>
-              <Header as="h5" disabled textAlign="center">
+              </CustomHeader>
+              <CustomHeader as="h5" disabled textAlign="center">
                 Click on generate button
-              </Header>
+              </CustomHeader>
               <Button
                 basic
                 positive
@@ -60,28 +68,28 @@ const InvitePeopleModal = ({ isOpen, onClose, channelId }) => {
               </Button>
             </Grid.Column>
             <Grid.Column>
-              <Header as="h3" textAlign="center">
+              <CustomHeader as="h3" textAlign="center">
                 Share a
                 <Label color="green" horizontal>
                   KEY
                 </Label>
                 !
-              </Header>
-              <Header as="h5" disabled textAlign="center">
+              </CustomHeader>
+              <CustomHeader as="h5" disabled textAlign="center">
                 Share this key to your friends
-              </Header>
-              <Header as="h5" textAlign="center">
+              </CustomHeader>
+              <CustomHeader as="h5" textAlign="center">
                 <Label color="green" horizontal>
                   key
                 </Label>
                 {shortId}
-              </Header>
+              </CustomHeader>
             </Grid.Column>
           </Grid>
-          <Divider vertical>and</Divider>
-        </Segment>
-      </Modal.Content>
-    </Modal>
+          <CustomDivider vertical>and</CustomDivider>
+        </CustomSegment>
+      </CustomModalContent>
+    </CustomModal>
   );
 };
 

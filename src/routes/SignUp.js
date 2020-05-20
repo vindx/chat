@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Container, Header, Input, Button, Message } from 'semantic-ui-react';
+import { Form, Container, Button, Message } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import { wsLink } from '../apollo';
 import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
 import { registerMutation } from '../graphql/user';
+import { CustomHeader, CustomInput } from '../components/styledComponents/GlobalStyle';
 
 const SignUp = ({ history }) => {
   const [register, { loading }] = useMutation(registerMutation);
@@ -50,10 +51,10 @@ const SignUp = ({ history }) => {
 
   return (
     <Container text>
-      <Header as="h2">Sign up</Header>
+      <CustomHeader as="h2">Sign up</CustomHeader>
       <Form onSubmit={handleSubmit}>
         <Form.Field error={!!userNameError}>
-          <Input
+          <CustomInput
             fluid
             autoComplete="off"
             placeholder="Username"
@@ -63,7 +64,7 @@ const SignUp = ({ history }) => {
           />
         </Form.Field>
         <Form.Field error={!!emailError}>
-          <Input
+          <CustomInput
             fluid
             autoComplete="off"
             placeholder="Email"
@@ -73,7 +74,7 @@ const SignUp = ({ history }) => {
           />
         </Form.Field>
         <Form.Field error={!!passwordError}>
-          <Input
+          <CustomInput
             fluid
             autoComplete="off"
             placeholder="Password"

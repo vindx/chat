@@ -1,9 +1,10 @@
 import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { Button, Modal } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { leaveChannelMutation } from '../../graphql/channel';
+import { CustomModalActions, CustomModalContent, CustomModalHeader } from '../styledComponents/GlobalStyle';
 
 const LeaveChannelModal = ({ onClose, channelId, history, updateQuery }) => {
   const [handleLeaveChannel, { loading }] = useMutation(leaveChannelMutation, {
@@ -21,11 +22,11 @@ const LeaveChannelModal = ({ onClose, channelId, history, updateQuery }) => {
 
   return (
     <>
-      <Modal.Header>Leave This Channel?</Modal.Header>
-      <Modal.Content>
+      <CustomModalHeader>Leave This Channel?</CustomModalHeader>
+      <CustomModalContent>
         <p>Are you sure you want to leave this channel?</p>
-      </Modal.Content>
-      <Modal.Actions>
+      </CustomModalContent>
+      <CustomModalActions>
         <Button positive onClick={onClose}>
           No
         </Button>
@@ -37,7 +38,7 @@ const LeaveChannelModal = ({ onClose, channelId, history, updateQuery }) => {
           loading={loading}
           onClick={handleLeaveChannel}
         />
-      </Modal.Actions>
+      </CustomModalActions>
     </>
   );
 };

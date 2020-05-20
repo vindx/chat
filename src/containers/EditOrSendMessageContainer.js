@@ -41,7 +41,7 @@ const EditOrSendMessageContainer = ({
             </EmojiWrapper>
           )}
           <ButtonsWrapper>
-            <Button onClick={triggerPicker} basic icon="smile outline" />
+            <Button onClick={triggerPicker} basic icon="smile outline" color="grey" />
           </ButtonsWrapper>
           {onEditing ? (
             <EditMessage

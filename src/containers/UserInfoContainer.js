@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { Dimmer, Loader, Menu } from 'semantic-ui-react';
+import { Dimmer, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { getUserQuery } from '../graphql/user';
@@ -9,6 +9,8 @@ import UserInfoChannels from '../components/UserInfo/UserInfoChannels';
 import UserInfoMessages from '../components/UserInfo/UserInfoMessages';
 import setViewModeStatus from '../helpers/setViewModeStatus';
 import switchChannelById from '../helpers/switchChannelById';
+import { UserInfoWrapper } from '../components/styledComponents/UserInfo';
+import { CustomMenu, CustomMenuItem } from '../components/styledComponents/GlobalStyle';
 
 const UserInfoContainer = ({ userId = '', history }) => {
   const {
@@ -30,14 +32,26 @@ const UserInfoContainer = ({ userId = '', history }) => {
   };
 
   return (
-    <div>
-      <Menu pointing>
-        <Menu.Item name="profile" active={activeItem === 'profile'} onClick={handleItemClick} />
-        <Menu.Item name="channels" active={activeItem === 'channels'} onClick={handleItemClick} />
+    <UserInfoWrapper>
+      <CustomMenu pointing>
+        <CustomMenuItem
+          name="profile"
+          active={activeItem === 'profile'}
+          onClick={handleItemClick}
+        />
+        <CustomMenuItem
+          name="channels"
+          active={activeItem === 'channels'}
+          onClick={handleItemClick}
+        />
         {!viewMode && (
-          <Menu.Item name="messages" active={activeItem === 'messages'} onClick={handleItemClick} />
+          <CustomMenuItem
+            name="messages"
+            active={activeItem === 'messages'}
+            onClick={handleItemClick}
+          />
         )}
-      </Menu>
+      </CustomMenu>
       {loading ? (
         <Dimmer active inverted>
           <Loader inverted>Loading</Loader>
@@ -61,7 +75,7 @@ const UserInfoContainer = ({ userId = '', history }) => {
           )}
         </>
       )}
-    </div>
+    </UserInfoWrapper>
   );
 };
 

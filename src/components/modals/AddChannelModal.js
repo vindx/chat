@@ -1,38 +1,45 @@
 import React from 'react';
-import { Header, Modal, Segment, Grid, Divider } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import CreateChannelForm from '../CreateChannelForm';
 import JoinChannelForm from '../JoinChannelForm';
+import {
+  CustomDivider,
+  CustomHeader,
+  CustomModal,
+  CustomModalContent,
+  CustomSegment,
+} from '../styledComponents/GlobalStyle';
 
 const AddChannelModal = ({ isOpen, onClose, history }) => (
-  <Modal open={isOpen} onClose={onClose} closeIcon>
-    <Modal.Content>
-      <Segment>
+  <CustomModal open={isOpen} onClose={onClose} closeIcon>
+    <CustomModalContent>
+      <CustomSegment>
         <Grid columns={2} relaxed="very">
           <Grid.Column>
-            <Header as="h3" textAlign="center">
+            <CustomHeader as="h3" textAlign="center">
               Create a channel!
-            </Header>
-            <Header as="h5" disabled textAlign="center">
+            </CustomHeader>
+            <CustomHeader as="h5" disabled textAlign="center">
               Create a new channel and invite people there
-            </Header>
+            </CustomHeader>
             <CreateChannelForm onClose={onClose} history={history} />
           </Grid.Column>
           <Grid.Column>
-            <Header as="h3" textAlign="center">
+            <CustomHeader as="h3" textAlign="center">
               Join a channel!
-            </Header>
-            <Header as="h5" disabled textAlign="center">
+            </CustomHeader>
+            <CustomHeader as="h5" disabled textAlign="center">
               Join an existing channel
-            </Header>
+            </CustomHeader>
             <JoinChannelForm onClose={onClose} history={history} />
           </Grid.Column>
         </Grid>
-        <Divider vertical>or</Divider>
-      </Segment>
-    </Modal.Content>
-  </Modal>
+        <CustomDivider vertical>or</CustomDivider>
+      </CustomSegment>
+    </CustomModalContent>
+  </CustomModal>
 );
 
 AddChannelModal.propTypes = {
