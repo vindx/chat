@@ -4,6 +4,7 @@ import { Dimmer, Dropdown, Label, Loader } from 'semantic-ui-react';
 import prettydate from 'pretty-date';
 import reactStringReplace from 'react-string-replace';
 import { Emoji } from 'emoji-mart';
+import Push from 'push.js';
 import PropTypes from 'prop-types';
 
 import {
@@ -89,6 +90,21 @@ const MessagesContainer = ({
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (currentChannelId) {
+      let windowIsActive = true;
+      const handleActivity = (forcedFlag) => {
+        if (typeof forcedFlag === 'boolean') {
+          // eslint-disable-next-line no-return-assign
+          return forcedFlag ? (windowIsActive = true) : (windowIsActive = false);
+        }
+
+        // eslint-disable-next-line no-return-assign
+        return document.hidden ? (windowIsActive = false) : (windowIsActive = true);
+      };
+      document.addEventListener('visibilitychange', handleActivity);
+      document.addEventListener('blur', () => handleActivity(false));
+      window.addEventListener('blur', () => handleActivity(false));
+      window.addEventListener('focus', () => handleActivity(true));
+      document.addEventListener('focus', () => handleActivity(true));
       const newMessageUnSubscribe = subscribeToMore({
         document: newMessageSubscription,
         variables: { channelId: currentChannelId },
@@ -100,6 +116,21 @@ const MessagesContainer = ({
               subscriptionData.data.newChannelMessage.id
             );
           }
+
+          if (!windowIsActive) {
+            Push.create(`New message on #${subscriptionData.data.newChannelMessage.channel.name}`, {
+              body: `${subscriptionData.data.newChannelMessage.user.userName} says:
+${subscriptionData.data.newChannelMessage.text}`,
+              icon: '../logo.png',
+              data: 'sdasdasd',
+              timeout: 3000,
+              onClick() {
+                window.focus();
+                this.close();
+              },
+            });
+          }
+
           return {
             ...prev,
             getMessages: [subscriptionData.data.newChannelMessage, ...prev.getMessages],
@@ -144,6 +175,11 @@ const MessagesContainer = ({
         newMessageUnSubscribe();
         deleteMessageUnSubscribe();
         editingMessageUnSubscribe();
+        window.removeEventListener('blur', handleActivity);
+        document.removeEventListener('blur', handleActivity);
+        window.removeEventListener('focus', handleActivity);
+        document.removeEventListener('focus', handleActivity);
+        document.removeEventListener('visibilitychange', handleActivity);
       };
     }
   }, [

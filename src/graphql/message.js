@@ -41,6 +41,9 @@ export const newMessageSubscription = gql`
         id
         userName
       }
+      channel {
+        name
+      }
       createdAt
     }
   }
