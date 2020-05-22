@@ -4,12 +4,11 @@ import { Form, Container, Button, Message } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
-import { wsLink } from '../apollo';
 import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
 import { registerMutation } from '../graphql/user';
 import { CustomHeader, CustomInput } from '../components/styledComponents/GlobalStyle';
 
-const SignUp = ({ history }) => {
+const SignUp = () => {
   const [register, { loading }] = useMutation(registerMutation);
   const [loginData, setLoginData] = useState({
     userName: '',
@@ -18,31 +17,42 @@ const SignUp = ({ history }) => {
     emailError: '',
     password: '',
     passwordError: '',
+    successfulSignUpMessage: '',
   });
-  const { userName, email, password, userNameError, emailError, passwordError } = loginData;
+  const {
+    userName,
+    email,
+    password,
+    userNameError,
+    emailError,
+    passwordError,
+    successfulSignUpMessage,
+  } = loginData;
 
   const handleChangeLoginData = (e) => {
     const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value, [`${name}Error`]: null });
+    setLoginData({
+      ...loginData,
+      [name]: value,
+      [`${name}Error`]: null,
+      successfulSignUpMessage: '',
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await register({ variables: { userName, email, password } });
-      const { ok, token, refreshToken, errors } = response.data.register;
+      const { ok, successMessage, errors } = response.data.register;
 
       if (ok) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
-        wsLink.subscriptionClient.tryReconnect();
-        history.push('/view-channel');
+        setLoginData((prevState) => ({ ...prevState, successfulSignUpMessage: successMessage }));
       } else {
         const err = errors.reduce((acc, { path, message }) => {
           acc[`${path}Error`] = message;
           return acc;
         }, {});
-        setLoginData({ ...loginData, ...err });
+        setLoginData({ ...loginData, ...err, successfulSignUpMessage: '' });
       }
     } catch (err) {
       console.log(err);
@@ -102,6 +112,13 @@ const SignUp = ({ history }) => {
           error
           header="There was some errors with your submission"
           list={[userNameError, emailError, passwordError]}
+        />
+      )}
+      {successfulSignUpMessage && (
+        <Message
+          success
+          header="Your registration was successful"
+          content={successfulSignUpMessage}
         />
       )}
     </Container>

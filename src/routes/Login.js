@@ -1,27 +1,36 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Container, Message } from 'semantic-ui-react';
+import { Form, Button, Container, Message, Icon } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 
 import { wsLink } from '../apollo';
 import { RedirectToOtherFormContainer } from '../components/styledComponents/LoginOrSignUp';
-import { loginMutation } from '../graphql/user';
+import { loginMutation, resendConfirmationEmail } from '../graphql/user';
 import { CustomHeader, CustomInput } from '../components/styledComponents/GlobalStyle';
 
 const Login = (props) => {
   const [login, { loading }] = useMutation(loginMutation);
+  const [
+    resendConfirmationLetter,
+    { data: { resendConfirmationEmail: resendStatus } = {}, loading: resendLoading },
+  ] = useMutation(resendConfirmationEmail);
   const [loginData, setLoginData] = useState({
     email: '',
     emailError: null,
     password: '',
     passwordError: null,
+    confirmationError: null,
   });
-  const { email, password, emailError, passwordError } = loginData;
+  const { email, password, emailError, passwordError, confirmationError } = loginData;
+
+  const handleInitResendingConfirmationLetter = async () => {
+    await resendConfirmationLetter({ variables: { email } });
+  };
 
   const handleChangeLoginData = (e) => {
     const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value, [`${name}Error`]: null });
+    setLoginData({ ...loginData, [name]: value, [`${name}Error`]: null, confirmationError: null });
   };
 
   const handleSubmit = async (e) => {
@@ -86,6 +95,29 @@ const Login = (props) => {
           header="There was some errors with your submission"
           list={[emailError, passwordError]}
         />
+      )}
+      {confirmationError && (
+        <Message warning>
+          <Message.Header>{confirmationError}</Message.Header>
+          <span>Didn&#39;t receive confirmation email yet? &#9658;</span>
+          <Button
+            compact
+            basic
+            loading={resendLoading}
+            disabled={resendLoading}
+            onClick={handleInitResendingConfirmationLetter}
+          >
+            Send again
+          </Button>
+          {typeof resendStatus === 'boolean' && (
+            <span>
+              <Icon
+                color={resendStatus ? 'green' : 'red'}
+                name={resendStatus ? 'check' : 'close'}
+              />
+            </span>
+          )}
+        </Message>
       )}
     </Container>
   );

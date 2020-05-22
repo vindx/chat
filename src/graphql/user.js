@@ -19,14 +19,19 @@ export const registerMutation = gql`
   mutation($userName: String!, $email: String!, $password: String!) {
     register(userName: $userName, email: $email, password: $password) {
       ok
-      token
-      refreshToken
+      successMessage
       errors {
         type
         path
         message
       }
     }
+  }
+`;
+
+export const resendConfirmationEmail = gql`
+  mutation($email: String!) {
+    resendConfirmationEmail(email: $email)
   }
 `;
 
