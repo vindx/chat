@@ -30,6 +30,7 @@ const userSchema = new Schema({
     minlength: [5, 'The password needs to be at least 5 characters long'],
     maxlength: [30, 'The password needs to be not more 30 characters long'],
   },
+  confirmed: { type: Boolean, default: false },
   messages: [{ type: Types.ObjectId, ref: 'Message' }],
   channels: [{ type: Types.ObjectId, ref: 'Channel' }],
 });

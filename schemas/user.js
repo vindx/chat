@@ -22,8 +22,7 @@ module.exports = `
   
   type RegisterResponse {
     ok: Boolean!
-    token: String
-    refreshToken: String
+    successMessage: String
     errors: [Error!]
   }
   
@@ -37,6 +36,7 @@ module.exports = `
   type Mutation {
     register(userName: String!, email: String!, password: String!): RegisterResponse!
     login(email: String!, password: String!): LoginResponse!
+    resendConfirmationEmail(email: String!): Boolean!
     editUserName(newUserName: String!): EditUserInfoResponse!
     editPassword(oldPassword: String!, newPassword: String!): EditUserInfoResponse!
   }

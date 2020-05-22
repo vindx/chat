@@ -57,6 +57,15 @@ const tryLogin = async (email, password, models, SECRET, SECRET2) => {
     };
   }
 
+  if (!user.confirmed) {
+    return {
+      ok: false,
+      errors: [
+        { type: 'not confirmed', path: 'confirmation', message: 'Please confirm your email to login' },
+      ],
+    };
+  }
+
   const valid = await bcrypt.compare(password, user.password);
 
   if (!valid) {

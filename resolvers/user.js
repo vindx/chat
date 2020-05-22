@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt');
-const formatErrors = require('../helpers/formatErrors');
 
+const formatErrors = require('../helpers/formatErrors');
 const { tryLogin } = require('../helpers/auth');
 const { requiresAuth } = require('../helpers/permissions');
+const sendConfirmationEmail = require('../helpers/sendConfirmationEmail');
 
 module.exports = {
   Query: {
@@ -20,10 +21,23 @@ module.exports = {
     getAllUsers: async (parent, args, { models }) => await models.User.find(),
   },
   Mutation: {
-    register: async (parent, args, { models, SECRET, SECRET2 }) => {
+    register: async (parent, args, {
+      models, transporter, EMAIL_SECRET, URL, ADMIN_EMAIL
+    }) => {
       try {
-        await new models.User(args).save();
-        return await tryLogin(args.email, args.password, models, SECRET, SECRET2);
+        const newUser = await new models.User(args).save();
+
+        await sendConfirmationEmail(
+          { id: newUser.id, email: args.email },
+          { transporter, ADMIN_EMAIL, EMAIL_SECRET },
+          URL
+        );
+
+        return {
+          ok: true,
+          successMessage:
+            'We send you confirmation email. Please follow the link on that email to confirm your account.',
+        };
       } catch (err) {
         return {
           ok: false,
@@ -34,6 +48,29 @@ module.exports = {
 
     login: async (parent, { email, password }, { models, SECRET, SECRET2 }) =>
       await tryLogin(email, password, models, SECRET, SECRET2),
+
+    resendConfirmationEmail: async (
+      parent,
+      { email },
+      {
+        models, transporter, ADMIN_EMAIL, EMAIL_SECRET, URL
+      }
+    ) => {
+      try {
+        const user = await models.User.findOne({ email });
+        if (user) {
+          await sendConfirmationEmail(
+            { id: user.id, email },
+            { transporter, ADMIN_EMAIL, EMAIL_SECRET },
+            URL
+          );
+          return true;
+        }
+        return false;
+      } catch (err) {
+        return false;
+      }
+    },
 
     editUserName: requiresAuth.createResolver(async (parent, { newUserName }, { models, user }) => {
       try {

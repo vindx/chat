@@ -8,18 +8,46 @@ const cors = require('cors');
 const { createServer } = require('http');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 const { refreshTokens } = require('./helpers/auth');
 const models = require('./models');
 const authMiddleware = require('./middlewares/auth.middleware');
 
-const { SECRET, SECRET2 } = process.env;
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: process.env.ADMIN_GMAIL_USER,
+    pass: process.env.ADMIN_GMAIL_PASS,
+  },
+});
+
+const {
+  SECRET, SECRET2, EMAIL_SECRET, ADMIN_GMAIL_USER: ADMIN_EMAIL
+} = process.env;
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')));
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
 const app = express();
 app.use(cors(), bodyParser.json(), authMiddleware(models, SECRET, SECRET2));
+
+app.get('/confirmation/:token', async (req, res) => {
+  try {
+    const {
+      user: { id },
+    } = jwt.verify(req.params.token, EMAIL_SECRET);
+    await models.User.findByIdAndUpdate(id, { confirmed: true });
+  } catch (e) {
+    res.send('Error');
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    return res.redirect(`${req.protocol}://${req.get('host')}`);
+  }
+
+  return res.redirect('http://localhost:3000');
+});
 
 const server = new ApolloServer({
   typeDefs,
@@ -43,10 +71,14 @@ const server = new ApolloServer({
       return { ...connection.context, models };
     }
     return {
+      URL: `${req.protocol}://${req.get('host')}`,
       user: req.user,
       models,
       SECRET,
       SECRET2,
+      EMAIL_SECRET,
+      transporter,
+      ADMIN_EMAIL,
     };
   },
 });
