@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
+import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 import { Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -24,20 +25,43 @@ const EditOrSendMessageContainer = ({
   setLastMessageSent,
 }) => {
   const [emojiPickerState, SetEmojiPicker] = useState(false);
-  const [emoji2, SetEmoji] = useState({ colons: '' });
+  const [emojiObj, SetEmojiObj] = useState({ colons: '' });
+
+  const emojiPicker = createRef();
 
   const triggerPicker = (e) => {
     e.preventDefault();
     SetEmojiPicker(!emojiPickerState);
   };
 
+  // eslint-disable-next-line consistent-return
+  const handleClick = (e) => {
+    try {
+      // eslint-disable-next-line react/no-find-dom-node
+      const node = ReactDOM.findDOMNode(emojiPicker.current);
+      if (!node.contains(e.target)) {
+        // handle outside click down below
+        SetEmojiPicker(!emojiPickerState);
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick, false);
+    return () => {
+      document.removeEventListener('mousedown', handleClick, false);
+    };
+  }, [emojiPickerState, emojiObj]);
+
   return (
     <>
       {channelName && (
         <SendMessageWrapper>
           {emojiPickerState && (
-            <EmojiWrapper>
-              <Picker emojiSize={20} onSelect={(emoji) => SetEmoji(emoji)} />
+            <EmojiWrapper ref={emojiPicker}>
+              <Picker emojiSize={20} onSelect={(emoji) => SetEmojiObj(emoji)} />
             </EmojiWrapper>
           )}
           <ButtonsWrapper>
@@ -45,7 +69,7 @@ const EditOrSendMessageContainer = ({
           </ButtonsWrapper>
           {onEditing ? (
             <EditMessage
-              emoji={emoji2}
+              emoji={emojiObj}
               currentChannelId={currentChannelId}
               close={cancelEditing}
               messageForEditing={messageForEditing}
@@ -55,7 +79,7 @@ const EditOrSendMessageContainer = ({
             />
           ) : (
             <SendMessage
-              emoji={emoji2}
+              emoji={emojiObj}
               channelName={channelName}
               currentChannelId={currentChannelId}
               enterKey={ENTER_KEY}
