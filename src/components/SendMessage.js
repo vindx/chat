@@ -21,10 +21,10 @@ const SendMessage = ({
   enterKey,
   startEditing,
   emoji,
+  SetMessageWithEmoji,
 }) => {
   useEffect(() => {
-    // eslint-disable-next-line no-param-reassign
-    values.message += emoji.colons;
+    SetMessageWithEmoji(`${values.message}${emoji.colons}`);
   }, [emoji]);
 
   return [
@@ -51,6 +51,7 @@ const SendMessage = ({
           }
           if (e.keyCode === ARROW_UP_KEY) {
             startEditing();
+            SetMessageWithEmoji('');
           }
         }}
       />
@@ -79,11 +80,11 @@ SendMessage.propTypes = {
 export default compose(
   graphql(createMessageMutation),
   withFormik({
-    mapPropsToValues: () => ({ message: '' }),
+    mapPropsToValues: ({ messageWithEmoji }) => ({ message: messageWithEmoji }),
     enableReinitialize: true,
     handleSubmit: async (
       { message },
-      { props: { currentChannelId, mutate }, setSubmitting, setFieldValue }
+      { props: { currentChannelId, mutate, SetMessageWithEmoji }, setSubmitting, setFieldValue }
     ) => {
       if (!message || !message.trim()) {
         setSubmitting(false);
@@ -94,6 +95,7 @@ export default compose(
       });
       setSubmitting(false);
       setFieldValue('message', '');
+      SetMessageWithEmoji('');
     },
   })
 )(SendMessage);

@@ -26,6 +26,7 @@ const EditOrSendMessageContainer = ({
 }) => {
   const [emojiPickerState, SetEmojiPicker] = useState(false);
   const [emojiObj, SetEmojiObj] = useState({ colons: '' });
+  const [messageWithEmoji, SetMessageWithEmoji] = useState('');
 
   const emojiPicker = createRef();
 
@@ -42,6 +43,7 @@ const EditOrSendMessageContainer = ({
       if (!node.contains(e.target)) {
         // handle outside click down below
         SetEmojiPicker(!emojiPickerState);
+        SetEmojiObj((prevState) => ({ ...prevState, colons: '' }));
       }
     } catch (error) {
       return null;
@@ -53,7 +55,7 @@ const EditOrSendMessageContainer = ({
     return () => {
       document.removeEventListener('mousedown', handleClick, false);
     };
-  }, [emojiPickerState, emojiObj]);
+  }, [emojiPickerState, messageWithEmoji, emojiObj]);
 
   return (
     <>
@@ -80,6 +82,8 @@ const EditOrSendMessageContainer = ({
           ) : (
             <SendMessage
               emoji={emojiObj}
+              messageWithEmoji={messageWithEmoji}
+              SetMessageWithEmoji={SetMessageWithEmoji}
               channelName={channelName}
               currentChannelId={currentChannelId}
               enterKey={ENTER_KEY}
