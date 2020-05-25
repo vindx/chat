@@ -51,7 +51,7 @@ let wsUri;
 if (process.env.NODE_ENV === 'development') {
   wsUri = 'ws://localhost:5000/graphql';
 } else {
-  wsUri = `ws://${window.location.host}/graphql`;
+  wsUri = `wss://${window.location.host}/graphql`;
 }
 
 // Create a WebSocket link:
