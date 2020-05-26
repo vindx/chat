@@ -51,10 +51,10 @@ const tryLogin = async (email, password, models, SECRET, SECRET2) => {
   const user = (await models.User.findOne({ email }))
     || (await models.User.findOne({ userName: email }));
   if (!user) {
-    // user with that email not found
+    // user with that email or username not found
     return {
       ok: false,
-      errors: [{ type: 'not found', path: 'email', message: 'No user with this email exists' }],
+      errors: [{ type: 'not found', path: 'email', message: 'No user with this email or username exists' }],
     };
   }
 
