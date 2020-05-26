@@ -7,6 +7,31 @@ export const ChannelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 2;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    > div {
+      > button {
+        padding: 3px !important;
+        width: 40px;
+        font-size: 12px !important;
+      }
+    }
+  }
+  @media screen and (min-width: 769px) and (max-width: 1025px) {
+    > div {
+      > button {
+        padding: 5px !important;
+        width: 50px;
+      }
+    }
+  }
+  @media screen and (min-width: 1025px) and (max-width: 1281px) {
+    > div {
+      > button {
+        padding: 8px !important;
+        width: 60px;
+      }
+    }
+  }
 `;
 
 export const ChannelList = styled.ul`
@@ -38,17 +63,38 @@ export const ChannelListItem = styled.li`
     border-width: thick;
   }
   ${({ active }) =>
-    active && css`
+    active
+    && css`
       border-style: solid;
       border-width: thick;
       border-color: #408ad2;
     `}
   ${({ bgColor }) =>
-    bgColor && css`
+    bgColor
+    && css`
       background-color: ${bgColor};
     `}
   ${({ borderColor }) =>
-    borderColor && css`
+    borderColor
+    && css`
       border-color: ${borderColor};
     `}
+    
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    height: 30px;
+    width: 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  @media screen and (min-width: 769px) and (max-width: 1025px) {
+    height: 35px;
+    width: 35px;
+    font-size: 20px;
+  }
+  @media screen and (min-width: 1025px) and (max-width: 1281px) {
+    height: 45px;
+    width: 45px;
+    font-size: 22px;
+  }
 `;

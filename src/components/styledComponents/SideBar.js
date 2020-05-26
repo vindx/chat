@@ -13,7 +13,8 @@ export const SideBarWrapper = styled.div`
   display: flex;
   flex-direction: row;
   ${({ center }) =>
-    center && css`
+    center
+    && css`
       align-items: center;
       justify-content: center;
     `};
@@ -24,6 +25,23 @@ export const SideBarContent = styled.div`
   padding: 0 10px;
   flex-direction: column;
   display: ${({ display }) => (display === 'true' ? 'flex' : 'none')};
+  @media screen and (min-width: 320px) and (max-width: 1025px) {
+    > div {
+      > button {
+        padding: 3px !important;
+        width: 80px;
+        font-size: 12px !important;
+      }
+    }
+  }
+  @media screen and (min-width: 1025px) and (max-width: 1281px) {
+    > div {
+      > button {
+        padding: 8px !important;
+        width: 110px;
+      }
+    }
+  }
 `;
 
 export const SideBarDisplayTrigger = styled.div`

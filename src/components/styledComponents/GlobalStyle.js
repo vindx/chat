@@ -57,6 +57,11 @@ export const CustomTextArea = styled(TextArea)`
   min-height: 35px;
   padding: 8px 13px !important;
   resize: none !important;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    height: 28px;
+    min-height: 25px;
+    font-size: 12px !important;
+  }
 `;
 
 export const CustomModal = styled(Modal)`

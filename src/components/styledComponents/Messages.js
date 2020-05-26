@@ -9,7 +9,8 @@ export const MessagesWrapper = styled.div`
   flex-direction: column-reverse;
   overflow-y: auto;
   ${({ center }) =>
-    center && css`
+    center
+    && css`
       align-items: center;
       justify-content: center;
     `}
@@ -19,7 +20,8 @@ export const MessageWrapper = styled.div`
   display: flex;
   min-height: fit-content;
   ${({ myMessage }) =>
-    myMessage && css`
+    myMessage
+    && css`
       justify-content: flex-end;
     `}
 `;
@@ -30,7 +32,8 @@ export const Message = styled.div`
   display: flex;
   flex-direction: column;
   ${({ myMessage }) =>
-    myMessage && css`
+    myMessage
+    && css`
       align-items: flex-end;
     `}
 `;
@@ -39,7 +42,8 @@ export const MessageHeader = styled.div`
   display: flex;
   flex-direction: row;
   ${({ myMessage }) =>
-    myMessage && css`
+    myMessage
+    && css`
       flex-direction: row-reverse;
     `}
 `;
@@ -49,15 +53,25 @@ export const UserName = styled.span`
   font-size: 18px;
   color: blue;
   cursor: pointer;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
+
 export const MessageText = styled.div`
   font-size: 16px;
   max-width: 80%;
   word-wrap: break-word;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 export const CreatedAt = styled.span`
   width: fit-content;
   font-size: 12px;
   opacity: 0.6;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    font-size: 10px;
+  }
 `;
