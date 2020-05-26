@@ -75,6 +75,7 @@ const UserInfoContainer = ({ userId = '', history }) => {
           {!viewMode && activeItem === 'messages' && (
             <UserInfoMessages
               messages={messages}
+              userId={userId}
               switchChannel={handleSwitchChannel}
               fetchMoreMessages={fetchMore}
             />
