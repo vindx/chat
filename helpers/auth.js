@@ -48,7 +48,8 @@ const refreshTokens = async (token, refreshToken, models, SECRET, SECRET2) => {
 };
 
 const tryLogin = async (email, password, models, SECRET, SECRET2) => {
-  const user = await models.User.findOne({ email });
+  const user = (await models.User.findOne({ email }))
+    || (await models.User.findOne({ userName: email }));
   if (!user) {
     // user with that email not found
     return {
