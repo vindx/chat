@@ -36,8 +36,8 @@ export const resendConfirmationEmail = gql`
 `;
 
 export const getUserQuery = gql`
-  query($id: ID) {
-    getUser(id: $id) {
+  query($id: ID, $offset: Int, $limit: Int) {
+    getUser(id: $id, offset: $offset, limit: $limit) {
       id
       userName
       email

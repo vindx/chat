@@ -16,6 +16,7 @@ const UserInfoContainer = ({ userId = '', history }) => {
   const {
     data: { getUser: { userName, email, channels, messages } = {} } = {},
     loading,
+    fetchMore,
   } = useQuery(getUserQuery, { variables: { id: userId }, fetchPolicy: 'network-only' });
 
   const [activeItem, setActiveItem] = useState('profile');
@@ -68,10 +69,15 @@ const UserInfoContainer = ({ userId = '', history }) => {
               history={history}
               userId={userId}
               switchChannel={handleSwitchChannel}
+              fetchMoreChannels={fetchMore}
             />
           )}
           {!viewMode && activeItem === 'messages' && (
-            <UserInfoMessages messages={messages} switchChannel={handleSwitchChannel} />
+            <UserInfoMessages
+              messages={messages}
+              switchChannel={handleSwitchChannel}
+              fetchMoreMessages={fetchMore}
+            />
           )}
         </>
       )}

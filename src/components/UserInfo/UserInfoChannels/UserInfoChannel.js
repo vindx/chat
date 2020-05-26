@@ -11,7 +11,7 @@ import {
 } from '../../styledComponents/UserInfo';
 import ChangeChannelNameForm from './ChangeChannelNameForm';
 
-const UserInfoChannel = ({ channel: { id, name }, viewMode, switchChannel }) => {
+const UserInfoChannel = ({ channel: { id, name }, viewMode, switchChannel, refLink }) => {
   const [editChannelNameMode, setEditChannelNameMode] = useState(false);
 
   const handleToggleChannelNameMode = () => {
@@ -19,7 +19,7 @@ const UserInfoChannel = ({ channel: { id, name }, viewMode, switchChannel }) => 
   };
 
   return (
-    <ChannelInfo>
+    <ChannelInfo ref={refLink}>
       {editChannelNameMode ? (
         <ChangeChannelNameForm
           close={handleToggleChannelNameMode}
@@ -50,6 +50,10 @@ UserInfoChannel.propTypes = {
   }).isRequired,
   viewMode: PropTypes.bool.isRequired,
   switchChannel: PropTypes.func.isRequired,
+  refLink: PropTypes.func,
+};
+UserInfoChannel.defaultProps = {
+  refLink: null,
 };
 
 export default UserInfoChannel;
