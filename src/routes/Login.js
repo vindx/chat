@@ -64,7 +64,7 @@ const Login = (props) => {
           <CustomInput
             fluid
             autoComplete="username"
-            placeholder="Email"
+            placeholder="Email or username"
             name="email"
             value={email}
             onChange={handleChangeLoginData}
