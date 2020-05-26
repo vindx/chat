@@ -7,17 +7,21 @@ const sendConfirmationEmail = require('../helpers/sendConfirmationEmail');
 
 module.exports = {
   Query: {
-    getUser: requiresAuth.createResolver(async (parent, { id }, { models, user }) => {
-      try {
-        const foundUser = await models.User.findById(id || user.id);
-        if (!foundUser) {
-          throw new Error("User didn't found");
+    getUser: requiresAuth.createResolver(
+      async (parent, { id, offset, limit }, { models, user }) => {
+        try {
+          const foundUser = await models.User.findById(id || user.id);
+          if (!foundUser) {
+            throw new Error("User didn't found");
+          }
+          foundUser.offset = offset;
+          foundUser.limit = limit;
+          return foundUser;
+        } catch (err) {
+          return err;
         }
-        return foundUser;
-      } catch (err) {
-        return err;
       }
-    }),
+    ),
     getAllUsers: async (parent, args, { models }) => await models.User.find(),
   },
   Mutation: {
@@ -155,7 +159,10 @@ module.exports = {
     ),
   },
   User: {
-    channels: async ({ id }, args, { models }) => await models.Channel.find({ owner: id }),
-    messages: async ({ id }, args, { models }) => await models.Message.find({ userId: id }),
+    channels: async ({ id, offset = 0, limit = 10 }, args, { models }) =>
+      await models.Channel.find({ owner: id }).limit(limit).skip(offset),
+
+    messages: async ({ id, offset = 0, limit = 10 }, args, { models }) =>
+      await models.Message.find({ userId: id }).sort({ _id: -1 }).limit(limit).skip(offset),
   },
 };

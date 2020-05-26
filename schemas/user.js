@@ -5,10 +5,12 @@ module.exports = `
     email: String!
     channels: [Channel!]!
     messages: [Message!]!
+    offset: Int
+    limit: Int
   }
 
   type Query {
-    getUser(id: ID): User!
+    getUser(id: ID, offset: Int, limit: Int): User!
     getAllUsers: [User!]!
   }
   
