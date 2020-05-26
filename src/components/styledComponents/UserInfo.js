@@ -128,6 +128,7 @@ export const MessagesInfoWrapper = styled.div`
 `;
 
 export const MessageInfoWrapper = styled.div`
+  min-height: fit-content;
   max-width: 90%;
   display: flex;
   flex-direction: column;

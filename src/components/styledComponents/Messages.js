@@ -17,6 +17,7 @@ export const MessagesWrapper = styled.div`
 
 export const MessageWrapper = styled.div`
   display: flex;
+  min-height: fit-content;
   ${({ myMessage }) =>
     myMessage && css`
       justify-content: flex-end;
