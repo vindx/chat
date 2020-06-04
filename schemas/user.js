@@ -5,6 +5,7 @@ module.exports = `
     email: String!
     channels: [Channel!]!
     messages: [Message!]!
+    darkTheme: Boolean!
     offset: Int
     limit: Int
   }
@@ -41,5 +42,6 @@ module.exports = `
     resendConfirmationEmail(email: String!): Boolean!
     editUserName(newUserName: String!): EditUserInfoResponse!
     editPassword(oldPassword: String!, newPassword: String!): EditUserInfoResponse!
+    changeTheme: Boolean!
   }
 `;

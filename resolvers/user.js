@@ -157,6 +157,22 @@ module.exports = {
         }
       }
     ),
+    // eslint-disable-next-line consistent-return
+    changeTheme: requiresAuth.createResolver(async (parent, args, { models, user }) => {
+      try {
+        const foundUser = await models.User.findById(user.id);
+        const updatedUser = await models.User.findByIdAndUpdate(
+          user.id,
+          {
+            darkTheme: !foundUser.darkTheme,
+          },
+          { new: true }
+        );
+        return updatedUser.darkTheme;
+      } catch (e) {
+        console.log(e);
+      }
+    }),
   },
   User: {
     channels: async ({ id, offset = 0, limit = 10 }, args, { models }) =>
