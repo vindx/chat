@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
 import { ThemeProvider } from 'styled-components';
+import Push from 'push.js';
 import PropTypes from 'prop-types';
 
 import ViewChannel from './ViewChannel';
@@ -43,6 +44,17 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 export default () => {
+  useEffect(() => {
+    Push.create('Welcome to DICO chat!', {
+      icon: '../logo.png',
+      timeout: 4000,
+      onClick() {
+        window.focus();
+        // eslint-disable-next-line react/no-this-in-sfc
+        this.close();
+      },
+    });
+  }, []);
   const theme = useTheme();
   return (
     <ThemeProvider theme={theme}>
@@ -52,7 +64,11 @@ export default () => {
           <PrivateRoute path="/" exact component={() => <Redirect to="/view-channel" />} />
           <Route path="/register" exact component={LoginOrRegisterContainer} />
           <Route path="/login" exact component={LoginOrRegisterContainer} />
-          <PrivateRoute path="/view-channel/:channelId?" exact component={ViewChannel} />
+          <PrivateRoute
+            path="/view-channel/:channelId?"
+            exact
+            component={(props) => <ViewChannel {...props} />}
+          />
           <PageNotFound />
         </Switch>
       </BrowserRouter>

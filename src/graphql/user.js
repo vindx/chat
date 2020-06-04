@@ -35,6 +35,20 @@ export const resendConfirmationEmail = gql`
   }
 `;
 
+export const getUserThemeQuery = gql`
+  query($id: ID) {
+    getUser(id: $id) {
+      darkTheme
+    }
+  }
+`;
+
+export const changeUserThemeMutation = gql`
+  mutation {
+    changeTheme
+  }
+`;
+
 export const getUserQuery = gql`
   query($id: ID, $offset: Int, $limit: Int) {
     getUser(id: $id, offset: $offset, limit: $limit) {

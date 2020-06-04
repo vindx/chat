@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'semantic-ui-css/semantic.min.css';
@@ -9,11 +10,14 @@ import 'emoji-mart/css/emoji-mart.css';
 import * as serviceWorker from './serviceWorker';
 import Routes from './routes';
 import client from './apollo';
+import store from './redux/store';
 
 const App = (
-  <ApolloProvider client={client}>
-    <Routes />
-  </ApolloProvider>
+  <Provider store={store}>
+    <ApolloProvider client={client}>
+      <Routes />
+    </ApolloProvider>
+  </Provider>
 );
 
 ReactDOM.render(App, document.getElementById('root'));

@@ -1,20 +1,38 @@
 import React, { useEffect } from 'react';
-import Push from 'push.js';
-import AppLayoutContainer from '../containers/AppLayoutContainer';
+import { useDispatch, connect } from 'react-redux';
+import { ThemeConsumer } from 'styled-components';
+import PropTypes from 'prop-types';
 
-// eslint-disable-next-line react/jsx-props-no-spreading
-export default (props) => {
+import AppLayoutContainer from '../containers/AppLayoutContainer';
+import { loadDarkThemeAction } from '../redux/actions';
+
+const ViewChannel = ({ fetchedTheme, ...props }) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    Push.create('Welcome to DICO chat!', {
-      icon: '../logo.png',
-      timeout: 4000,
-      onClick() {
-        window.focus();
-        // eslint-disable-next-line react/no-this-in-sfc
-        this.close();
-      },
-    });
+    dispatch(loadDarkThemeAction());
   }, []);
 
-  return <AppLayoutContainer {...props} />;
+  return (
+    <ThemeConsumer>
+      {(theme) => {
+        // eslint-disable-next-line no-unused-expressions
+        fetchedTheme.mode !== theme.mode && theme.setTheme({ ...theme, ...fetchedTheme });
+
+        return <AppLayoutContainer {...props} />;
+      }}
+    </ThemeConsumer>
+  );
 };
+
+const mapStateToProps = (state) => ({
+  fetchedTheme: { mode: `${state.theme.darkTheme ? 'dark' : 'light'}` },
+});
+
+ViewChannel.propTypes = {
+  fetchedTheme: PropTypes.shape({
+    mode: PropTypes.string,
+  }).isRequired,
+};
+
+export default connect(mapStateToProps)(ViewChannel);
