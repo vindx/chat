@@ -29,5 +29,6 @@ module.exports = `
     createMessage(channelId: ID!, text: String!, replyTo: ID): Message!
     editMessage(channelId: ID!, messageId: ID!, text: String!): Message!
     deleteMessage(channelId: ID!, messageId: ID!): deleteMessageResponse!
+    findMessages(text: String!): [Message!]!
   }
 `;
