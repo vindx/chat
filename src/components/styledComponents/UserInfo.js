@@ -119,6 +119,25 @@ export const ChannelNameRemainingLetters = styled.div`
   font-size: 16px;
 `;
 
+export const OptionsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin: 10px auto;
+`;
+
+export const SearchMessageContainer = styled.div`
+  width: 95%;
+`;
+
+export const RefreshIconWrapper = styled.div`
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+`;
+
 export const MessagesInfoWrapper = styled.div`
   overflow-y: auto;
   max-height: 60vh;

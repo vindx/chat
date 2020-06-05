@@ -81,3 +81,17 @@ export const deleteMessageMutation = gql`
     }
   }
 `;
+
+export const searchMessagesMutation = gql`
+  mutation($text: String!) {
+    findMessages(text: $text) {
+      id
+      text
+      channel {
+        id
+        name
+      }
+      createdAt
+    }
+  }
+`;
