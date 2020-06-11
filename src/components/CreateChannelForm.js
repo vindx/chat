@@ -1,12 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Form, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-import { allChannelsQuery, createChannelMutation } from '../graphql/channel';
+import { createChannelMutation } from '../graphql/channel';
 import { CustomInput } from './styledComponents/GlobalStyle';
+import { addChannel } from '../redux/actions';
 
 const createChannelForm = ({
   values,
@@ -53,36 +55,22 @@ createChannelForm.propTypes = {
 
 export default compose(
   graphql(createChannelMutation),
+  connect(null, { addChannel }),
   withFormik({
     mapPropsToValues: () => ({ channelName: '' }),
     handleSubmit: async (
       { channelName },
-      { props: { onClose, mutate, history }, setSubmitting, setErrors }
+      { props: { addChannel: updateChannels, onClose, mutate, history }, setSubmitting, setErrors }
     ) => {
       const response = await mutate({
         variables: { name: channelName },
-        optimisticResponse: {
-          __typename: 'Mutation',
-          createChannel: {
-            ok: true,
-            channel: {
-              id: -1,
-              name: channelName,
-              __typename: 'Channel',
-            },
-            errors: null,
-            __typename: 'createChannel',
-          },
-        },
         update: (store, { data: { createChannel } }) => {
           const { ok, channel, errors } = createChannel;
           if (!ok) {
             setErrors(errors[0]);
             return;
           }
-          const data = store.readQuery({ query: allChannelsQuery });
-          data.getAllChannels.push(channel);
-          store.writeQuery({ query: allChannelsQuery, data });
+          updateChannels(channel);
         },
       });
       const {

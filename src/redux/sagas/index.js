@@ -56,7 +56,7 @@ function* workerTakeAllChannels() {
   if (data.error) {
     yield put(takingAllChannelsOnError(data.error));
   } else {
-    yield put(takingAllChannelsOnSuccess(data.data));
+    yield put(takingAllChannelsOnSuccess(data.data.getAllChannels));
   }
 }
 

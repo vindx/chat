@@ -104,7 +104,7 @@ const SideBarContainer = ({
         smbLeftChannelUnSubscribe();
       };
     }
-  }, [name, setChannelName, currentChannelId, subscribeToMore, error]);
+  }, [name, currentChannelId, subscribeToMore, error]);
 
   const toggleInvitePeopleModal = () => {
     setToggleInvitePeopleModal(!invitePeopleModalIsOpen);

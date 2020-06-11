@@ -1,12 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Form, Label } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import { graphql } from 'react-apollo';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
-import { allChannelsQuery, joinChannelMutation } from '../graphql/channel';
+import { joinChannelMutation } from '../graphql/channel';
 import { CustomInput } from './styledComponents/GlobalStyle';
+import { addChannel } from '../redux/actions';
 
 const joinChannelForm = ({
   values,
@@ -53,11 +55,12 @@ joinChannelForm.propTypes = {
 
 export default compose(
   graphql(joinChannelMutation),
+  connect(null, { addChannel }),
   withFormik({
     mapPropsToValues: () => ({ secretKey: '' }),
     handleSubmit: async (
       { secretKey },
-      { props: { onClose, mutate, history }, setSubmitting, setErrors }
+      { props: { addChannel: updateChannels, onClose, mutate, history }, setSubmitting, setErrors }
     ) => {
       const response = await mutate({
         variables: { secretKey },
@@ -67,9 +70,7 @@ export default compose(
             setErrors(errors[0]);
             return;
           }
-          const data = store.readQuery({ query: allChannelsQuery });
-          data.getAllChannels.push(channel);
-          store.writeQuery({ query: allChannelsQuery, data });
+          updateChannels(channel);
         },
       });
       const {

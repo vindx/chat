@@ -13,7 +13,7 @@ const ChannelsContainer = ({
   activeUserId,
   loading,
   error,
-  data: { getAllChannels: channels = [] },
+  data: channels,
 }) => {
   const dispatch = useDispatch();
   const [addChannelModalIsOpen, setToggleAddChannelModal] = useState(false);

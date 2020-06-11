@@ -1,10 +1,15 @@
 import { handleActions } from 'redux-actions';
-import { takeAllChannels, takingAllChannelsOnSuccess, takingAllChannelsOnError } from '../actions';
+import {
+  takeAllChannels,
+  takingAllChannelsOnSuccess,
+  takingAllChannelsOnError,
+  addChannel,
+} from '../actions';
 
 const defaultState = {
   loading: false,
   error: null,
-  data: {},
+  data: [],
 };
 
 export default handleActions(
@@ -23,6 +28,10 @@ export default handleActions(
       ...state,
       loading: false,
       error: action.payload,
+    }),
+    [addChannel]: (state, action) => ({
+      ...state,
+      data: [...state.data, action.payload],
     }),
   },
   defaultState
