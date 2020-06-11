@@ -5,3 +5,7 @@ export const changeUserTheme = createAction('CHANGE_USER_THEME');
 export const setDarkThemeAction = createAction('SET_DARK_THEME', (boolean) => boolean);
 
 export const searchMessages = createAction('SEARCH_MESSAGES');
+
+export const takeAllChannels = createAction('TAKE_ALL_CHANNELS');
+export const takingAllChannelsOnSuccess = createAction('TAKE_ALL_CHANNELS_SUCCESS', (data) => data);
+export const takingAllChannelsOnError = createAction('TAKE_ALL_CHANNELS_ERROR', (error) => error);

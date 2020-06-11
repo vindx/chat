@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/modals/AddChannelModal';
-import { allChannelsQuery } from '../graphql/channel';
+import { takeAllChannels } from '../redux/actions';
 
-const ChannelsContainer = ({ currentChannelId, history, onProfileClick, activeUserId }) => {
-  const { loading, error, data: { getAllChannels: channels } = {} } = useQuery(allChannelsQuery, {
-    fetchPolicy: 'network-only',
-  });
+const ChannelsContainer = ({
+  currentChannelId,
+  history,
+  onProfileClick,
+  activeUserId,
+  loading,
+  error,
+  data: { getAllChannels: channels = [] },
+}) => {
+  const dispatch = useDispatch();
   const [addChannelModalIsOpen, setToggleAddChannelModal] = useState(false);
+
+  useEffect(() => {
+    dispatch(takeAllChannels());
+  }, [dispatch]);
 
   const toggleAddChannelModal = () => {
     setToggleAddChannelModal(!addChannelModalIsOpen);
@@ -37,6 +47,12 @@ const ChannelsContainer = ({ currentChannelId, history, onProfileClick, activeUs
   ];
 };
 
+const mapStateToProps = (state) => ({
+  loading: state.channels.loading,
+  data: state.channels.data,
+  error: state.channels.error,
+});
+
 ChannelsContainer.propTypes = {
   currentChannelId: PropTypes.string,
   history: PropTypes.shape({}).isRequired,
@@ -46,4 +62,4 @@ ChannelsContainer.defaultProps = {
   currentChannelId: undefined,
 };
 
-export default ChannelsContainer;
+export default connect(mapStateToProps)(ChannelsContainer);
