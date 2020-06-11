@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { ToastContainer } from 'react-toastify';
 import PropTypes from 'prop-types';
 
@@ -10,56 +10,100 @@ import MessagesContainer from './MessagesContainer';
 import EditOrSendMessageContainer from './EditOrSendMessageContainer';
 import UserInfoModal from '../components/modals/UserInfoModal';
 
-const AppLayoutContainer = ({ match: { params }, history, userId }) => {
-  const [channelName, setChannelName] = useState('');
-  const [messageEditing, setMessageEditing] = useState({
+const initialState = {
+  channelName: '',
+  messageEditing: {
     onEdit: false,
     message: '',
     messageId: '',
-  });
-  const [lastMessageSent, setLastMessageSent] = useState({ message: '', messageId: '' });
-  const [displaySideBar, setToggleSideBarDisplay] = useState(false);
-  const [displayProfileInfoModal, setToggleProfileInfoModalDisplay] = useState({
+  },
+  lastMessageSent: { message: '', messageId: '' },
+  displaySideBar: false,
+  displayProfileInfoModal: {
     open: false,
     userId: '',
-  });
+  },
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_CHANNEL_NAME':
+      return { ...state, channelName: action.payload };
+    case 'SET_MESSAGE_EDITING':
+      return {
+        ...state,
+        messageEditing: {
+          ...state.messageEditing,
+          ...action.payload,
+        },
+      };
+    case 'SET_LAST_MESSAGE_SENT':
+      return {
+        ...state,
+        lastMessageSent: {
+          ...state.lastMessageSent,
+          ...action.payload,
+        },
+      };
+    case 'TOGGLE_SIDEBAR_DISPLAY':
+      return {
+        ...state,
+        displaySideBar: !state.displaySideBar,
+      };
+    case 'SET_PROFILE_INFO_MODAL_DISPLAY':
+      return {
+        ...state,
+        displayProfileInfoModal: {
+          ...state.displayProfileInfoModal,
+          ...action.payload,
+        },
+      };
+    default:
+      throw new Error();
+  }
+};
+
+const AppLayoutContainer = ({ match: { params }, history, userId }) => {
+  const [state, dispatch] = useReducer(reducer, initialState, undefined);
 
   const handleToggleSideBarDisplay = () => {
-    setToggleSideBarDisplay(!displaySideBar);
+    dispatch({ type: 'TOGGLE_SIDEBAR_DISPLAY' });
   };
 
   const handleToggleProfileInfoModalDisplay = (e) => {
     const { id } = e.target;
-    if (displayProfileInfoModal.open) {
-      setToggleProfileInfoModalDisplay((prevState) => ({ ...prevState, open: false, userId: '' }));
+    if (state.displayProfileInfoModal.open) {
+      dispatch({ type: 'SET_PROFILE_INFO_MODAL_DISPLAY', payload: { open: false, userId: '' } });
     } else {
-      setToggleProfileInfoModalDisplay((prevState) => ({ ...prevState, open: true, userId: id }));
+      dispatch({ type: 'SET_PROFILE_INFO_MODAL_DISPLAY', payload: { open: true, userId: id } });
     }
   };
 
   const handleInitiateMessageEditing = (
     e,
     { message, messageid: messageId } = {
-      message: lastMessageSent.message,
-      messageid: lastMessageSent.messageId,
+      message: state.lastMessageSent.message,
+      messageid: state.lastMessageSent.messageId,
     }
   ) => {
     if (message && messageId) {
-      setMessageEditing((prevState) => ({
-        ...prevState,
-        onEdit: true,
-        message,
-        messageId,
-      }));
+      dispatch({ type: 'SET_MESSAGE_EDITING', payload: { onEdit: true, message, messageId } });
     }
   };
 
   const handleCancelMessageEditing = () => {
-    setMessageEditing((prevState) => ({ ...prevState, onEdit: false, message: '', messageId: '' }));
+    dispatch({
+      type: 'SET_MESSAGE_EDITING',
+      payload: { onEdit: false, message: '', messageId: '' },
+    });
   };
 
   const handleSetLastMessageSent = (message, messageId) => {
-    setLastMessageSent((prevState) => ({ ...prevState, message, messageId }));
+    dispatch({ type: 'SET_LAST_MESSAGE_SENT', payload: { message, messageId } });
+  };
+
+  const handleSetChannelName = (name) => {
+    dispatch({ type: 'SET_CHANNEL_NAME', payload: name });
   };
 
   useEffect(() => {
@@ -68,7 +112,7 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
   }, [params.channelId]);
 
   return (
-    <AppLayout displaySideBar={displaySideBar}>
+    <AppLayout displaySideBar={state.displaySideBar}>
       <ChannelsContainer
         currentChannelId={params.channelId}
         history={history}
@@ -76,28 +120,28 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
         activeUserId={userId}
       />
       <SideBarContainer
-        setChannelName={setChannelName}
+        setChannelName={handleSetChannelName}
         currentChannelId={params.channelId}
         history={history}
-        displaySideBar={displaySideBar}
+        displaySideBar={state.displaySideBar}
         toggleDisplaySideBar={handleToggleSideBarDisplay}
         onProfileClick={handleToggleProfileInfoModalDisplay}
       />
-      <Header channelName={channelName} />
+      <Header channelName={state.channelName} />
       <MessagesContainer
         currentChannelId={params.channelId}
         activeUserId={userId}
         initEditing={handleInitiateMessageEditing}
-        messageEditingInfo={messageEditing}
+        messageEditingInfo={state.messageEditing}
         setLastMessageSent={handleSetLastMessageSent}
         onProfileClick={handleToggleProfileInfoModalDisplay}
       />
       <EditOrSendMessageContainer
-        channelName={channelName}
+        channelName={state.channelName}
         currentChannelId={params.channelId}
-        onEditing={messageEditing.onEdit}
-        messageForEditing={messageEditing.message}
-        messageId={messageEditing.messageId}
+        onEditing={state.messageEditing.onEdit}
+        messageForEditing={state.messageEditing.message}
+        messageId={state.messageEditing.messageId}
         startEditing={handleInitiateMessageEditing}
         cancelEditing={handleCancelMessageEditing}
         setLastMessageSent={handleSetLastMessageSent}
@@ -105,8 +149,8 @@ const AppLayoutContainer = ({ match: { params }, history, userId }) => {
       <UserInfoModal
         history={history}
         onClose={handleToggleProfileInfoModalDisplay}
-        open={displayProfileInfoModal.open}
-        userId={displayProfileInfoModal.userId}
+        open={state.displayProfileInfoModal.open}
+        userId={state.displayProfileInfoModal.userId}
       />
       <ToastContainer />
     </AppLayout>
